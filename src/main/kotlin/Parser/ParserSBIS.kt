@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.util.*
 
-class ParserSbis {
+class ParserSBIS {
     fun parser(INN: String) {
         try {
             val url = "https://sbis.ru/contragents/"
