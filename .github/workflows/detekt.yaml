@@ -34,15 +34,9 @@ jobs:
           arguments: detektMain detektTest --continue
 
       - name: Post to PR
-        uses: EliLillyCo/github-actions-post-to-pr@main
+        uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success() || failure()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          post_to_pr_definition: |
-            [
-              {
-                "message_file": "./build/reports/detekt/main.md",
-                "title": "Detekt",
-                "collapsible": true
-              }
-            ]
+          filename: "./build/reports/detekt/main.md"
