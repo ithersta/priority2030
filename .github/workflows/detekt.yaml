@@ -34,9 +34,9 @@ jobs:
           arguments: detektMain detektTest --continue
 
       - name: Post to PR
-        uses: harupy/comment-on-pr@master
+        uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success() || failure()
         with:
-          filename: "./build/reports/detekt/main.md"
+          path: "./build/reports/detekt/main.md"
