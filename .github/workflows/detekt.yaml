@@ -34,4 +34,4 @@ jobs:
       - name: Run analysis
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # tag=v2
         with:
-          arguments: detektMain detektTest :detektReportMergeSarif --continue
+          arguments: detektMain detektTest --continue
