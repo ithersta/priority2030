@@ -35,3 +35,15 @@ jobs:
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # tag=v2
         with:
           arguments: detektMain detektTest --continue
+
+      - name: "Post to PR"
+        uses: EliLillyCo/github-actions-post-to-pr@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          post_to_pr_definition: |
+            [
+              {
+                "message_file": "./build/reports/detekt/main.md",
+                "title": "Detekt"
+              }
+            ]
