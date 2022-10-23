@@ -46,6 +46,6 @@ jobs:
               {
                 "message_file": "./build/reports/detekt/main.md",
                 "title": "Detekt",
-                "collapsible": true,
+                "collapsible": true
               }
             ]
