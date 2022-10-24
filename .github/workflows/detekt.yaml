@@ -37,6 +37,6 @@ jobs:
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: success() || failure()
+        if: (success() || failure()) && github.ref.startsWith('refs/pull/')
         with:
           path: "./build/reports/detekt/main.md"
