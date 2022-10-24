@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 class FullName(
     val firstName: String,
     val lastName: String,
-    val middleName: String?
-): FieldData {
-    fun withInitials() = "$lastName ${firstName.first()}. ${middleName?.first()?.plus(".") ?: ""}"
+    val patronymic: String?
+) : FieldData {
+    fun withInitials() = "$lastName ${firstName.first()}. ${patronymic?.first()?.plus(".").orEmpty()}"
 }

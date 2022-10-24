@@ -24,18 +24,7 @@ val stateMachine = stateMachine(
                 TODO()
             }
             onText { message ->
-                val fieldData: FieldData = TODO()
-                val result = documentSet.build(state.fieldsData.associateBy { it::class })
-                when (result) {
-                    is DocumentSet.Result.MissingData -> {
-                        setState { CollectingDataState(fieldsData + fieldData, result.kClass) }
-                    }
-
-                    is DocumentSet.Result.OK -> {
-                        sendTextMessage(message.chat, result.documents.toString())
-                        setState { EmptyState }
-                    }
-                }
+                TODO()
             }
         }
     }
