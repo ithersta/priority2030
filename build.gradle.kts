@@ -1,9 +1,11 @@
+import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
     id("com.google.devtools.ksp") version "1.7.20-1.0.7"
+    id("io.gitlab.arturbosch.detekt").version("1.22.0-RC2")
 }
 
 group = "ru.spbstu"
@@ -32,4 +34,8 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+detekt {
+    buildUponDefaultConfig = true
 }
