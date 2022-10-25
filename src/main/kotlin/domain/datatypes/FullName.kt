@@ -6,12 +6,12 @@ sealed interface FullName {
     val value: String
 
     @Serializable
-    class International(
+    data class International(
         override val value: String
     ) : FieldData, FullName
 
     @Serializable
-    class Russian(
+    data class Russian(
         val lastName: String,
         val firstName: String,
         val patronymic: String?
