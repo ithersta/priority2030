@@ -23,6 +23,7 @@ repositories {
 dependencies {
     implementation("com.ithersta.tgbotapi:fsm:0.18.0")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))

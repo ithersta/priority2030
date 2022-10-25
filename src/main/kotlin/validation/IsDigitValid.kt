@@ -1,6 +1,6 @@
 package validation
 
-object IsDigit {
+object IsDigitValid {
     operator fun invoke(digit: String): Boolean {
         return try {
             digit.toDouble()
