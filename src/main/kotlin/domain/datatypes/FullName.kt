@@ -20,15 +20,5 @@ sealed interface FullName {
             get() = "$lastName $firstName $patronymic"
 
         fun withInitials() = "${firstName.first()}.${patronymic?.let { " $it." }} $lastName"
-
-        companion object {
-            fun of(value: String): Russian? {
-                val words = value.split(' ')
-                return when (words.size) {
-                    2, 3 -> Russian(lastName = words[0], firstName = words[1], patronymic = words.getOrNull(2))
-                    else -> null
-                }
-            }
-        }
     }
 }
