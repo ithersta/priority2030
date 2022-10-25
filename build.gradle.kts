@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.ithersta.tgbotapi:fsm:0.18.0")
+    implementation("com.ithersta.tgbotapi:fsm:0.19.1")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
