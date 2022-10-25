@@ -10,5 +10,6 @@ val documentSet = documentSet {
         document("VV.docx") {
             field("FIRST_NAME", get<FullName>().firstName)
         }
+        document("hmm.docx")
     }
 }
