@@ -7,10 +7,11 @@ import com.ithersta.tgbotapi.fsm.repository.InMemoryStateRepositoryImpl
 import com.ithersta.tgbotapi.menu.builders.menu
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.types.UserId
+import documentSet
+import domain.documents.DocumentSet
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
-import telegram.entities.state.FullNameCollectorState
 
 val stateMachine = rolelessStateMachine(
     stateRepository = InMemoryStateRepositoryImpl<UserId, DialogState>(),
@@ -27,8 +28,16 @@ val stateMachine = rolelessStateMachine(
     state<CollectingDataState> {
         val collectors = collectors()
         onEnter { chatId ->
-            sendTextMessage(chatId, state.snapshot.toString())
-            state.push(FullNameCollectorState.WaitingForLastName)
+            when (val result = documentSet.build(state.snapshot.fieldsData.associateBy { it::class })) {
+                is DocumentSet.Result.MissingData -> {
+                    state.push(collectors.getValue(result.kClass))
+                }
+
+                is DocumentSet.Result.OK -> {
+                    sendTextMessage(chatId, "Документы построены")
+                    state.override { EmptyState }
+                }
+            }
         }
     }
 }

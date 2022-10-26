@@ -5,11 +5,11 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.flatReplyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
-import domain.datatypes.FullName
+import domain.datatypes.RussianFullName
 import telegram.entities.state.FullNameCollectorState
 
 fun CollectorMapBuilder.fullNameCollector() {
-    collector<FullName.Russian>(initialState = FullNameCollectorState.WaitingForLastName) {
+    collector<RussianFullName>(initialState = FullNameCollectorState.WaitingForLastName) {
         state<FullNameCollectorState.WaitingForLastName> {
             onEnter { sendTextMessage(it, "Фамилия?") }
             onText { state.override { FullNameCollectorState.WaitingForFirstName(it.content.text) } }
@@ -25,7 +25,7 @@ fun CollectorMapBuilder.fullNameCollector() {
                 })
             }
             onText { message ->
-                val name = FullName.Russian(
+                val name = RussianFullName(
                     lastName = state.snapshot.lastName,
                     firstName = state.snapshot.firstName,
                     patronymic = message.content.text.takeIf { it != "Отсутствует" }

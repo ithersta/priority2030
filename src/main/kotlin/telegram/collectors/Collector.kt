@@ -32,7 +32,7 @@ class CollectorMapBuilder {
     ): Map<KClass<out FieldData>, DialogState> {
         val missingCollectors = FieldData::class.sealedSubclasses - map.keys
         check(missingCollectors.isEmpty()) {
-            "Missing collectors for types ${missingCollectors.joinToString()}"
+            "Missing collectors for: ${missingCollectors.joinToString()}"
         }
         stateFilterBuilder.nestedStateMachine(
             onExit = { copy(fieldsData = fieldsData + it) }
