@@ -12,3 +12,6 @@ object FullNameCollectorState {
     @Serializable
     data class WaitingForPatronymic(val lastName: String, val firstName: String) : DialogState
 }
+
+@Serializable
+object OrganizationTypeState : DialogState
