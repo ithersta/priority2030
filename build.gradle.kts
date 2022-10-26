@@ -18,10 +18,13 @@ sourceSets.main {
 repositories {
     mavenCentral()
     maven("https://repo.repsy.io/mvn/ithersta/tgbotapi")
+    maven("https://jitpack.io")
 }
 
 dependencies {
     implementation("com.ithersta.tgbotapi:fsm:0.19.1")
+    implementation("org.apache.poi:poi-ooxml:5.2.2")
+    implementation("com.github.deividasstr:docx-word-replacer:0.4")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")

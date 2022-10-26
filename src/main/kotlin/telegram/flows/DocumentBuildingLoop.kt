@@ -2,10 +2,13 @@ package telegram.flows
 
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
-import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
+import dev.inmo.tgbotapi.extensions.api.send.media.sendDocument
+import dev.inmo.tgbotapi.extensions.api.send.withUploadDocumentAction
+import dev.inmo.tgbotapi.requests.abstracts.asMultipartFile
 import dev.inmo.tgbotapi.types.UserId
 import documentSet
 import domain.documents.DocumentSet
+import telegram.Docx
 import telegram.collectors
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
@@ -21,7 +24,11 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.documentBuildingLoop() {
                 }
 
                 is DocumentSet.Result.OK -> {
-                    sendTextMessage(chatId, "Документы построены")
+                    result.documents.map {
+                        withUploadDocumentAction(chatId) {
+                            sendDocument(chatId, Docx.load(it).asMultipartFile(it.templatePath.substringAfterLast('/')))
+                        }
+                    }
                     state.override { EmptyState }
                 }
             }

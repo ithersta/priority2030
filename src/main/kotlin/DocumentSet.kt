@@ -3,13 +3,12 @@ import domain.documents.documentSet
 import domain.documents.get
 
 val documentSet = documentSet {
-    document("Шаблон.docx") {
-        field("LAST_NAME", get<RussianFullName>().lastName)
+    document("/Документ1.docx") {
+        field("\$WITH_INITIALS", get<RussianFullName>().withInitials())
     }
-    if (get<RussianFullName>().firstName.startsWith("В")) {
-        document("VV.docx") {
-            field("FIRST_NAME", get<RussianFullName>().firstName)
+    if (get<RussianFullName>().firstName.startsWith("А", ignoreCase = true)) {
+        document("/Только для тех, чьё имя начинается с А.docx") {
+            field("\$FIRST_NAME", get<RussianFullName>().firstName)
         }
-        document("hmm.docx")
     }
 }
