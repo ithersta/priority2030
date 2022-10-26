@@ -1,44 +1,19 @@
 package telegram
 
 import com.ithersta.tgbotapi.fsm.builders.rolelessStateMachine
-import com.ithersta.tgbotapi.fsm.entities.triggers.onCommand
-import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.repository.InMemoryStateRepositoryImpl
-import com.ithersta.tgbotapi.menu.builders.menu
-import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.types.UserId
-import documentSet
-import domain.documents.DocumentSet
-import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
+import telegram.flows.documentBuildingLoop
+import telegram.flows.mainMenu
+import telegram.flows.startCommand
 
 val stateMachine = rolelessStateMachine(
     stateRepository = InMemoryStateRepositoryImpl<UserId, DialogState>(),
     initialState = EmptyState
 ) {
-    state<EmptyState> {
-        onCommand("start", null) { message ->
-            state.override { this }
-        }
-    }
-    menu<DialogState, Unit, _>("Выберите действие", EmptyState) {
-        button("Собрать документ", CollectingDataState(emptyList()))
-    }.run { invoke() }
-    state<CollectingDataState> {
-        val collectors = collectors()
-        onEnter { chatId ->
-            when (val result = documentSet.build(state.snapshot.fieldsData.associateBy { it::class })) {
-                is DocumentSet.Result.MissingData -> {
-                    state.push(collectors.getValue(result.kClass))
-                }
-
-                is DocumentSet.Result.OK -> {
-                    sendTextMessage(chatId, "Документы построены")
-                    state.override { EmptyState }
-                }
-            }
-        }
-    }
+    startCommand()
+    mainMenu.run { invoke() }
+    documentBuildingLoop()
 }
-
