@@ -5,17 +5,18 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.OrganizationType
 import telegram.entities.state.OrganizationTypeState
+import telegram.resources.strings.CollectorStrings
 
 fun CollectorMapBuilder.organizationTypeCollector() {
     collector<OrganizationType>(initialState = OrganizationTypeState) {
         state<OrganizationTypeState> {
-            onEnter { sendTextMessage(it, "Введите тип организации") }
+            onEnter { sendTextMessage(it, CollectorStrings.OrganizationType.Message) }
             onText { message ->
                 val type = when (message.content.text) {
-                    "ИП" -> OrganizationType.IP
-                    "OOO" -> OrganizationType.Ooo
+                    CollectorStrings.OrganizationType.IP -> OrganizationType.IP
+                    CollectorStrings.OrganizationType.Ooo -> OrganizationType.Ooo
                     else -> {
-                        sendTextMessage(message.chat, "Доступные варианты: ИП, ООО")
+                        sendTextMessage(message.chat, CollectorStrings.OrganizationType.Invalid)
                         return@onText
                     }
                 }
