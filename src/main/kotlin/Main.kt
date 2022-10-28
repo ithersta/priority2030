@@ -14,10 +14,19 @@ suspend fun main() {
         .useToken(morpherToken)
         .build()
     println(client.queriesLeftForToday())
-    client.russian().adjectiveGenders("Илахинская").run {
-        println(feminine)
-        println(neuter)
-        println(plural)
+    client.russian().declension("Лысенко Александра Владимировна").run {
+        println(nominative)
+        println(dative)
+        println(genitive)
+        println(accusative)
+        println(instrumental)
+        println(prepositional)
+        println(fullName.name)
+        println(fullName.surname)
+        println(fullName.patronymic)
+    }
+    client.russian().spell(300, "рубль").run {
+        println("${numberDeclension.nominative} ${unitDeclension.nominative}")
     }
     exitProcess(0)
 
