@@ -2,6 +2,7 @@ package telegram.flows
 
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
+import com.ithersta.tgbotapi.fsm.entities.triggers.onTransition
 import dev.inmo.tgbotapi.extensions.api.send.media.sendDocument
 import dev.inmo.tgbotapi.extensions.api.send.withUploadDocumentAction
 import dev.inmo.tgbotapi.requests.abstracts.asMultipartFile
