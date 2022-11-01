@@ -16,20 +16,20 @@ class Parser {
             "> div.cCard__Name-Addr-IP > div.cCard__MainReq-Name > h1"
     private val data = " div.cCard__CompanyDescription > p:nth-child(5)"
 
-    fun takeDataUsingINN(INN: String) {
+    fun takeDataUsingINN(inn: String) {
         val url = "https://sbis.ru/contragents/"
         val document: Document = try {
-            Jsoup.connect(url + INN).get()
+            Jsoup.connect(url + inn).get()
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
         takeContent(document)
     }
 
-    fun takeDataUsingINNAndKPP(INN: String, KPP: String) {
+    fun takeDataUsingINNAndKPP(inn: String, kpp: String) {
         val url = "https://sbis.ru/contragents/"
         val document: Document = try {
-            Jsoup.connect("$url$INN/$KPP").get()
+            Jsoup.connect("$url$inn/$kpp").get()
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
