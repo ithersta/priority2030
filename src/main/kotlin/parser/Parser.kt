@@ -1,11 +1,12 @@
 package parser
 
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.io.IOException
 import java.util.*
 
 class Parser {
+
     private val mainSelect = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private val fullNameSelectForCom = " div:nth-child(1) > div.cCard__MainReq > " +
             "div.ws-flexbox.ws-justify-content-between > div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column >" +
@@ -20,7 +21,7 @@ class Parser {
         val url = "https://sbis.ru/contragents/"
         val document: Document = try {
             Jsoup.connect(url + inn).get()
-        } catch (e: IOException) {
+        } catch (e: HttpStatusException) {
             throw RuntimeException(e)
         }
         takeContent(document)
@@ -30,7 +31,7 @@ class Parser {
         val url = "https://sbis.ru/contragents/"
         val document: Document = try {
             Jsoup.connect("$url$inn/$kpp").get()
-        } catch (e: IOException) {
+        } catch (e: HttpStatusException) {
             throw RuntimeException(e)
         }
         takeContent(document)
