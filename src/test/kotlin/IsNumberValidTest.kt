@@ -11,5 +11,6 @@ internal class IsNumberValidTest {
         assertFalse(IsNumberValid("-1"))
         assertFalse(IsNumberValid("71d200"))
         assertFalse(IsNumberValid("1234567-890k2345"))
+        assertFalse(IsNumberValid(""))
     }
 }

@@ -13,5 +13,6 @@ internal class IsIndicatorValidTest {
         assertFalse(IsIndicatorValid("1-2"))
         assertFalse(IsIndicatorValid("--"))
         assertFalse(IsIndicatorValid("--123"))
+        assertFalse(IsIndicatorValid(""))
     }
 }

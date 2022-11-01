@@ -11,5 +11,6 @@ internal class IsPaymentAccountValidTest {
         assertFalse(IsPaymentAccountValid("sgshj"))
         assertFalse(IsPaymentAccountValid("12345678sjksj123456789"))
         assertFalse(IsPaymentAccountValid("тест"))
+        assertFalse(IsPaymentAccountValid(""))
     }
 }

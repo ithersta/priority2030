@@ -11,5 +11,6 @@ internal class IsCorrAccountValidTest {
         assertFalse(IsCorrAccountValid("sgshj"))
         assertFalse(IsCorrAccountValid("12345678901234567890"))
         assertFalse(IsCorrAccountValid("тест"))
+        assertFalse(IsCorrAccountValid(""))
     }
 }

@@ -13,5 +13,6 @@ internal class IsLetterEventValidTest {
         assertFalse(IsLetterEventValid("щ"))
         assertFalse(IsLetterEventValid("щау"))
         assertFalse(IsLetterEventValid("ащ"))
+        assertFalse(IsLetterEventValid(""))
     }
 }

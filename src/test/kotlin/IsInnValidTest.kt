@@ -11,5 +11,6 @@ internal class IsInnValidTest {
         assertFalse(IsInnValid("sgshj"))
         assertFalse(IsInnValid("12345678901234567890"))
         assertFalse(IsInnValid("тест"))
+        assertFalse(IsInnValid(""))
     }
 }

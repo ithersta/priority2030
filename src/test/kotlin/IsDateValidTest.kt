@@ -11,5 +11,6 @@ internal class IsDateValidTest {
         assertFalse(IsDateValid("1111111"))
         assertFalse(IsDateValid("тест"))
         assertFalse(IsDateValid("2002"))
+        assertFalse(IsDateValid(""))
     }
 }

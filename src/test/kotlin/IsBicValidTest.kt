@@ -11,5 +11,6 @@ internal class IsBicValidTest {
         assertFalse(IsBicValid("sgshj"))
         assertFalse(IsBicValid("12345678sjksj123456789"))
         assertFalse(IsBicValid("тест"))
+        assertFalse(IsBicValid(""))
     }
 }

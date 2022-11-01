@@ -14,5 +14,6 @@ internal class IsPointNumberValidTest {
         assertFalse(IsPointNumberValid("702"))
         assertFalse(IsPointNumberValid("12345678sjksj123456789"))
         assertFalse(IsPointNumberValid("тест"))
+        assertFalse(IsPointNumberValid(""))
     }
 }

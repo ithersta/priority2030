@@ -11,5 +11,6 @@ internal class IsPhoneNumberValidTest {
         assertFalse(IsPhoneNumberValid("+799030"))
         assertFalse(IsPhoneNumberValid("+7929299299929299229"))
         assertFalse(IsPhoneNumberValid("тест"))
+        assertFalse(IsPhoneNumberValid(""))
     }
 }

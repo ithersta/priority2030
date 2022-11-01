@@ -11,5 +11,6 @@ internal class IsFullNameValidTest {
         assertFalse(IsFullNameValid("Душечкина В.С"))
         assertFalse(IsFullNameValid("Душечкина В.Сергеевна"))
         assertFalse(IsFullNameValid("Душечкина Виктория Сергеевна"))
+        assertFalse(IsFullNameValid(""))
     }
 }

@@ -12,5 +12,6 @@ internal class IsOgrnipValidTest {
         assertFalse(IsOgrnipValid("sgshj"))
         assertFalse(IsOgrnipValid("12345678sjksj123456789"))
         assertFalse(IsOgrnipValid("тест"))
+        assertFalse(IsOgrnipValid(""))
     }
 }
