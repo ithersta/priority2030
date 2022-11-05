@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation("com.ithersta.tgbotapi:fsm:0.18.0")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
+    implementation("org.jsoup:jsoup:1.15.3")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))
