@@ -1,10 +1,10 @@
 package domain.documents
 
 @DocumentDsl
-class DocumentSetContext(override val fieldDataMap: FieldDataMap): FieldDataContext {
+class DocumentSetContext(override val fieldDataMap: FieldDataMap) : FieldDataContext {
     private val documents = mutableListOf<Document>()
 
-    fun document(templatePath: String, block: DocumentBuilder.() -> Unit) {
+    fun document(templatePath: String, block: DocumentBuilder.() -> Unit = {}) {
         documents += DocumentBuilder(templatePath, fieldDataMap).apply(block).build()
     }
 
