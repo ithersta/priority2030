@@ -1,4 +1,4 @@
-package telegram.resourses.strings
+package telegram.resources.strings
 
 object ButtonStrings {
 
@@ -11,6 +11,7 @@ object ButtonStrings {
                 "(Закупка у единственного поставщика)"
         const val ViewingExample = "Посмотреть примеры правильных коммерческих предложений для оформления закупки у единственного поставщика"
     }
+    const val CheckingDoc = "Скачать пакет документов для проверки и внесения недостающих данных"
     const val UploadPackageDoc = "Загрузить готовый пакет документов и отправить на проверку"
     const val UploadDocuments = "Загрузить документы"
     const val Send = "Отправить"
