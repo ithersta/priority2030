@@ -18,7 +18,7 @@ object BankCollectorState {
     object WaitingForBik : DialogState
 
     @Serializable
-    data class WaitingForPaymentAccount(val bik: String, val corrAccount: String, val nameBank: String) : DialogState
+    data class WaitingForPaymentAccount(val bik: String) : DialogState
 
 }
 

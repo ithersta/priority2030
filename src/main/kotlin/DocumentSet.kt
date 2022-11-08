@@ -1,3 +1,4 @@
+import domain.datatypes.BankInfo
 import domain.datatypes.OrganizationType
 import domain.datatypes.RussianFullName
 import domain.documents.DocumentBuilder
@@ -7,6 +8,10 @@ import domain.documents.get
 val documentSet = documentSet {
     document("/Общий.docx") {
         field("FIRST_NAME", get<RussianFullName>().firstName)
+        field("BIK", get<BankInfo>().bik)
+        field("CORRESPONDENT_ACCOUNT", get<BankInfo>().correspondentAccount)
+        field("BANK_NAME", get<BankInfo>().bankName)
+        field("ACCOUNT_NUMBER", get<BankInfo>().settlementAccountNumber)
 // todo: сделать так же как сверху!
 //        field("FIRST_NAME", get<RussianFullName>().firstName)
 

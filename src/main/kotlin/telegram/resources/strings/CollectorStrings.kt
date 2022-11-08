@@ -33,6 +33,6 @@ object CollectorStrings {
 
     object Bank {
         const val bik = "Введите БИК банка"
-        const val account = "Введите расчетный счет"
+        const val account = "Введите номер расчетного счета"
     }
 }

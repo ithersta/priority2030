@@ -4,6 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.BankInfo
+import parser.ParserBik
 import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
 
@@ -12,17 +13,20 @@ fun CollectorMapBuilder.BankInfoCollector() {
         state<BankCollectorState.WaitingForBik> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
-                // возьмем данные с сайта ...
-                state.override { BankCollectorState.WaitingForPaymentAccount(it.content.text, "1", "bank") }
+                state.override {
+                    BankCollectorState.WaitingForPaymentAccount(it.content.text)
+                }
             }
         }
         state<BankCollectorState.WaitingForPaymentAccount> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
             onText { message ->
+                val parser = ParserBik()
+                parser.parseWebPage(state.snapshot.bik)
                 val info = BankInfo(
                     bik = state.snapshot.bik,
-                    correspondentAccount = state.snapshot.corrAccount,
-                    bankName = state.snapshot.nameBank,
+                    correspondentAccount =  parser.corrAccount,
+                    bankName = parser.bakName,
                     settlementAccountNumber = message.content.text
                 )
                 this@collector.exit(state, listOf(info))
