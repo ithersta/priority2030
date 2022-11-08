@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package telegram.resources.strings
 
 object CollectorStrings {
@@ -14,5 +15,23 @@ object CollectorStrings {
         const val IP = "ИП"
         const val Ooo = "ООО"
         const val Invalid = "Доступные варианты: ИП, ООО"
+    }
+
+    object IP {
+        const val inn = "Введите ИНН предпринимателя"
+        const val bik = "Введите БИК банка предпринимателя"
+        const val account = "Введите расчетный счет предпринимателя"
+        const val phone = "Введите номер телефона предпринимателя"
+        const val email = "Введите адрес электронной почты предпринимателя"
+    }
+
+    object Ooo {
+        const val inn = "Введите ИНН предприятия"
+        const val kpp = "Введите КРР предприятия"
+        const val bik = "Введите БИК банка предприятия"
+        const val account = "Введите расчетный счет предприятия"
+        const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
+        const val phone = "Введите номер телефона ответственного от предприятия"
+        const val email = "Введите адрес электронной почты ответственного от предприятия"
     }
 }
