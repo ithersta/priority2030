@@ -7,12 +7,16 @@ import domain.documents.get
 val documentSet = documentSet {
     document("/Общий.docx") {
         field("FIRST_NAME", get<RussianFullName>().firstName)
+// todo: сделать так же как сверху!
+//        field("FIRST_NAME", get<RussianFullName>().firstName)
+
     }
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/Для ИП.docx") {
             commonFields()
             field("LAST_NAME", get<RussianFullName>().lastName)
         }
+
         OrganizationType.Ooo -> document("/Для ООО.docx") {
             commonFields()
         }
