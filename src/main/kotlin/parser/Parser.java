@@ -1,5 +1,6 @@
 package parser;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -11,26 +12,36 @@ public class Parser {
     private final String select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >";
     private Document document;
 
-    public Document parsing(String inn) {
+    public void parsing(String inn) {
         try {
             String url = "https://sbis.ru/contragents/";
-            document = Jsoup.connect(url + inn).get();
+            Connection.Response response = Jsoup.connect(url + inn).timeout(10_000).execute();
+            if (response.statusCode() == 200) {
+                document = response.parse();
+                type = (byte) (!document.html().contains("ИП") ? 0 : 1);
+                return;
+            }
+//            пишем ручками
+//            document = null
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        type = (byte) (!document.html().contains("ИП") ? 0 : 1);
-        return document;
     }
 
     // для ООО у которых есть несколкьо организаций внутри себя
-    public Document parsing(String inn, String kpp) {
+    public void parsing(String inn, String kpp) {
         try {
             String url = "https://sbis.ru/contragents/";
-            document = Jsoup.connect(url + inn + "/" + kpp).get();
+            Connection.Response response = Jsoup.connect(url + inn + "/" + kpp).timeout(10_000).execute();
+            if (response.statusCode() == 200) {
+                document = response.parse();
+                return;
+            }
+//            пишем ручками
+//            document = null
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return document;
     }
 
     public String getFullName() {
