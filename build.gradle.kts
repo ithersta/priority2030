@@ -26,6 +26,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation("com.github.deividasstr:docx-word-replacer:0.4")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))
