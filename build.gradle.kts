@@ -1,4 +1,3 @@
-import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {

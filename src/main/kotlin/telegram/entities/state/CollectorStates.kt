@@ -22,10 +22,10 @@ object BankCollectorState {
         DialogState
 
     @Serializable
-    data class handsWaitingForCorrAccount(val bik: String) : DialogState
+    data class HandsWaitingForCorrAccount(val bik: String) : DialogState
 
     @Serializable
-    data class handsWaitingForBankName(val bik: String, val correspondentAccount: String) : DialogState
+    data class HandsWaitingForBankName(val bik: String, val correspondentAccount: String) : DialogState
 }
 
 @Serializable
@@ -44,6 +44,29 @@ object IpCollectorState {
     object WaitingForInn : DialogState
 
     @Serializable
-    data class WaitingForInfo(val inn: String) : DialogState
+    data class WaitingResponse(val inn: String, val fullNameOfOrg: String) : DialogState
+
+    @Serializable
+    data class HandsWaitingOgrn(val inn: String) : DialogState
+
+    @Serializable
+    data class HandsWaitingOkpo(val inn: String, val orgn: String) : DialogState
+
+    @Serializable
+    data class HandsWaitingFullNameOfOrg(val inn: String, val orgn: String, val okpo: String) : DialogState
+
+    @Serializable
+    data class WaitingPhone(val inn: String, val orgn: String, val okpo: String, val fullNameOfOrg: String) :
+        DialogState
+
+    @Serializable
+    data class WaitingEmail(
+        val inn: String,
+        val orgn: String,
+        val okpo: String,
+        val fullNameOfOrg: String,
+        val phone: String
+    ) : DialogState
+
 
 }

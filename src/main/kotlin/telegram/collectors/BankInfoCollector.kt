@@ -23,17 +23,17 @@ fun CollectorMapBuilder.BankInfoCollector() {
                         )
                     }
                 } else {
-                    state.override { BankCollectorState.handsWaitingForCorrAccount(it.content.text) }
+                    state.override { BankCollectorState.HandsWaitingForCorrAccount(it.content.text) }
                 }
             }
         }
-        state<BankCollectorState.handsWaitingForCorrAccount> {
+        state<BankCollectorState.HandsWaitingForCorrAccount> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.corrAccount) }
             onText {
-                state.override { BankCollectorState.handsWaitingForBankName(state.snapshot.bik, it.content.text) }
+                state.override { BankCollectorState.HandsWaitingForBankName(state.snapshot.bik, it.content.text) }
             }
         }
-        state<BankCollectorState.handsWaitingForBankName> {
+        state<BankCollectorState.HandsWaitingForBankName> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bankName) }
             onText {
                 state.override {

@@ -19,6 +19,10 @@ object CollectorStrings {
 
     object IP {
         const val inn = "Введите ИНН предпринимателя"
+        const val isRight = "Вы заключаете договор с этим предпринимателем?"
+        const val Yes = "Да"
+        const val No = "Нет"
+        const val Invalid = "Доступные варианты: Да, Нет"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
     }
@@ -26,6 +30,10 @@ object CollectorStrings {
     object Ooo {
         const val inn = "Введите ИНН предприятия"
         const val kpp = "Введите КРР предприятия"
+        const val isRight = "Вы заключаете договор с этим предприятием?"
+        const val Yes = "Да"
+        const val No = "Нет"
+        const val Invalid = "Доступные варианты: Да, Нет"
         const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
         const val phone = "Введите номер телефона ответственного от предприятия"
         const val email = "Введите адрес электронной почты ответственного от предприятия"

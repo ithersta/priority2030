@@ -8,8 +8,8 @@ data class IpInfo(
     val orgn: String,
     val okpo: String,
     val fullNameIp: String,
-    val fullNameHolder: RussianFullName,
-    val shortNameHolder: String
+    val phone: String,
+    val email: String
 ) : FieldData {
 
 }
