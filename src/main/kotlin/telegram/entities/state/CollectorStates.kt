@@ -18,8 +18,14 @@ object BankCollectorState {
     object WaitingForBik : DialogState
 
     @Serializable
-    data class WaitingForPaymentAccount(val bik: String) : DialogState
+    data class WaitingForPaymentAccount(val bik: String, val correspondentAccount: String, val bankName: String) :
+        DialogState
 
+    @Serializable
+    data class handsWaitingForCorrAccount(val bik: String) : DialogState
+
+    @Serializable
+    data class handsWaitingForBankName(val bik: String, val correspondentAccount: String) : DialogState
 }
 
 @Serializable

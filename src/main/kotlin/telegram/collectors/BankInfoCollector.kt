@@ -13,20 +13,46 @@ fun CollectorMapBuilder.BankInfoCollector() {
         state<BankCollectorState.WaitingForBik> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
+                val parser = ParserBik()
+                if (parser.parseWebPage(it.content.text) == 200) {
+                    state.override {
+                        BankCollectorState.WaitingForPaymentAccount(
+                            it.content.text,
+                            parser.corrAccount,
+                            parser.bakName
+                        )
+                    }
+                } else {
+                    state.override { BankCollectorState.handsWaitingForCorrAccount(it.content.text) }
+                }
+            }
+        }
+        state<BankCollectorState.handsWaitingForCorrAccount> {
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.corrAccount) }
+            onText {
+                state.override { BankCollectorState.handsWaitingForBankName(state.snapshot.bik, it.content.text) }
+            }
+        }
+        state<BankCollectorState.handsWaitingForBankName> {
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.bankName) }
+            onText {
                 state.override {
-                    BankCollectorState.WaitingForPaymentAccount(it.content.text)
+                    BankCollectorState.WaitingForPaymentAccount(
+                        state.snapshot.bik,
+                        state.snapshot.correspondentAccount,
+                        it.content.text
+                    )
                 }
             }
         }
         state<BankCollectorState.WaitingForPaymentAccount> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
             onText { message ->
-                val parser = ParserBik()
-                parser.parseWebPage(state.snapshot.bik)
+
                 val info = BankInfo(
                     bik = state.snapshot.bik,
-                    correspondentAccount =  parser.corrAccount,
-                    bankName = parser.bakName,
+                    correspondentAccount = state.snapshot.correspondentAccount,
+                    bankName = state.snapshot.bankName,
                     settlementAccountNumber = message.content.text
                 )
                 this@collector.exit(state, listOf(info))

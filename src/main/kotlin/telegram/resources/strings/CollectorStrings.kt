@@ -33,6 +33,8 @@ object CollectorStrings {
 
     object Bank {
         const val bik = "Введите БИК банка"
+        const val corrAccount = "Введите номер корреспондентский счет"
+        const val bankName = "Введите Наименование банк"
         const val account = "Введите номер расчетного счета"
     }
 }
