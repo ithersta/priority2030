@@ -25,11 +25,11 @@ object CollectorStrings {
         const val question = "Вы заключаете договор с этим предпринимателем?"
         const val Yes = "Да"
         const val No = "Нет"
-        const val Invalid = "Доступные варианты: Да, Нет"
+        const val Invalid = "Доступные варианты ответа: Да, Нет"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
-        fun isRight(string: String) :  String{
-            return question+'\n'+string
+        fun isRight(string: String): String {
+            return question + '\n' + string + '\n' + Invalid
         }
     }
 

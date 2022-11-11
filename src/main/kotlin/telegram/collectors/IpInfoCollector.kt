@@ -46,10 +46,12 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
+
         state<IpCollectorState.HandsWaitingOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.ogrn) }
             onText { state.override { IpCollectorState.HandsWaitingOkpo(state.snapshot.inn, it.content.text) } }
         }
+
         state<IpCollectorState.HandsWaitingOkpo> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.okpo) }
             onText {
