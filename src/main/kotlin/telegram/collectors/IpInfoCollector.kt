@@ -10,17 +10,19 @@ import telegram.resources.strings.CollectorStrings
 
 fun CollectorMapBuilder.IpInfoCollector() {
     collector<IpInfo>(initialState = IpCollectorState.WaitingForInn) {
+        val parser = Parser()
         state<IpCollectorState.WaitingForInn> {
-            val parser = Parser()
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText {
                 if (parser.parsing(it.content.text) != 200) {
                     state.override { IpCollectorState.HandsWaitingOgrn(it.content.text) }
+                } else {
+                    state.override { IpCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg) }
                 }
             }
-            //TODO: переделать все что ниже тк не запускается программа!
-//            onEnter { sendTextMessage(it, CollectorStrings.IP.isRight) }
-            onEnter { sendTextMessage(it, parser.fullNameOfOrg) }
+        }
+        state<IpCollectorState.WaitingInspection> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.isRight(state.snapshot.fullNameOfOrg)) }
             onText { message ->
                 val response = when (message.content.text) {
                     CollectorStrings.IP.Yes -> "Да"
@@ -44,6 +46,28 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
+        state<IpCollectorState.HandsWaitingOgrn> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.ogrn) }
+            onText { state.override { IpCollectorState.HandsWaitingOkpo(state.snapshot.inn, it.content.text) } }
+        }
+        state<IpCollectorState.HandsWaitingOkpo> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.okpo) }
+            onText {
+                state.override {
+                    IpCollectorState.HandsWaitingFullNameOfOrg(
+                        state.snapshot.inn, state.snapshot.orgn, it.content.text
+                    )
+                }
+            }
+        }
+//        state<IpCollectorState.HandsWaitingFullNameOfOrg> {
+//            onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
+//            onText {
+//                state.override {
+//                    IpCollectorState.Hand
+//                }
+//            }
+//        }
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.phone) }
             onText {
@@ -52,7 +76,8 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         state.snapshot.inn,
                         state.snapshot.orgn,
                         state.snapshot.okpo,
-                        state.snapshot.fullNameOfOrg, it.content.text
+                        state.snapshot.fullNameOfOrg,
+                        it.content.text
                     )
                 }
             }

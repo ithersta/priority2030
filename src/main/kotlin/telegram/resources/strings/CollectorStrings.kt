@@ -19,12 +19,18 @@ object CollectorStrings {
 
     object IP {
         const val inn = "Введите ИНН предпринимателя"
-        const val isRight = "Вы заключаете договор с этим предпринимателем?"
+        const val ogrn = "Введите ОГРН предпринимателя"
+        const val okpo = "Введите ОКПО  предпринимателя"
+        const val fullName = "Введите ФИО предпринимателя предпринимателя"
+        const val question = "Вы заключаете договор с этим предпринимателем?"
         const val Yes = "Да"
         const val No = "Нет"
         const val Invalid = "Доступные варианты: Да, Нет"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
+        fun isRight(string: String) :  String{
+            return question+'\n'+string
+        }
     }
 
     object Ooo {

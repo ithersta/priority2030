@@ -42,6 +42,8 @@ object CompanyCollectorState {
 object IpCollectorState {
     @Serializable
     object WaitingForInn : DialogState
+    @Serializable
+    data class WaitingInspection(val inn: String , val fullNameOfOrg: String ): DialogState
 
     @Serializable
     data class WaitingResponse(val inn: String, val fullNameOfOrg: String) : DialogState
