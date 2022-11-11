@@ -1,24 +1,41 @@
 package telegram.flows
 
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
+import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
+import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.types.UserId
-import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardRemove
+import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
-import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.entities.state.FillingProvisionOfServicesState.BeginningFillDoc
-import telegram.resources.strings.ButtonStrings
-import telegram.resources.strings.Strings
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.*
+import telegram.entities.state.EmptyState
+import telegram.resources.strings.ButtonStrings.Back
+import telegram.resources.strings.Strings.Menu.CreateDocuments
 
-fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.FillDocsProvisionOfServices() {
-    state<BeginningFillDoc>{
-        button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) { message ->
-            sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
-            state.override { FillingProvisionOfServicesState.BeginningFillDoc}
+fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServices() {
+    state<BeginningFillDoc> {
+        onEnter { chatId ->
+            sendTextMessage(
+                chatId,
+                "Начать заполнение документов",
+                replyMarkup = replyKeyboard(
+                    resizeKeyboard = true,
+                    oneTimeKeyboard = true
+                ) {
+                    row {
+                        simpleButton(CreateDocuments)
+                        simpleButton(Back)
+                    }
+                }
+            )
         }
-        button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) { message ->
-            sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
-            state.override { FillingProvisionOfServicesState.BeginningFillDoc}
+        onText(CreateDocuments) {
+            //TODO: (Для Саши) тут переход к состоянию заполнению полей документов
+            state.override { EmptyState }
+        }
+        onText(Back) {
+            state.override { EmptyState }
         }
     }
 }

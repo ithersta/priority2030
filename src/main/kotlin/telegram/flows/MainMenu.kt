@@ -10,21 +10,20 @@ import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings
 
 val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
-//    button(Strings.Menu.CreateDocuments) { message ->
-//        sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
-//        state.override { CollectingDataState(emptyList()) }
-//    }
     button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) { message ->
         sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
         state.override { FillingProvisionOfServicesState.BeginningFillDoc}
     }
     button(ButtonStrings.ChoiceFillingDoc.DeliveryOfGoods) { message ->
-        //sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
+        sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
+        state.override { EmptyState }
     }
     button(ButtonStrings.ChoiceFillingDoc.ConclusionGphCOntract) { message ->
-        //sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
+        sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
+        state.override { EmptyState }
     }
     button(ButtonStrings.ChoiceFillingDoc.ViewingExample) { message ->
-        //sendTextMessage(message.chat, Strings.CreateDocumentsMessage, replyMarkup = ReplyKeyboardRemove())
+        sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
+        state.override { EmptyState }
     }
 }
