@@ -38,7 +38,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                             parser.innOfOrg,
                             parser.orgnOfOrg,
                             parser.okpoOfOrg,
-                            parser.fullName
+                            parser.fullNameOfOrg
                         )
                     }
                 } else {
@@ -73,7 +73,6 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
-
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.phone) }
             onText {

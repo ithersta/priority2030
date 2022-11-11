@@ -37,16 +37,40 @@ object CompanyCollectorState {
 
     @Serializable
     data class WaitingForKpp(val inn: String) : DialogState
+
+    @Serializable
+    data class WaitingInspection(val inn: String, val fullNameOfOrg: String) : DialogState
+
+    @Serializable
+    data class HandsWaitingOgrn(val inn: String, val kpp: String) : DialogState
+
+    @Serializable
+    data class WaitingPhone(
+        val inn: String,
+        val orgn: String,
+        val okpo: String,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String
+    ) :
+        DialogState
+
+    @Serializable
+    data class WaitingEmail(
+        val inn: String,
+        val orgn: String,
+        val okpo: String,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String
+        val phone: String
+    ) : DialogState
 }
 
 object IpCollectorState {
     @Serializable
     object WaitingForInn : DialogState
-    @Serializable
-    data class WaitingInspection(val inn: String , val fullNameOfOrg: String ): DialogState
 
     @Serializable
-    data class WaitingResponse(val inn: String, val fullNameOfOrg: String) : DialogState
+    data class WaitingInspection(val inn: String, val fullNameOfOrg: String) : DialogState
 
     @Serializable
     data class HandsWaitingOgrn(val inn: String) : DialogState
@@ -69,6 +93,4 @@ object IpCollectorState {
         val fullNameOfOrg: String,
         val phone: String
     ) : DialogState
-
-
 }

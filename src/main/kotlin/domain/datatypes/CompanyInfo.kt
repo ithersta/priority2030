@@ -9,7 +9,7 @@ data class CompanyInfo(
     val orgn: String,
     val okpo: String,
     val fullNameOfOrganization: String,
-    val fullNameHolder: RussianFullName,
+    val fullNameHolder: String,
     val shortNameHolder: String
 ) : FieldData {
 
