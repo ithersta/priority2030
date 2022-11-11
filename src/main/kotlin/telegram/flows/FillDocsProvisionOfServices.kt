@@ -10,6 +10,7 @@ import telegram.entities.state.DialogState
 import telegram.entities.state.FillingProvisionOfServicesState.BeginningFillDoc
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.*
 import telegram.entities.state.EmptyState
+import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings.Back
 import telegram.resources.strings.Strings.Menu.CreateDocuments
 
@@ -18,7 +19,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServic
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
-                "Начать заполнение документов",
+                CreateDocuments,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
