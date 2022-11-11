@@ -62,14 +62,18 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
-//        state<IpCollectorState.HandsWaitingFullNameOfOrg> {
-//            onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
-//            onText {
-//                state.override {
-//                    IpCollectorState.Hand
-//                }
-//            }
-//        }
+        state<IpCollectorState.HandsWaitingFullNameOfOrg> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
+            onText {
+                state.override {
+                    IpCollectorState.WaitingPhone(
+                        state.snapshot.inn, state.snapshot.orgn,
+                        state.snapshot.okpo, it.content.text
+                    )
+                }
+            }
+        }
+
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.phone) }
             onText {
