@@ -30,7 +30,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        onText(Strings.Menu.CreateDocuments){
+        onText(ButtonStrings.CheckingDoc){
             //TODO: отправка доков в чат
             state.override { EmptyState }
         }
