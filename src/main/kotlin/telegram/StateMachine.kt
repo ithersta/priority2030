@@ -21,7 +21,8 @@ val stateMachine = rolelessStateMachine(
     onException = { userId, throwable ->
         logger.info(throwable) { userId }
         sendTextMessage(userId, Strings.InternalError)
-    }
+    },
+    includeHelp = true
 ) {
     cancelCommand(EmptyState)
     startCommand()
