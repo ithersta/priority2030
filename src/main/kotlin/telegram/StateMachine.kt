@@ -14,4 +14,5 @@ val stateMachine = rolelessStateMachine(
     mainMenu.run { invoke() }
     documentBuildingLoop()
     fillDocsProvisionOfServices()
+    downloadDocsProvisionOfServices()
 }

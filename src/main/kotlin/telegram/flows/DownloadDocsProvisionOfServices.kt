@@ -9,6 +9,7 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
+import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.Strings
 
@@ -30,6 +31,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onText(Strings.Menu.CreateDocuments){
             //TODO: отправка доков в чат
+            state.override { EmptyState }
         }
     }
 }
