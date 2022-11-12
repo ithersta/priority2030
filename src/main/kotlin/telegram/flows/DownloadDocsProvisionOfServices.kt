@@ -74,8 +74,65 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText(ButtonStrings.UploadDocuments){
-            //след состояние
-            state.override { EmptyState }
+            state.override { FillingProvisionOfServicesState.UploadDocApplicationForPlacement }
         }
+    }
+    state<FillingProvisionOfServicesState.UploadDocApplicationForPlacement> {
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.UploadDocs.ApplicationForPlacement
+            )
+        }
+        onText{
+            state.override { FillingProvisionOfServicesState.UploadDocOfficialMemo }
+        }
+    }
+    state<FillingProvisionOfServicesState.UploadDocOfficialMemo> {
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.UploadDocs.OfficialMemo
+            )
+        }
+        onText{
+            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement }
+        }
+    }
+    state<FillingProvisionOfServicesState.UploadDocDraftAgreement> {
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.UploadDocs.DraftAgreement
+            )
+        }
+        onText{
+            state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers }
+        }
+    }
+    state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.UploadDocs.CommercialOffers
+            )
+        }
+        onText{
+            state.override { FillingProvisionOfServicesState.UploadExtraDocs }
+        }
+    }
+    state<FillingProvisionOfServicesState.UploadExtraDocs> {
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.UploadDocs.ExtraDocs
+            )
+        }
+        onText{
+            state.override { FillingProvisionOfServicesState.SendDocs }
+        }
+    }
+    state<FillingProvisionOfServicesState.SendDocs> {
+
     }
 }

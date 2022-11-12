@@ -22,4 +22,12 @@ object Strings {
             """.trimMargin()
                 )
     }
+
+    object UploadDocs {
+        const val ApplicationForPlacement = "Загрузите заявку на размещение"
+        const val OfficialMemo = "Загрузите служебную записку"
+        const val DraftAgreement = "Загрузите проект договора"
+        const val CommercialOffers = "Загрузите три и более коммерческих предложения"
+        const val ExtraDocs = "Загрузите дополнительные документы при необходимости"
+    }
 }

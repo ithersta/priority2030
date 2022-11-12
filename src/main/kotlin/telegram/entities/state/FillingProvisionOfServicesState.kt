@@ -30,4 +30,7 @@ object FillingProvisionOfServicesState {
     @Serializable
     object UploadExtraDocs : DialogState
 
+    @Serializable
+    object SendDocs : DialogState
+
 }
