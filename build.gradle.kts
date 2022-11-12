@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation("com.ithersta.tgbotapi:fsm:0.20.0")
     implementation("com.ithersta.tgbotapi:sqlite-persistence:0.2.0")
+    implementation("com.ithersta.tgbotapi:commands:0.1.0")
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation("com.github.deividasstr:docx-word-replacer:0.4")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
