@@ -11,7 +11,7 @@ import telegram.resources.strings.Strings
 
 val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
     button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) { message ->
-        state.override { FillingProvisionOfServicesState.BeginningFillDoc}
+        state.override { FillingProvisionOfServicesState.BeginFillDoc}
     }
     button(ButtonStrings.ChoiceFillingDoc.DeliveryOfGoods) { message ->
         sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())

@@ -4,15 +4,30 @@ import kotlinx.serialization.Serializable
 
 object FillingProvisionOfServicesState {
     @Serializable
-    object BeginningFillDoc : DialogState
+    object BeginFillDoc : DialogState
 
     @Serializable
-    object DownloadingDocs : DialogState
+    object DownloadDocs : DialogState
 
     @Serializable
-    object UploadingDocs : DialogState
+    object UploadDocs : DialogState
 
     @Serializable
-    object CheckingAndUploadingDocs : DialogState
+    object CheckAndUploadDocs : DialogState
+
+    @Serializable
+    object UploadDocApplicationForPlacement : DialogState
+
+    @Serializable
+    object UploadDocOfficialMemo : DialogState
+
+    @Serializable
+    object UploadDocDraftAgreement : DialogState
+
+    @Serializable
+    object UploadDocsCommercialOffers : DialogState
+
+    @Serializable
+    object UploadExtraDocs : DialogState
 
 }

@@ -13,7 +13,7 @@ import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
-    state<FillingProvisionOfServicesState.DownloadingDocs>{
+    state<FillingProvisionOfServicesState.DownloadDocs>{
         onEnter{chatId->
             sendTextMessage(
                 chatId,
@@ -29,8 +29,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText(ButtonStrings.CheckingDoc){
-            //TODO: отправка доков в чат
-            state.override { FillingProvisionOfServicesState.UploadingDocs }
+            //отправка доков в чат
+            state.override { FillingProvisionOfServicesState.UploadDocs }
         }
     }
 }

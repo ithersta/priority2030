@@ -15,7 +15,7 @@ import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings.checkingListOfDocs
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.checkDocsProvisionOfServices() {
-    state<FillingProvisionOfServicesState.CheckingAndUploadingDocs>{
+    state<FillingProvisionOfServicesState.CheckAndUploadDocs>{
         onEnter{chatId->
             sendTextMessage(
                 chatId,

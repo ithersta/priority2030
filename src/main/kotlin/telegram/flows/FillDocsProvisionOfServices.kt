@@ -7,7 +7,7 @@ import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
-import telegram.entities.state.FillingProvisionOfServicesState.BeginningFillDoc
+import telegram.entities.state.FillingProvisionOfServicesState.BeginFillDoc
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.*
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
@@ -15,7 +15,7 @@ import telegram.resources.strings.ButtonStrings.Back
 import telegram.resources.strings.Strings.Menu.CreateDocuments
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServices() {
-    state<BeginningFillDoc> {
+    state<BeginFillDoc> {
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
@@ -32,8 +32,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServic
             )
         }
         onText(CreateDocuments) {
-            //TODO: (Для Саши) тут переход к состоянию заполнению полей документов
-            state.override { FillingProvisionOfServicesState.DownloadingDocs }
+            //(Для Саши) тут переход к состоянию заполнения полей документов
+            state.override { FillingProvisionOfServicesState.DownloadDocs }
         }
         onText(Back) {
             state.override { EmptyState }
