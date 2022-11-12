@@ -8,9 +8,12 @@ data class CompanyInfo(
     val kpp: String,
     val orgn: String,
     val okpo: String,
-    val fullNameOfOrganization: String,
-    val fullNameHolder: String,
-    val shortNameHolder: String
+    val fullNameOfOrg: String,
+    val post : String,
+    val fullNameOfHolder: String,
+    val location: String,
+    val phone: String,
+    val email: String
 ) : FieldData {
 
 }

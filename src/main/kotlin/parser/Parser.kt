@@ -37,7 +37,32 @@ class Parser {
         }
     }
 
-    val fullName: String
+    //TODO: непроверенная функция
+    val post: String
+        get() {
+            val post =
+                document!!.select(
+                    "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div >" +
+                            " div > div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
+                            " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column > div.cCard__MainReq-Left >" +
+                            " div.cCard__Director.ws-flexbox.ws-flex-column.ws-flex-wrap.ws-justify-content-start.ws-" +
+                            "align-items-start > div > div > div.cCard__Director-Position"
+                ).html()
+            return post
+        }
+
+    //TODO: непроверенная функция
+    val location: String
+        get() {
+            val location = document!!.select(
+                "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div > " +
+                        "div:nth-child(1) > div.cCard__Contacts > div.cCard__Contacts-AddressBlock.cCard__" +
+                        "Main-Grid-Element > div.cCard__Contacts-Address"
+            ).html()
+            return location
+        }
+
+    val fullNameOfHolder: String
         get() {
             var fullName = document!!.select(
                 select + (" div:nth-child(1) > div.cCard__MainReq >" +
@@ -58,7 +83,7 @@ class Parser {
         }
     val shortName: String
         get() {
-            val fAndIO = fullName.split(" ".toRegex(), limit = 2).toTypedArray()
+            val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
             return fAndIO[0] + " " + fAndIO[1].replace("[а-я]+".toRegex(), ".")
         }
     private val mainInfoAboutOrg: Array<String>

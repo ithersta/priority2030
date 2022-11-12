@@ -20,16 +20,16 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForKpp> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.kpp) }
             onText {
-                if (parser.parsing(state.snapshot.inn, it.content.text) != 200) {
-                    state.override { CompanyCollectorState.HandsWaitingOgrn(state.snapshot.inn, it.content.text) }
-                } else {
+                if (parser.parsing(state.snapshot.inn, it.content.text) == 200) {
                     state.override { CompanyCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg) }
+                } else {
+                    state.override { CompanyCollectorState.HandsWaitingOgrn(state.snapshot.inn, it.content.text) }
                 }
             }
         }
-        state<CompanyCollectorState.WaitingInspection> {  
-            onEnter{ sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg)) }
-            onText{ message->
+        state<CompanyCollectorState.WaitingInspection> {
+            onEnter { sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg)) }
+            onText { message ->
                 val response = when (message.content.text) {
                     CollectorStrings.Ooo.Yes -> "Да"
                     CollectorStrings.Ooo.No -> "Нет"
@@ -42,10 +42,13 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                     state.override {
                         CompanyCollectorState.WaitingPhone(
                             parser.innOfOrg,
+                            parser.kppOfOrg,
                             parser.orgnOfOrg,
                             parser.okpoOfOrg,
                             parser.fullNameOfOrg,
-                            parser.fullName
+                            parser.fullNameOfHolder,
+                            parser.post,
+                            parser.location
                         )
                     }
                 } else {
@@ -59,10 +62,13 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 state.override {
                     CompanyCollectorState.WaitingEmail(
                         state.snapshot.inn,
+                        state.snapshot.kpp,
                         state.snapshot.orgn,
                         state.snapshot.okpo,
                         state.snapshot.fullNameOfOrg,
                         state.snapshot.fullNameOfHolder,
+                        state.snapshot.post,
+                        state.snapshot.location,
                         it.content.text
                     )
                 }
@@ -73,10 +79,13 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onText {
                 val info = CompanyInfo(
                     inn = state.snapshot.inn,
+                    kpp = state.snapshot.kpp,
                     orgn = state.snapshot.orgn,
                     okpo = state.snapshot.okpo,
-                    fullNameOfOrganization = state.snapshot.fullNameOfOrg,
-                    fullNameHolder  = state.snapshot.fullNameOfHolder,
+                    fullNameOfOrg = state.snapshot.fullNameOfOrg,
+                    fullNameOfHolder = state.snapshot.fullNameOfHolder,
+                    post = state.snapshot.post,
+                    location = state.snapshot.location,
                     phone = state.snapshot.phone,
                     email = it.content.text
                 )

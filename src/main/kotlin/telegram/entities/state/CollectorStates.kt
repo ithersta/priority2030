@@ -47,20 +47,25 @@ object CompanyCollectorState {
     @Serializable
     data class WaitingPhone(
         val inn: String,
+        val kpp: String,
         val orgn: String,
         val okpo: String,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: String
-    ) :
-        DialogState
+        val fullNameOfHolder: String,
+        val post: String,
+        val location: String
+    ) : DialogState
 
     @Serializable
     data class WaitingEmail(
         val inn: String,
+        val kpp: String,
         val orgn: String,
         val okpo: String,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: String
+        val fullNameOfHolder: String,
+        val location: String,
+        val post: String,
         val phone: String
     ) : DialogState
 }
