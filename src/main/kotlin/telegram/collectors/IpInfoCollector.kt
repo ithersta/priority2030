@@ -38,7 +38,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                             parser.innOfOrg,
                             parser.ogrnOfOrg,
                             parser.okpoOfOrg,
-                            parser.fullNameOfOrg
+                            parser.fullNameOfHolder
                         )
                     }
                 } else {

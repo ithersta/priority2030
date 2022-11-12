@@ -104,7 +104,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (response.equals("Да")) {
                     state.override {
                         CompanyCollectorState.WaitingPhone(
-                            parser.innOfOrg, parser.kppOfOrg, parser.orgnOfOrg, parser.okpoOfOrg,
+                            parser.innOfOrg, parser.kppOfOrg, parser.ogrnOfOrg, parser.okpoOfOrg,
                             parser.fullNameOfOrg, parser.fullNameOfHolder, parser.post, parser.location
                         )
                     }

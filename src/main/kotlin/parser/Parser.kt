@@ -102,7 +102,7 @@ class Parser {
         get() = mainInfoAboutOrg[1]
     val kppOfOrg: String
         get() = mainInfoAboutOrg[2]
-    val orgnOfOrg: String
+    val ogrnOfOrg: String
         get() = if (type.toInt() == 0) mainInfoAboutOrg[3] else mainInfoAboutOrg[2]
     val okpoOfOrg: String
         get() = if (type.toInt() == 0) mainInfoAboutOrg[4] else mainInfoAboutOrg[3]
