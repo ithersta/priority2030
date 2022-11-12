@@ -38,14 +38,16 @@ object CollectorStrings {
         const val kpp = "Введите КРР предприятия"
         const val ogrn = "Введите ОГРН предприятия"
         const val okpo = "Введите ОКПО  предприятия"
+        const val fullNameofOrg = "Введите название предприятия"
+        const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
+        const val employeeRank = "Введите должность  ответсвтенного сотрудника от предприятия"
+        const val location = "Введите юридический адрес предприятия"
+        const val phone = "Введите номер телефона ответственного от предприятия"
+        const val email = "Введите адрес электронной почты ответственного от предприятия"
         const val question = "Вы заключаете договор с этим предприятием?"
         const val Yes = "Да"
         const val No = "Нет"
         const val Invalid = "Доступные варианты: Да, Нет"
-        const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
-        const val employeeRank = "Введите должность  ответсвтенного сотрудника от предприятия"
-        const val phone = "Введите номер телефона ответственного от предприятия"
-        const val email = "Введите адрес электронной почты ответственного от предприятия"
         fun isRight(string: String): String {
             return question + '\n' + string + '\n' + Invalid
         }

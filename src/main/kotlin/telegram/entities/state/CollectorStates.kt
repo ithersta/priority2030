@@ -45,10 +45,49 @@ object CompanyCollectorState {
     data class HandsWaitingOgrn(val inn: String, val kpp: String) : DialogState
 
     @Serializable
+    data class HandsWaitingOkpo(val inn: String, val kpp: String, val ogrn: String) : DialogState
+
+    @Serializable
+    data class HandsWaitingFullNameOfOrg(
+        val inn: String,
+        val kpp: String,
+        val ogrn: String,
+        val okpo: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingFullNameOfHolder(
+        val inn: String,
+        val kpp: String,
+        val ogrn: String,
+        val okpo: String,
+        val fullNameOfOrg: String
+    ) : DialogState
+    @Serializable
+    data class HandsWaitingPost(
+        val inn: String,
+        val kpp: String,
+        val ogrn: String,
+        val okpo: String,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String
+    ) : DialogState
+    @Serializable
+    data class HandsWaitingLocation(
+        val inn: String,
+        val kpp: String,
+        val ogrn: String,
+        val okpo: String,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String,
+        val post: String
+    ) : DialogState
+
+    @Serializable
     data class WaitingPhone(
         val inn: String,
         val kpp: String,
-        val orgn: String,
+        val ogrn: String,
         val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String,
@@ -60,7 +99,7 @@ object CompanyCollectorState {
     data class WaitingEmail(
         val inn: String,
         val kpp: String,
-        val orgn: String,
+        val ogrn: String,
         val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String,
@@ -81,19 +120,19 @@ object IpCollectorState {
     data class HandsWaitingOgrn(val inn: String) : DialogState
 
     @Serializable
-    data class HandsWaitingOkpo(val inn: String, val orgn: String) : DialogState
+    data class HandsWaitingOkpo(val inn: String, val ogrn: String) : DialogState
 
     @Serializable
-    data class HandsWaitingFullNameOfOrg(val inn: String, val orgn: String, val okpo: String) : DialogState
+    data class HandsWaitingFullNameOfOrg(val inn: String, val ogrn: String, val okpo: String) : DialogState
 
     @Serializable
-    data class WaitingPhone(val inn: String, val orgn: String, val okpo: String, val fullNameOfOrg: String) :
+    data class WaitingPhone(val inn: String, val ogrn: String, val okpo: String, val fullNameOfOrg: String) :
         DialogState
 
     @Serializable
     data class WaitingEmail(
         val inn: String,
-        val orgn: String,
+        val ogrn: String,
         val okpo: String,
         val fullNameOfOrg: String,
         val phone: String

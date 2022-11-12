@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class CompanyInfo(
     val inn: String,
     val kpp: String,
-    val orgn: String,
+    val ogrn: String,
     val okpo: String,
     val fullNameOfOrg: String,
     val post : String,
