@@ -11,6 +11,7 @@ import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
+import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
@@ -18,13 +19,13 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onEnter{chatId->
             sendTextMessage(
                 chatId,
-                Strings.Menu.CreateDocuments,
+                ButtonStrings.CheckingDoc,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
                 ) {
                     row {
-                        simpleButton(Strings.Menu.CreateDocuments)
+                        simpleButton(ButtonStrings.CheckingDoc)
                     }
                 }
             )
