@@ -1,9 +1,8 @@
 package telegram
 
 import com.ithersta.tgbotapi.fsm.builders.rolelessStateMachine
-import com.ithersta.tgbotapi.fsm.repository.InMemoryStateRepositoryImpl
+import com.ithersta.tgbotapi.persistence.SqliteStateRepository
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import dev.inmo.tgbotapi.types.UserId
 import mu.KotlinLogging
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
@@ -15,7 +14,7 @@ import telegram.resources.strings.Strings
 private val logger = KotlinLogging.logger { }
 
 val stateMachine = rolelessStateMachine(
-    stateRepository = InMemoryStateRepositoryImpl<UserId, DialogState>(),
+    stateRepository = SqliteStateRepository.create<DialogState>(),
     initialState = EmptyState,
     onException = { userId, throwable ->
         logger.info(throwable) { userId }
