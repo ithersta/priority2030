@@ -36,7 +36,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                     state.override {
                         IpCollectorState.WaitingPhone(
                             parser.innOfOrg,
-                            parser.orgnOfOrg,
+                            parser.ogrnOfOrg,
                             parser.okpoOfOrg,
                             parser.fullNameOfOrg
                         )
@@ -57,7 +57,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
             onText {
                 state.override {
                     IpCollectorState.HandsWaitingFullNameOfOrg(
-                        state.snapshot.inn, state.snapshot.orgn, it.content.text
+                        state.snapshot.inn, state.snapshot.ogrn, it.content.text
                     )
                 }
             }
@@ -67,7 +67,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
             onText {
                 state.override {
                     IpCollectorState.WaitingPhone(
-                        state.snapshot.inn, state.snapshot.orgn,
+                        state.snapshot.inn, state.snapshot.ogrn,
                         state.snapshot.okpo, it.content.text
                     )
                 }
@@ -79,7 +79,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 state.override {
                     IpCollectorState.WaitingEmail(
                         state.snapshot.inn,
-                        state.snapshot.orgn,
+                        state.snapshot.ogrn,
                         state.snapshot.okpo,
                         state.snapshot.fullNameOfOrg,
                         it.content.text
@@ -92,7 +92,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
             onText {
                 val info = IpInfo(
                     inn = state.snapshot.inn,
-                    orgn = state.snapshot.orgn,
+                    ogrn = state.snapshot.ogrn,
                     okpo = state.snapshot.okpo,
                     fullNameIp = state.snapshot.fullNameOfOrg,
                     phone = state.snapshot.phone,

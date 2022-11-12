@@ -21,13 +21,19 @@ val documentSet = documentSet {
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/Для ИП.docx") {
             commonFields()
-            field("LAST_NAME", get<RussianFullName>().lastName)
-            field("INN", get<IpInfo>().inn)
+            field("ENPREPRENEUR_FIO",get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП
+            field()
+            field()
+            field()
+            field()
+//            field("LAST_NAME", get<RussianFullName>().lastName)
+//            field("INN", get<IpInfo>().inn)
 
         }
 
         OrganizationType.Ooo -> document("/Для ООО.docx") {
             commonFields()
+
         }
     }
 }
