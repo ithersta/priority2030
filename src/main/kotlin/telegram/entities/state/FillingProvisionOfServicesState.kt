@@ -8,4 +8,7 @@ object FillingProvisionOfServicesState {
 
     @Serializable
     object DownloadDocs : DialogState
+
+    @Serializable
+    object UploadDocs : DialogState
 }

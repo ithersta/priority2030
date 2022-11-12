@@ -14,25 +14,29 @@ import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings
 
-fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
-    state<FillingProvisionOfServicesState.DownloadDocs>{
+fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.uploadDocsProvisionOfServices() {
+    state<FillingProvisionOfServicesState.UploadDocs>{
         onEnter{chatId->
             sendTextMessage(
                 chatId,
-                ButtonStrings.CheckingDoc,
+                ButtonStrings.UploadPackageDoc,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
                 ) {
                     row {
-                        simpleButton(ButtonStrings.CheckingDoc)
+                        simpleButton(ButtonStrings.UploadPackageDoc)
+                        simpleButton(ButtonStrings.BackToCreateDocs)
                     }
                 }
             )
         }
-        onText(ButtonStrings.CheckingDoc){
-            //TODO: отправка доков в чат
-            state.override { FillingProvisionOfServicesState.UploadDocs }
+        onText(ButtonStrings.UploadPackageDoc){
+            //след состояние
+            state.override { EmptyState }
+        }
+        onText(ButtonStrings.BackToCreateDocs){
+            state.override { EmptyState }
         }
     }
 }

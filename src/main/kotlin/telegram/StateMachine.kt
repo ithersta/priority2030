@@ -15,4 +15,5 @@ val stateMachine = rolelessStateMachine(
     documentBuildingLoop()
     fillDocsProvisionOfServices()
     downloadDocsProvisionOfServices()
+    uploadDocsProvisionOfServices()
 }

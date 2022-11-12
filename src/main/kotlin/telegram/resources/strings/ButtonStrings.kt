@@ -13,6 +13,7 @@ object ButtonStrings {
     }
     const val CheckingDoc = "Скачать пакет документов для проверки и внесения недостающих данных"
     const val UploadPackageDoc = "Загрузить готовый пакет документов и отправить на проверку"
+    const val BackToCreateDocs = "Вернуться к заполнению документов"
     const val UploadDocuments = "Загрузить документы"
     const val Send = "Отправить"
     const val Back = "⬅️Назад"
