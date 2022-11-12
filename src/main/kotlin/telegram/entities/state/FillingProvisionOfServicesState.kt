@@ -7,8 +7,12 @@ object FillingProvisionOfServicesState {
     object BeginningFillDoc : DialogState
 
     @Serializable
-    object DownloadDocs : DialogState
+    object DownloadingDocs : DialogState
 
     @Serializable
-    object UploadDocs : DialogState
+    object UploadingDocs : DialogState
+
+    @Serializable
+    object CheckingAndUploadingDocs : DialogState
+
 }

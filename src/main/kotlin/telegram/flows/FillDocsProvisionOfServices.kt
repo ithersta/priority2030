@@ -33,7 +33,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServic
         }
         onText(CreateDocuments) {
             //TODO: (Для Саши) тут переход к состоянию заполнению полей документов
-            state.override { FillingProvisionOfServicesState.DownloadDocs }
+            state.override { FillingProvisionOfServicesState.DownloadingDocs }
         }
         onText(Back) {
             state.override { EmptyState }

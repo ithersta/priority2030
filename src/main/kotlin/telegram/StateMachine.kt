@@ -16,4 +16,5 @@ val stateMachine = rolelessStateMachine(
     fillDocsProvisionOfServices()
     downloadDocsProvisionOfServices()
     uploadDocsProvisionOfServices()
+    checkDocsProvisionOfServices()
 }

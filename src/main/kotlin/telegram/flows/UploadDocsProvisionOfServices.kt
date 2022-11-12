@@ -14,7 +14,7 @@ import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.uploadDocsProvisionOfServices() {
-    state<FillingProvisionOfServicesState.UploadDocs>{
+    state<FillingProvisionOfServicesState.UploadingDocs>{
         onEnter{chatId->
             sendTextMessage(
                 chatId,
@@ -31,8 +31,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.uploadDocsProvisionOfServ
             )
         }
         onText(ButtonStrings.UploadPackageDoc){
-            //след состояние
-            state.override { EmptyState }
+            state.override { FillingProvisionOfServicesState.CheckingAndUploadingDocs }
         }
         onText(ButtonStrings.BackToCreateDocs){
             state.override { EmptyState }

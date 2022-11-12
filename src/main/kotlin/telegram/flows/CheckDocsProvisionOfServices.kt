@@ -9,28 +9,30 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
+import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
+import telegram.resources.strings.Strings.checkingListOfDocs
 
-fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
-    state<FillingProvisionOfServicesState.DownloadingDocs>{
+fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.checkDocsProvisionOfServices() {
+    state<FillingProvisionOfServicesState.CheckingAndUploadingDocs>{
         onEnter{chatId->
             sendTextMessage(
                 chatId,
-                ButtonStrings.CheckingDoc,
+                checkingListOfDocs(),
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
                 ) {
                     row {
-                        simpleButton(ButtonStrings.CheckingDoc)
+                        simpleButton(ButtonStrings.UploadDocuments)
                     }
                 }
             )
         }
-        onText(ButtonStrings.CheckingDoc){
-            //TODO: отправка доков в чат
-            state.override { FillingProvisionOfServicesState.UploadingDocs }
+        onText(ButtonStrings.UploadDocuments){
+            //след состояние
+            state.override { EmptyState }
         }
     }
 }
