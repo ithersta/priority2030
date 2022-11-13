@@ -99,11 +99,11 @@ class Parser {
     val fullNameOfOrg: String
         get() = if (type.toInt() == 0) mainInfoAboutOrg[0] else "ИП " + mainInfoAboutOrg[0]
     val innOfOrg: String
-        get() = mainInfoAboutOrg[1]
+        get() = mainInfoAboutOrg[1].replace("ИНН ".toRegex(), "")
     val kppOfOrg: String
-        get() = mainInfoAboutOrg[2]
+        get() = mainInfoAboutOrg[2].replace("КПП ".toRegex(), "")
     val ogrnOfOrg: String
-        get() = if (type.toInt() == 0) mainInfoAboutOrg[3] else mainInfoAboutOrg[2]
+        get() = (if (type.toInt() == 0) mainInfoAboutOrg[3] else mainInfoAboutOrg[2]).replace("ОГРН ".toRegex(), "")
     val okpoOfOrg: String
-        get() = if (type.toInt() == 0) mainInfoAboutOrg[4] else mainInfoAboutOrg[3]
+        get() = (if (type.toInt() == 0) mainInfoAboutOrg[4] else mainInfoAboutOrg[3]).replace("ОКПО ".toRegex(), "")
 }
