@@ -18,6 +18,7 @@ val documentSet = documentSet {
             field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП
 //            field("ENPREPRENEUR_INIC") // Фамилия и  инициалы предпринимателя
 //            field("ENPREPRENEUR_INIC_F") // Инициалы и фамилия предпринимателя
+
             //TODO:?
             field("OGRNIP_NUMB для номера", get<IpInfo>().ogrn) // ОГРНИП
 //            field("OGRNIP_DATE для даты") //
@@ -58,7 +59,6 @@ val documentSet = documentSet {
             field("CONTRAGENT_EMAIL", get<CompanyInfo>().email) //Адрес электронной почты ответственного от ООО
             field("CONTRAGENT_PHONE", get<CompanyInfo>().phone) //Номер телефона ответственного от ООО
 //            field("GENERAL_MANAGER_INIC") //Инициалы и фамилия генерального директора
-
         }
     }
 }
