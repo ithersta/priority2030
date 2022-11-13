@@ -5,12 +5,14 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.IpInfo
 import parser.Parser
+import parser.ParserRusprofile
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
 
 fun CollectorMapBuilder.IpInfoCollector() {
     collector<IpInfo>(initialState = IpCollectorState.WaitingForInn) {
         val parser = Parser()
+        val parserForData = ParserRusprofile()
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText {
@@ -38,7 +40,8 @@ fun CollectorMapBuilder.IpInfoCollector() {
                             parser.innOfOrg,
                             parser.ogrnOfOrg,
                             parser.okpoOfOrg,
-                            parser.fullNameOfHolder
+                            parser.fullNameOfHolder,
+                            parserForData.parseWebPage(parser.ogrnOfOrg)
                         )
                     }
                 } else {
@@ -51,13 +54,23 @@ fun CollectorMapBuilder.IpInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.ogrn) }
             onText { state.override { IpCollectorState.HandsWaitingOkpo(state.snapshot.inn, it.content.text) } }
         }
-
         state<IpCollectorState.HandsWaitingOkpo> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.okpo) }
             onText {
                 state.override {
-                    IpCollectorState.HandsWaitingFullNameOfOrg(
+                    IpCollectorState.HandsWaitingDataOfOgrn(
                         state.snapshot.inn, state.snapshot.ogrn, it.content.text
+                    )
+                }
+            }
+        }
+        state<IpCollectorState.HandsWaitingDataOfOgrn> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.data) }
+            onText {
+                state.override {
+                    IpCollectorState.HandsWaitingFullNameOfOrg(
+                        state.snapshot.inn, state.snapshot.ogrn,
+                        state.snapshot.okpo, it.content.text
                     )
                 }
             }
@@ -68,7 +81,8 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 state.override {
                     IpCollectorState.WaitingPhone(
                         state.snapshot.inn, state.snapshot.ogrn,
-                        state.snapshot.okpo, it.content.text
+                        state.snapshot.okpo, state.snapshot.dataOgrn,
+                        it.content.text
                     )
                 }
             }
@@ -82,6 +96,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         state.snapshot.ogrn,
                         state.snapshot.okpo,
                         state.snapshot.fullNameOfOrg,
+                        state.snapshot.dataOkpo,
                         it.content.text
                     )
                 }
@@ -95,6 +110,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                     ogrn = state.snapshot.ogrn,
                     okpo = state.snapshot.okpo,
                     fullNameIp = state.snapshot.fullNameOfOrg,
+                    orgrnData = state.snapshot.dataOkpo,
                     phone = state.snapshot.phone,
                     email = it.content.text
                 )

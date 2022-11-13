@@ -22,6 +22,7 @@ object CollectorStrings {
         const val ogrn = "Введите ОГРН предпринимателя"
         const val okpo = "Введите ОКПО  предпринимателя"
         const val fullName = "Введите ФИО предпринимателя предпринимателя"
+        const val  data = "Введите дату от такого числа ОГРНИП"
         const val question = "Вы заключаете договор с этим предпринимателем?"
         const val Yes = "Да"
         const val No = "Нет"

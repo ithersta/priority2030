@@ -2,7 +2,6 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
-import telegram.entities.state.IpCollectorState
 
 val documentSet = documentSet {
     document("/Общий.docx") {
