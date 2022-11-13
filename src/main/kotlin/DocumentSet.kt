@@ -38,26 +38,26 @@ val documentSet = documentSet {
 
         OrganizationType.Ooo -> document("/Для ООО.docx") {
             commonFields()
-//            field("CONTRAGENT_FULL_NAME", get<CompanyInfo>().fullNameOfOrg) //Наименование контрагента полностью ИЗ ИНН
-////            field("CONTRAGENT_SHORT_NAME") //Наименование контрагента сокращённо ИЗ ИНН
-////            field("GENERAL_MANAGER") //Генеральный директор ФИО в именительном падеже полностью
-////            field("GENERAL_MANAGER_R") //Генеральный директор ФИО в родительном полностью
-////            field("PP") //Пункт обоснования закупок
-////            field("PURCHASE_RUB_NUMB") //Стоимость закупки цифрами
-////            field("PURCHASE_RUB") //Стоимость закупки прописью
-////            field("SUMM_COP_NUMB") //Сумма цифрами  в копейках
-//            field("CONTRAGENT_ADDRESS", get<CompanyInfo>().location) //Юридический адрес ИЗ ИНН
-//            field("CONTRAGENT_COR_WALLET", get<BankInfo>().correspondentAccount) //Корреспондентский счёт
-//            field("INN", get<CompanyInfo>().inn) //ИНН
-//            field("KPP", get<CompanyInfo>().kpp) //КПП ИЗ ИНН
-//            field("OGRN", get<CompanyInfo>().ogrn) //ОГРН ИЗ ИНН
-//            field("CONTRAGENT_WALLET", get<BankInfo>().settlementAccountNumber) //Расчётный счёт
-//            field("BIK", get<BankInfo>().bik) //БИК
-//            field("CONTRAGENT_FIO", get<CompanyInfo>().fullNameOfHolder) //ФИО ответсвенного от ООО
-//            field("CONTRAGENT_PROF", get<CompanyInfo>().post) //Должность ответственного от ООО
-//            field("CONTRAGENT_EMAIL", get<CompanyInfo>().email) //Адрес электронной почты ответственного от ООО
-//            field("CONTRAGENT_PHONE", get<CompanyInfo>().phone) //Номер телефона ответственного от ООО
-////            field("GENERAL_MANAGER_INIC") //Инициалы и фамилия генерального директора
+            field("CONTRAGENT_FULL_NAME", get<CompanyInfo>().fullNameOfOrg) //Наименование контрагента полностью ИЗ ИНН
+//            field("CONTRAGENT_SHORT_NAME") //Наименование контрагента сокращённо ИЗ ИНН
+//            field("GENERAL_MANAGER") //Генеральный директор ФИО в именительном падеже полностью
+//            field("GENERAL_MANAGER_R") //Генеральный директор ФИО в родительном полностью
+//            field("PP") //Пункт обоснования закупок
+//            field("PURCHASE_RUB_NUMB") //Стоимость закупки цифрами
+//            field("PURCHASE_RUB") //Стоимость закупки прописью
+//            field("SUMM_COP_NUMB") //Сумма цифрами  в копейках
+            field("CONTRAGENT_ADDRESS", get<CompanyInfo>().location) //Юридический адрес ИЗ ИНН
+            field("CONTRAGENT_COR_WALLET", get<BankInfo>().correspondentAccount) //Корреспондентский счёт
+            field("INN", get<CompanyInfo>().inn) //ИНН
+            field("KPP", get<CompanyInfo>().kpp) //КПП ИЗ ИНН
+            field("OGRN", get<CompanyInfo>().ogrn) //ОГРН ИЗ ИНН
+            field("CONTRAGENT_WALLET", get<BankInfo>().settlementAccountNumber) //Расчётный счёт
+            field("BIK", get<BankInfo>().bik) //БИК
+            field("CONTRAGENT_FIO", get<CompanyInfo>().fullNameOfHolder) //ФИО ответсвенного от ООО
+            field("CONTRAGENT_PROF", get<CompanyInfo>().post) //Должность ответственного от ООО
+            field("CONTRAGENT_EMAIL", get<CompanyInfo>().email) //Адрес электронной почты ответственного от ООО
+            field("CONTRAGENT_PHONE", get<CompanyInfo>().phone) //Номер телефона ответственного от ООО
+//            field("GENERAL_MANAGER_INIC") //Инициалы и фамилия генерального директора
 
         }
     }
