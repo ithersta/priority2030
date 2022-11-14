@@ -2,21 +2,15 @@ import dev.inmo.tgbotapi.bot.ktor.telegramBot
 import dev.inmo.tgbotapi.bot.settings.limiters.CommonLimiter
 import dev.inmo.tgbotapi.extensions.behaviour_builder.buildBehaviourWithLongPolling
 import email.EmailSecrets
-import email.EmailSender
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import telegram.stateMachine
-import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
 suspend fun main() {
     val properties = Properties()
-    withContext(Dispatchers.IO) {
-        properties.load(FileInputStream(System.getenv()["CONFIG_FILE"]?:"src/config.cfg"))
-    }
+    properties.load(FileInputStream(System.getenv()["CONFIG_FILE"] ?: "src/config.cfg"))
     EmailSecrets.hostname = properties.getProperty("EMAIL_HOSTNAME")
     EmailSecrets.port = properties.getProperty("EMAIL_PORT")
     EmailSecrets.username = properties.getProperty("EMAIL_USERNAME")
