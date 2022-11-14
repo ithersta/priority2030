@@ -65,19 +65,12 @@ object CompanyCollectorState {
         val kpp: String
     ) : DialogState
 
-    @Serializable
-    data class HandsWaitingOkpo(
-        val inn: String,
-        val kpp: String,
-        val ogrn: String
-    ) : DialogState
 
     @Serializable
     data class HandsWaitingFullNameOfOrg(
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String
     ) : DialogState
 
     @Serializable
@@ -85,7 +78,6 @@ object CompanyCollectorState {
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String
     ) : DialogState
 
@@ -94,7 +86,6 @@ object CompanyCollectorState {
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String
     ) : DialogState
@@ -104,7 +95,6 @@ object CompanyCollectorState {
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String,
         val post: String
@@ -115,7 +105,6 @@ object CompanyCollectorState {
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String,
         val post: String,
@@ -127,7 +116,6 @@ object CompanyCollectorState {
         val inn: String,
         val kpp: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
         val fullNameOfHolder: String,
         val location: String,
@@ -150,25 +138,16 @@ object IpCollectorState {
     data class HandsWaitingOgrn(
         val inn: String
     ) : DialogState
-
-    @Serializable
-    data class HandsWaitingOkpo(
-        val inn: String,
-        val ogrn: String
-    ) : DialogState
-
     @Serializable
     data class HandsWaitingDataOfOgrn(
         val inn: String,
         val ogrn: String,
-        val okpo: String
     ) : DialogState
 
     @Serializable
     data class HandsWaitingFullNameOfOrg(
         val inn: String,
         val ogrn: String,
-        val okpo: String,
         val dataOgrn: String
     ) : DialogState
 
@@ -176,18 +155,16 @@ object IpCollectorState {
     data class WaitingPhone(
         val inn: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
-        val dataOkpo: String
+        val dataOgrn: String
     ) : DialogState
 
     @Serializable
     data class WaitingEmail(
         val inn: String,
         val ogrn: String,
-        val okpo: String,
         val fullNameOfOrg: String,
-        val dataOkpo: String,
+        val dataOgrn: String,
         val phone: String
     ) : DialogState
 }

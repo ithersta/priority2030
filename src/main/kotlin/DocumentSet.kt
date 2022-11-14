@@ -12,6 +12,7 @@ val documentSet = documentSet {
 //        field("ACCOUNT_NUMBER", get<BankInfo>().settlementAccountNumber)
     }
     when (get<OrganizationType>()) {
+        // todo: удалить из документа $, поменять название файла, поменять файл для ООО.
         OrganizationType.IP -> document("/Для ИП.docx") {
             commonFields()
             field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП

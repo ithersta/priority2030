@@ -7,7 +7,6 @@ data class CompanyInfo(
     val inn: String,
     val kpp: String,
     val ogrn: String,
-    val okpo: String,
     val fullNameOfOrg: String,
     val post : String,
     val fullNameOfHolder: String,

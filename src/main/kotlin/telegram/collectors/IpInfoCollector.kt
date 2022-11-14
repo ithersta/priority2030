@@ -8,6 +8,9 @@ import parser.Parser
 import parser.ParserRusprofile
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
+import validation.IsInnValidForIp
+import validation.IsOgrnipValidForIp
+import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.IpInfoCollector() {
     collector<IpInfo>(initialState = IpCollectorState.WaitingForInn) {
@@ -16,10 +19,14 @@ fun CollectorMapBuilder.IpInfoCollector() {
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText {
-                if (parser.parsing(it.content.text) != 200) {
-                    state.override { IpCollectorState.HandsWaitingOgrn(it.content.text) }
+                if (IsInnValidForIp(it.content.text)) {
+                    if (parser.parsing(it.content.text) != 200) {
+                        state.override { IpCollectorState.HandsWaitingOgrn(it.content.text) }
+                    } else {
+                        state.override { IpCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg) }
+                    }
                 } else {
-                    state.override { IpCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg) }
+                    return@onText
                 }
             }
         }
@@ -39,7 +46,6 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         IpCollectorState.WaitingPhone(
                             parser.innOfOrg,
                             parser.ogrnOfOrg,
-                            parser.okpoOfOrg,
                             parser.fullNameOfHolder,
                             parserForData.parseWebPage(parser.ogrnOfOrg)
                         )
@@ -49,28 +55,24 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
-
         state<IpCollectorState.HandsWaitingOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.ogrn) }
-            onText { state.override { IpCollectorState.HandsWaitingOkpo(state.snapshot.inn, it.content.text) } }
-        }
-        state<IpCollectorState.HandsWaitingOkpo> {
-            onEnter { sendTextMessage(it, CollectorStrings.IP.okpo) }
             onText {
-                state.override {
-                    IpCollectorState.HandsWaitingDataOfOgrn(
-                        state.snapshot.inn, state.snapshot.ogrn, it.content.text
-                    )
+                if (IsOgrnipValidForIp(it.content.text)) {
+                    state.override { IpCollectorState.HandsWaitingDataOfOgrn(state.snapshot.inn, it.content.text) }
+                } else {
+                    return@onText
                 }
             }
         }
         state<IpCollectorState.HandsWaitingDataOfOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.data) }
             onText {
+//              TODO: ВАЛИДАЦИЯ для ДАТЫ (ЗАДАНИЕ ВИКИ , не все сделала!)
                 state.override {
                     IpCollectorState.HandsWaitingFullNameOfOrg(
                         state.snapshot.inn, state.snapshot.ogrn,
-                        state.snapshot.okpo, it.content.text
+                        it.content.text
                     )
                 }
             }
@@ -78,11 +80,11 @@ fun CollectorMapBuilder.IpInfoCollector() {
         state<IpCollectorState.HandsWaitingFullNameOfOrg> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
             onText {
+//              TODO: Валидация для ИП: ИП ФАМЛИЛИЯ ИМЯ ОТЧЕСТВО
                 state.override {
                     IpCollectorState.WaitingPhone(
                         state.snapshot.inn, state.snapshot.ogrn,
-                        state.snapshot.okpo, state.snapshot.dataOgrn,
-                        it.content.text
+                        state.snapshot.dataOgrn, it.content.text
                     )
                 }
             }
@@ -90,27 +92,30 @@ fun CollectorMapBuilder.IpInfoCollector() {
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.phone) }
             onText {
-                state.override {
-                    IpCollectorState.WaitingEmail(
-                        state.snapshot.inn,
-                        state.snapshot.ogrn,
-                        state.snapshot.okpo,
-                        state.snapshot.fullNameOfOrg,
-                        state.snapshot.dataOkpo,
-                        it.content.text
-                    )
+                if (IsPhoneNumberValid(it.content.text)) {
+                    state.override {
+                        IpCollectorState.WaitingEmail(
+                            state.snapshot.inn,
+                            state.snapshot.ogrn,
+                            state.snapshot.fullNameOfOrg,
+                            state.snapshot.dataOgrn,
+                            it.content.text
+                        )
+                    }
+                } else {
+                    return@onText
                 }
             }
         }
         state<IpCollectorState.WaitingEmail> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.email) }
             onText {
+//              TODO: где валидация для e-mail?
                 val info = IpInfo(
                     inn = state.snapshot.inn,
                     ogrn = state.snapshot.ogrn,
-                    okpo = state.snapshot.okpo,
                     fullNameIp = state.snapshot.fullNameOfOrg,
-                    orgrnData = state.snapshot.dataOkpo,
+                    orgrnData = state.snapshot.dataOgrn,
                     phone = state.snapshot.phone,
                     email = it.content.text
                 )
