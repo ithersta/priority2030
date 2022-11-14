@@ -6,15 +6,14 @@ import javax.mail.util.ByteArrayDataSource
 
 private const val DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
-class EmailSender(private val emailSecrets: EmailSecrets) {
-    fun sendFiles(to: String, files: List<Attachment>) {
+object EmailSender {
+     fun sendFiles(to: String, files: List<Attachment>) {
         val mail: MultiPartEmail = MultiPartEmail().apply {
-            hostName = emailSecrets.hostname
-            sslSmtpPort = emailSecrets.port
+            hostName = EmailSecrets.hostname
+            sslSmtpPort = EmailSecrets.port
             isSSLOnConnect = true
-            setAuthenticator(DefaultAuthenticator(emailSecrets.username, emailSecrets.password))
-            setFrom(emailSecrets.from)
-
+            setAuthenticator(DefaultAuthenticator(EmailSecrets.username, EmailSecrets.password))
+            setFrom(EmailSecrets.from)
             subject = Strings.SendFilesSubject
             setMsg(Strings.SendFilesMessage)
             addTo(to)
