@@ -10,7 +10,7 @@ class ParserRusprofile {
         val response = Jsoup.connect("$url$ogrnIp").timeout(10000).execute()
         if (response.statusCode() == 200) {
             val document = response.parse()
-            return document.select(selectorData).html()
+            return document.select(selectorData).html().replace("от ".toRegex(), "")
         }
         return "ДАННЫХ НЕТ!!!"
     }

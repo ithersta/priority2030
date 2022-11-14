@@ -17,12 +17,8 @@ val documentSet = documentSet {
             field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП
 //            field("ENPREPRENEUR_INIC") // Фамилия и  инициалы предпринимателя
 //            field("ENPREPRENEUR_INIC_F") // Инициалы и фамилия предпринимателя
-
-            //TODO:?
-            field("OGRNIP_NUMB для номера", get<IpInfo>().ogrn) // ОГРНИП
-//            field("OGRNIP_DATE для даты") //
-            /*TODO:?*/
-
+            field("OGRNIP_NUMB", get<IpInfo>().ogrn) // ОГРНИП
+            field("OGRNIP_DATE", get<IpInfo>().orgrnData) // дата
 //            field("PP") // Пункт обоснования закупок
 //            field("PURCHASE_RUB_NUMB") // Стоимость закупки цифрами
 //            field("PURCHASE_RUB") // Стоимость закупки прописью
