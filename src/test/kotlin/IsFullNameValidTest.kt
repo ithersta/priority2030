@@ -6,12 +6,11 @@ internal class IsFullNameValidTest {
 
     @org.junit.jupiter.api.Test
     operator fun invoke() {
-        assertTrue(IsFullNameValid("В.С. Душечкина"))
-        assertFalse(IsFullNameValid("В.С Душечкина"))
-        assertFalse(IsFullNameValid("Душечкина"))
-        assertFalse(IsFullNameValid("Душечкина В.С"))
-        assertFalse(IsFullNameValid("Душечкина В.Сергеевна"))
-        assertFalse(IsFullNameValid("Душечкина Виктория Сергеевна"))
-        assertFalse(IsFullNameValid(""))
+        assertTrue(IsFullNameValid("Душечкина Виктория"))
+        assertTrue(IsFullNameValid("Душечкина Виктория Сергеевна"))
+        assertTrue(IsFullNameValid("Гасанова Илаха Адалет Гызы"))
+        assertTrue(IsFullNameValid("Зейти Бассел"))
+        assertFalse(IsFullNameValid("Dsds"))
+        assertFalse(IsFullNameValid("Попов"))
     }
 }
