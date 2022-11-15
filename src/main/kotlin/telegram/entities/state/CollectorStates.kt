@@ -41,3 +41,12 @@ object PurchaseDescriptionState {
         val selectionIdentifier:String
     ) : DialogState
 }
+
+@Serializable
+object PurchasePointState : DialogState
+
+@Serializable
+object PurchaseIniciatorState : DialogState
+
+@Serializable
+object PurchaseCostState : DialogState

@@ -19,6 +19,7 @@ repositories {
     mavenCentral()
     maven("https://repo.repsy.io/mvn/ithersta/tgbotapi")
     maven("https://jitpack.io")
+    maven("https://raw.github.com/morpher-ru/morpher-ws3-java-client/mvn-repo")
 }
 
 dependencies {
@@ -30,6 +31,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.3")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
     implementation("org.junit.jupiter:junit-jupiter:5.9.0")
+    implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))
