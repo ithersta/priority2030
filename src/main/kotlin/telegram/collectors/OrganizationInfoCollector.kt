@@ -15,7 +15,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
             onText {
-                if (IsInnValidForIp(it.content.text)) {
+                if (IsInnValidForOoo (it.content.text)) {
                     state.override {
                         CompanyCollectorState.WaitingForKpp(
                             inn = it.content.text
@@ -29,7 +29,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForKpp> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.kpp) }
             onText {
-                if (IsInnValidForOoo(it.content.text)) {
+                if (IsKppValid(it.content.text)) {
                     if (parser.parsing(state.snapshot.inn, it.content.text) == 200) {
                         state.override {
                             CompanyCollectorState.WaitingInspection(
