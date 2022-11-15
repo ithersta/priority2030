@@ -24,6 +24,5 @@ data class CompanyInfo(
             val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
             return fAndIO[1].replace("[а-я]+".toRegex(), ".") + " " + fAndIO[0]
         }
-//    TODO: Я не  знаю
 //    val shortNameOfCompany : String = fullNameOfOrg
 }

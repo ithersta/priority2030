@@ -6,10 +6,12 @@ import java.io.IOException
 
 class ParserBik {
     private lateinit var document: Document
+    private val time = 25000
+    private val statusCodeSuccessful = 200
     fun parseWebPage(bik: String): Int {
         val url = "https://bik-info.ru/bik_"
-        val response = Jsoup.connect("$url$bik.html").timeout(10000).execute()
-        if (response.statusCode() == 200) {
+        val response = Jsoup.connect("$url$bik.html").timeout(time).execute()
+        if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
         }
         return response.statusCode()

@@ -2,17 +2,25 @@ package parser
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.io.IOException
 
 class Parser {
     //     0 -  ООО , 1  - ИП
     private var type: Byte = 0
+    private val time = 25000
+    private val statusCodeSuccessful = 200
+    private val orderFullName = 0
+    private val orderInn = 1
+    private val orderKppOoo = 2
+    private val orderOgrnOoo = 3
+    private val orderOkpoOoo = 4
+    private val orderOgrnIp = 2
+    private val orderOkpoIp = 3
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private lateinit var document: Document
     fun parsing(inn: String): Int {
         val url = "https://sbis.ru/contragents/"
-        val response = Jsoup.connect(url + inn).timeout(10000).execute()
-        if (response.statusCode() == 200) {
+        val response = Jsoup.connect(url + inn).timeout(time).execute()
+        if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
             type = 1
         }
@@ -21,25 +29,20 @@ class Parser {
 
     // для ООО у которых есть несколкьо организаций внутри себя
     fun parsing(inn: String, kpp: String): Int {
-        try {
-            val url = "https://sbis.ru/contragents/"
-            val response = Jsoup.connect("$url$inn/$kpp").timeout(10000).execute()
-            if (response.statusCode() == 200) {
-                document = response.parse()
-            }
-            return response.statusCode()
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+        val url = "https://sbis.ru/contragents/"
+        val response = Jsoup.connect("$url$inn/$kpp").timeout(time).execute()
+        if (response.statusCode() == statusCodeSuccessful) {
+            document = response.parse()
         }
+        return response.statusCode()
     }
 
-    //TODO: непроверенная функция
     val post: String
         get() {
             val post =
                 document.select(
-                    "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div >" +
-                            " div > div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
+                    "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >" +
+                            " div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
                             " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column > div.cCard__MainReq-Left >" +
                             " div.cCard__Director.ws-flexbox.ws-flex-column.ws-flex-wrap.ws-justify-content-start.ws-" +
                             "align-items-start > div > div > div.cCard__Director-Position"
@@ -47,7 +50,6 @@ class Parser {
             return post
         }
 
-    //TODO: непроверенная функция
     val location: String
         get() {
             val location = document.select(
@@ -87,14 +89,20 @@ class Parser {
                 .dropLastWhile { it.isEmpty() }
                 .toTypedArray()
         }
+
+
     val fullNameOfOrg: String
-        get() = if (type.toInt() == 0) mainInfoAboutOrg[0] else "ИП " + mainInfoAboutOrg[0]
+        get() = if (type.toInt() == 0) mainInfoAboutOrg[orderFullName] else "ИП " + mainInfoAboutOrg[orderFullName]
     val innOfOrg: String
-        get() = mainInfoAboutOrg[1].replace("ИНН ".toRegex(), "")
+        get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     val kppOfOrg: String
-        get() = mainInfoAboutOrg[2].replace("КПП ".toRegex(), "")
+        get() = mainInfoAboutOrg[orderKppOoo].replace("КПП ".toRegex(), "")
     val ogrnOfOrg: String
-        get() = (if (type.toInt() == 0) mainInfoAboutOrg[3] else mainInfoAboutOrg[2]).replace("ОГРН ".toRegex(), "")
+        get() = (if (type.toInt() == 0) mainInfoAboutOrg[orderOgrnOoo] else mainInfoAboutOrg[orderOgrnIp]).replace(
+            "ОГРН ".toRegex(), ""
+        )
     val okpoOfOrg: String
-        get() = (if (type.toInt() == 0) mainInfoAboutOrg[4] else mainInfoAboutOrg[3]).replace("ОКПО ".toRegex(), "")
+        get() = (if (type.toInt() == 0) mainInfoAboutOrg[orderOkpoOoo] else mainInfoAboutOrg[orderOkpoIp]).replace(
+            "ОКПО ".toRegex(), ""
+        )
 }

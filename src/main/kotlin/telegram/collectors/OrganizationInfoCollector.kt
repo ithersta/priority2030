@@ -72,7 +72,6 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingFullNameOfOrg> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.fullNameofOrg) }
             onText {
-//              TODO: какие-то образом надо проверить!
                 state.override {
                     CompanyCollectorState.HandsWaitingFullNameOfHolder(
                         inn = state.snapshot.inn,
