@@ -10,7 +10,7 @@ import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
 import validation.*
 
-fun CollectorMapBuilder.IpInfoCollector() {
+fun CollectorMapBuilder.ipInfoCollector() {
     collector<IpInfo>(initialState = IpCollectorState.WaitingForInn) {
         val parser = Parser()
         val parserForData = ParserRusprofile()

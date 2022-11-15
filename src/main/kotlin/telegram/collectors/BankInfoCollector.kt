@@ -11,7 +11,7 @@ import validation.IsBicValid
 import validation.IsCorrAccountValid
 import validation.IsPaymentAccountValid
 
-fun CollectorMapBuilder.BankInfoCollector() {
+fun CollectorMapBuilder.bankInfoCollector() {
     collector<BankInfo>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
