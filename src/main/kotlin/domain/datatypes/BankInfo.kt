@@ -8,6 +8,4 @@ data class BankInfo(
     val correspondentAccount: String,
     val bankName: String,
     val settlementAccountNumber: String
-) : FieldData {
-
-}
+    ) : FieldData

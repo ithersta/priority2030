@@ -6,12 +6,14 @@ object IsOgrnipValid {
         return regex.matches(input = ogrnip)
     }
 }
+
 object IsOgrnipValidForIp {
     operator fun invoke(ogrnip: String): Boolean {
         val regex = Regex(pattern = "\\d{15}")
         return regex.matches(input = ogrnip)
     }
 }
+
 object IsOgrnipValidForOoo {
     operator fun invoke(ogrnip: String): Boolean {
         val regex = Regex(pattern = "\\d{13}")

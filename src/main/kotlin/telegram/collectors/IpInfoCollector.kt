@@ -28,7 +28,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         state.override {
                             IpCollectorState.WaitingInspection(
                                 inn = it.content.text,
-                                fullNameOfIp = parser.fullNameOfOrg
+                                fullNameOfHolder = parser.fullNameOfOrg
                             )
                         }
                     }
@@ -39,7 +39,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
             }
         }
         state<IpCollectorState.WaitingInspection> {
-            onEnter { sendTextMessage(it, CollectorStrings.IP.isRight(state.snapshot.fullNameOfIp)) }
+            onEnter { sendTextMessage(it, CollectorStrings.IP.isRight(state.snapshot.fullNameOfHolder)) }
             onText { message ->
                 val response = when (message.content.text) {
                     CollectorStrings.IP.Yes -> "Да"
@@ -54,7 +54,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         IpCollectorState.WaitingPhone(
                             inn = parser.innOfOrg,
                             ogrn = parser.ogrnOfOrg,
-                            fullNameOfIp = parser.fullNameOfHolder,
+                            fullNameOfHolder = parser.fullNameOfHolder,
                             dataOgrn = parserForData.parseWebPage(parser.ogrnOfOrg)
                         )
                     }
@@ -83,7 +83,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.data) }
             onText {
                 state.override {
-                    IpCollectorState.HandsWaitingFullNameOfIp(
+                    IpCollectorState.HandsWaitingfullNameOfHolder(
                         inn = state.snapshot.inn,
                         ogrn = state.snapshot.ogrn,
                         dataOgrn = it.content.text
@@ -91,7 +91,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                 }
             }
         }
-        state<IpCollectorState.HandsWaitingFullNameOfIp> {
+        state<IpCollectorState.HandsWaitingfullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
             onText {
                 if (IsFullNameValid(it.content.text)) {
@@ -100,7 +100,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                             inn = state.snapshot.inn,
                             ogrn = state.snapshot.ogrn,
                             dataOgrn = state.snapshot.dataOgrn,
-                            fullNameOfIp = it.content.text
+                            fullNameOfHolder = it.content.text
                         )
                     }
                 } else {
@@ -117,7 +117,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         IpCollectorState.WaitingEmail(
                             inn = state.snapshot.inn,
                             ogrn = state.snapshot.ogrn,
-                            fullNameOfIp = state.snapshot.fullNameOfIp,
+                            fullNameOfHolder = state.snapshot.fullNameOfHolder,
                             dataOgrn = state.snapshot.dataOgrn,
                             phone = it.content.text
                         )
@@ -135,7 +135,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                     val info = IpInfo(
                         inn = state.snapshot.inn,
                         ogrn = state.snapshot.ogrn,
-                        fullNameIp = state.snapshot.fullNameOfIp,
+                        fullNameOfHolder = state.snapshot.fullNameOfHolder,
                         orgrnData = state.snapshot.dataOgrn,
                         phone = state.snapshot.phone,
                         email = it.content.text

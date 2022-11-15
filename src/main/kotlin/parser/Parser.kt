@@ -81,11 +81,6 @@ class Parser {
             }
             return fullName
         }
-    val shortName: String
-        get() {
-            val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
-            return fAndIO[0] + " " + fAndIO[1].replace("[а-я]+".toRegex(), ".")
-        }
     private val mainInfoAboutOrg: Array<String>
         private get() {
             val infoAboutOrg = document!!.select(

@@ -131,13 +131,14 @@ object IpCollectorState {
     @Serializable
     data class WaitingInspection(
         val inn: String,
-        val fullNameOfIp: String
+        val fullNameOfHolder: String
     ) : DialogState
 
     @Serializable
     data class HandsWaitingOgrn(
         val inn: String
     ) : DialogState
+
     @Serializable
     data class HandsWaitingDataOfOgrn(
         val inn: String,
@@ -145,7 +146,7 @@ object IpCollectorState {
     ) : DialogState
 
     @Serializable
-    data class HandsWaitingFullNameOfIp(
+    data class HandsWaitingfullNameOfHolder(
         val inn: String,
         val ogrn: String,
         val dataOgrn: String
@@ -155,7 +156,7 @@ object IpCollectorState {
     data class WaitingPhone(
         val inn: String,
         val ogrn: String,
-        val fullNameOfIp: String,
+        val fullNameOfHolder: String,
         val dataOgrn: String
     ) : DialogState
 
@@ -163,7 +164,7 @@ object IpCollectorState {
     data class WaitingEmail(
         val inn: String,
         val ogrn: String,
-        val fullNameOfIp: String,
+        val fullNameOfHolder: String,
         val dataOgrn: String,
         val phone: String
     ) : DialogState

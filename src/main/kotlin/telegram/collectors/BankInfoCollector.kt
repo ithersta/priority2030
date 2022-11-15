@@ -65,7 +65,7 @@ fun CollectorMapBuilder.BankInfoCollector() {
                         settlementAccountNumber = message.content.text
                     )
                     this@collector.exit(state, listOf(info))
-                }else{
+                } else {
                     sendTextMessage(message.chat, CollectorStrings.Recommendations.paymentAccount)
                     return@onText
                 }

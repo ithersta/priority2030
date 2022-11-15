@@ -8,11 +8,22 @@ data class CompanyInfo(
     val kpp: String,
     val ogrn: String,
     val fullNameOfOrg: String,
-    val post : String,
+    val post: String,
     val fullNameOfHolder: String,
     val location: String,
     val phone: String,
     val email: String
 ) : FieldData {
-
+    val surnameAfterInitials: String
+        get() {
+            val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
+            return fAndIO[0] + " " + fAndIO[1].replace("[а-я]+".toRegex(), ".")
+        }
+    val initialsAfterSurname: String
+        get() {
+            val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
+            return fAndIO[1].replace("[а-я]+".toRegex(), ".") + " " + fAndIO[0]
+        }
+//    TODO: Я не  знаю
+//    val shortNameOfCompany : String = fullNameOfOrg
 }
