@@ -29,12 +29,16 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                 val rubles=totalCost.substringBefore('.').toInt()
                 val cops=totalCost.substringAfter('.').toInt()
                 val rublesRu=client.russian().spell(rubles,"рубль").numberDeclension.nominative
+                val rubl=client.russian().spell(rubles,"рубль").unitDeclension.nominative
                 val copsRu=client.russian().spell(cops,"копейка").numberDeclension.nominative
+                val cop=client.russian().spell(cops,"копейка").unitDeclension.nominative
                 val purchaseCost =PurchaseCost(
                     costInRubles = rubles.toString(),
                     costInCops = cops.toString(),
                     costInRublesPrescription = rublesRu,
-                    costInCopsPrescription = copsRu
+                    costInCopsPrescription = copsRu,
+                    rubles = rubl,
+                    cops=cop
                 )
                 this@collector.exit(state, listOf(purchaseCost))
             }

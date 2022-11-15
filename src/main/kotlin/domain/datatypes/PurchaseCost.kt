@@ -7,5 +7,7 @@ data class PurchaseCost(
     val costInRubles: String,
     val costInRublesPrescription: String,
     val costInCops: String,
-    val costInCopsPrescription: String
+    val costInCopsPrescription: String,
+    val rubles:String,
+    val cops: String
 ) : FieldData
