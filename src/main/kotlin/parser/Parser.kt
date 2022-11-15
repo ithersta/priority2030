@@ -8,7 +8,7 @@ class Parser {
     //     0 -  ООО , 1  - ИП
     private var type: Byte = 0
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
-    private var document: Document? = null
+    private lateinit var document: Document
     fun parsing(inn: String): Int {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect(url + inn).timeout(10000).execute()
@@ -37,7 +37,7 @@ class Parser {
     val post: String
         get() {
             val post =
-                document!!.select(
+                document.select(
                     "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div >" +
                             " div > div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
                             " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column > div.cCard__MainReq-Left >" +
@@ -50,7 +50,7 @@ class Parser {
     //TODO: непроверенная функция
     val location: String
         get() {
-            val location = document!!.select(
+            val location = document.select(
                 "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div > " +
                         "div:nth-child(1) > div.cCard__Contacts > div.cCard__Contacts-AddressBlock.cCard__" +
                         "Main-Grid-Element > div.cCard__Contacts-Address"
@@ -60,7 +60,7 @@ class Parser {
 
     val fullNameOfHolder: String
         get() {
-            var fullName = document!!.select(
+            var fullName = document.select(
                 select + (" div:nth-child(1) > div.cCard__MainReq >" +
                         " div.ws-flexbox.ws-justify-content-between >" +
                         " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column >" +
@@ -69,7 +69,7 @@ class Parser {
                         "-content-start.ws-align-items-start > div > span")
             ).html()
             if (fullName.isEmpty()) {
-                fullName = document!!.select(
+                fullName = document.select(
                     select + (" div:nth-child(1) >" +
                             " div.cCard__MainReq.cCard__MainReq-IP > div.cCard__Name-Addr-IP >" +
                             " div.cCard__MainReq-Name > h1")
@@ -79,7 +79,7 @@ class Parser {
         }
     private val mainInfoAboutOrg: Array<String>
         private get() {
-            val infoAboutOrg = document!!.select(
+            val infoAboutOrg = document.select(
                 select + " div.cCard__CompanyDescription >" +
                         " p:nth-child(5)"
             ).html().replace("<!-- -->,".toRegex(), "")
