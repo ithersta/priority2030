@@ -60,4 +60,22 @@ object CollectorStrings {
         const val bankName = "Введите Наименование банк"
         const val account = "Введите номер расчетного счета"
     }
+
+    object Recommendations {
+        const val innForIp = "Введит нормальный ИНН из 12 цифр"
+        const val innForOoo = "Введите нормальный ИНН из 10 цифр"
+        const val kpp = "Введите нормальный КПП из 9 цифр"
+        const val ogrnForIp = "Введите нормальный ОГРН из 15 цифр"
+        const val ogrnForOoo = "Введите нормальный ОГРН из 13 цифр"
+        const val okpoForIp = "Введите нормальный ОКПО из 10 цифр"
+        const val okpoForOoo = "Введите нормальный ОКПО из 8 цифр"
+        const val fullName = "Введите нормальное ФИО, например: Иванов Иван или Петров Петр Петрович"
+        const val phone = "Введите нормальный номер телеофна начиная с +7..., например: +79777777777"
+        const val email = "Введите нормальную электронную почту"
+        const val bik = "Введите нормальный БИК из 9 цифр"
+        const val corrAccount = "Введите нормальный корреспондентский счет из 20 цифр"
+        const val paymentAccount = "Введите нормальный расчетный счет из 20 цифр"
+
+
+    }
 }

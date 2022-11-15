@@ -15,13 +15,14 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
             onText {
-                if (IsInnValidForOoo (it.content.text)) {
+                if (IsInnValidForOoo(it.content.text)) {
                     state.override {
                         CompanyCollectorState.WaitingForKpp(
                             inn = it.content.text
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.innForOoo)
                     return@onText
                 }
             }
@@ -46,6 +47,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         }
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.kpp)
                     return@onText
                 }
             }
@@ -62,6 +64,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.ogrnForOoo)
                     return@onText
                 }
             }
@@ -83,15 +86,19 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingFullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.employee) }
             onText {
-//              TODO: проверка для полного ФИО а у нас только проверка для краткой формы ФИО.
-                state.override {
-                    CompanyCollectorState.HandsWaitingPost(
-                        inn = state.snapshot.inn,
-                        kpp = state.snapshot.kpp,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                        fullNameOfHolder = it.content.text
-                    )
+                if (IsFullNameValid(it.content.text)) {
+                    state.override {
+                        CompanyCollectorState.HandsWaitingPost(
+                            inn = state.snapshot.inn,
+                            kpp = state.snapshot.kpp,
+                            ogrn = state.snapshot.ogrn,
+                            fullNameOfOrg = state.snapshot.fullNameOfOrg,
+                            fullNameOfHolder = it.content.text
+                        )
+                    }
+                } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
+                    return@onText
                 }
             }
         }
@@ -173,6 +180,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
                     return@onText
                 }
             }
@@ -194,6 +202,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                     )
                     this@collector.exit(state, listOf(info))
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.email)
                     return@onText
                 }
             }

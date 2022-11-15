@@ -33,6 +33,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         }
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.innForIp)
                     return@onText
                 }
             }
@@ -73,6 +74,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.ogrnForIp)
                     return@onText
                 }
             }
@@ -102,6 +104,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
                     return@onText
                 }
             }
@@ -120,6 +123,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                         )
                     }
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
                     return@onText
                 }
             }
@@ -138,6 +142,7 @@ fun CollectorMapBuilder.IpInfoCollector() {
                     )
                     this@collector.exit(state, listOf(info))
                 } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.email)
                     return@onText
                 }
             }
