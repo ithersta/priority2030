@@ -16,24 +16,24 @@ fun CollectorMapBuilder.ipInfoCollector() {
         val parserForData = ParserRusprofile()
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
-            onText {
-                if (IsInnValidForIp(it.content.text)) {
-                    if (parser.parsing(it.content.text) != 200) {
+            onText { message ->
+                if (IsInnValidForIp(message.content.text)) {
+                    if (parser.parsing(message.content.text) != 200) {
                         state.override {
                             IpCollectorState.HandsWaitingOgrn(
-                                inn = it.content.text
+                                inn = message.content.text
                             )
                         }
                     } else {
                         state.override {
                             IpCollectorState.WaitingInspection(
-                                inn = it.content.text,
+                                inn = message.content.text,
                                 fullNameOfHolder = parser.fullNameOfOrg
                             )
                         }
                     }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.innForIp)
+                    sendTextMessage(message.chat, CollectorStrings.Recommendations.innForIp)
                     return@onText
                 }
             }
