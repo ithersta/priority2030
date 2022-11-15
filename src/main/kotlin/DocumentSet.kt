@@ -13,7 +13,7 @@ val documentSet = documentSet {
     }
     when (get<OrganizationType>()) {
         // todo: удалить из документа $, поменять название файла, поменять файл для ООО.
-        OrganizationType.IP -> document("/Для ИП.docx") {
+        OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.doc") {
             commonFields()
             field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП
 //            field("ENPREPRENEUR_INIC") // Фамилия и  инициалы предпринимателя
@@ -33,7 +33,7 @@ val documentSet = documentSet {
             field("ENTERPRENEUR_PHONE", get<IpInfo>().phone) // Номер телефона предпринимателя
         }
 
-        OrganizationType.Ooo -> document("/Для ООО.docx") {
+        OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.doc") {
             commonFields()
             field("CONTRAGENT_FULL_NAME", get<CompanyInfo>().fullNameOfOrg) //Наименование контрагента полностью ИЗ ИНН
 //            field("CONTRAGENT_SHORT_NAME") //Наименование контрагента сокращённо ИЗ ИНН
