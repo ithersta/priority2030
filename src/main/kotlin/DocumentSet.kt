@@ -5,15 +5,15 @@ import domain.documents.documentSet
 import domain.documents.get
 
 val documentSet = documentSet {
-    document("/Общий.docx") {
+    document("/documents/Общий.docx") {
         field("FIRST_NAME", get<RussianFullName>().firstName)
     }
     when (get<OrganizationType>()) {
-        OrganizationType.IP -> document("/Для ИП.docx") {
+        OrganizationType.IP -> document("/documents/Для ИП.docx") {
             commonFields()
             field("LAST_NAME", get<RussianFullName>().lastName)
         }
-        OrganizationType.Ooo -> document("/Для ООО.docx") {
+        OrganizationType.Ooo -> document("/documents/Для ООО.docx") {
             commonFields()
         }
     }

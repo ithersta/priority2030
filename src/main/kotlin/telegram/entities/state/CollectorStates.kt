@@ -15,3 +15,29 @@ object FullNameCollectorState {
 
 @Serializable
 object OrganizationTypeState : DialogState
+
+object PurchaseDescriptionState {
+    @Serializable
+    object WaitingForShortName : DialogState
+
+    @Serializable
+    data class WaitingForShortJustification(val shortName: String) : DialogState
+
+    @Serializable
+    data class WaitingForSelectionLetter(val shortName: String, val shortJustification: String) : DialogState
+
+    @Serializable
+    data class WaitingForSelectionIdentifier(
+        val shortName: String,
+        val shortJustification: String,
+        val selectionLetter:String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingForFullJustification(
+        val shortName: String,
+        val shortJustification: String,
+        val selectionLetter:String,
+        val selectionIdentifier:String
+    ) : DialogState
+}
