@@ -2,18 +2,20 @@ package email
 
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.MultiPartEmail
+import org.koin.core.annotation.Single
 import javax.mail.util.ByteArrayDataSource
 
 private const val DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
-object EmailSender {
+@Single
+class EmailSender(private val emailSecrets: EmailSecrets) {
      fun sendFiles(to: String, files: List<Attachment>) {
         val mail: MultiPartEmail = MultiPartEmail().apply {
-            hostName = EmailSecrets.hostname
-            sslSmtpPort = EmailSecrets.port
+            hostName = emailSecrets.hostname
+            sslSmtpPort = emailSecrets.port
             isSSLOnConnect = true
-            setAuthenticator(DefaultAuthenticator(EmailSecrets.username, EmailSecrets.password))
-            setFrom(EmailSecrets.from)
+            setAuthenticator(DefaultAuthenticator(emailSecrets.username, emailSecrets.password))
+            setFrom(emailSecrets.from)
             subject = Strings.SendFilesSubject
             setMsg(Strings.SendFilesMessage)
             addTo(to)
@@ -22,7 +24,7 @@ object EmailSender {
                 attach(
                     ByteArrayDataSource(it.file, DOCX_MIME_TYPE),
                     it.name,
-                    it.discription
+                    it.description
                 )
             }
         }
