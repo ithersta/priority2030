@@ -7,16 +7,12 @@ import java.io.IOException
 class ParserBik {
     private var document: Document? = null
     fun parseWebPage(bik: String): Int {
-        try {
-            val url = "https://bik-info.ru/bik_"
-            val response = Jsoup.connect("$url$bik.html").timeout(10000).execute()
-            if (response.statusCode() == 200) {
-                document = response.parse()
-            }
-            return response.statusCode()
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+        val url = "https://bik-info.ru/bik_"
+        val response = Jsoup.connect("$url$bik.html").timeout(10000).execute()
+        if (response.statusCode() == 200) {
+            document = response.parse()
         }
+        return response.statusCode()
     }
 
     val corrAccount: String

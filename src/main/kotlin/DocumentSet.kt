@@ -14,7 +14,7 @@ val documentSet = documentSet {
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
             commonFields()
-            field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameIp) // ФИО предпринимателя ИЗ ОГРНИП
+            field("ENPREPRENEUR_FIO", get<IpInfo>().fullNameOfHolder) // ФИО предпринимателя ИЗ ОГРНИП
 //            field("ENPREPRENEUR_INIC") // Фамилия и  инициалы предпринимателя
 //            field("ENPREPRENEUR_INIC_F") // Инициалы и фамилия предпринимателя
             field("OGRNIP_NUMB", get<IpInfo>().ogrn) // ОГРНИП

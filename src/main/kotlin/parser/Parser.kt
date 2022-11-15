@@ -10,17 +10,13 @@ class Parser {
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private var document: Document? = null
     fun parsing(inn: String): Int {
-        try {
-            val url = "https://sbis.ru/contragents/"
-            val response = Jsoup.connect(url + inn).timeout(10000).execute()
-            if (response.statusCode() == 200) {
-                document = response.parse()
-                type = 1
-            }
-            return response.statusCode()
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+        val url = "https://sbis.ru/contragents/"
+        val response = Jsoup.connect(url + inn).timeout(10000).execute()
+        if (response.statusCode() == 200) {
+            document = response.parse()
+            type = 1
         }
+        return response.statusCode()
     }
 
     // для ООО у которых есть несколкьо организаций внутри себя

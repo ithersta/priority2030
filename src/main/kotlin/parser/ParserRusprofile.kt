@@ -9,8 +9,7 @@ class ParserRusprofile {
                 " div > div.company-requisites > div:nth-child(2) > dl:nth-child(1) > dd:nth-child(3)"
         val response = Jsoup.connect("$url$ogrnIp").timeout(10000).execute()
         if (response.statusCode() == 200) {
-            val document = response.parse()
-            return document.select(selectorData).html().replace("от ".toRegex(), "")
+            return response.parse().select(selectorData).html().replace("от ".toRegex(), "")
         }
         return "ДАННЫХ НЕТ!!!"
     }
