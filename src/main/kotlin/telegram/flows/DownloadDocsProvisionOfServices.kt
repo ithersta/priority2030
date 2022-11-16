@@ -87,7 +87,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument{message->
-            state.override {FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId))}
+            state.override {
+                FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId))
+            }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocOfficialMemo> {
@@ -98,7 +100,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument{ message->
-            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.media.fileId) }
+            state.override {
+                FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.media.fileId)
+            }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocDraftAgreement> {
@@ -109,7 +113,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument{ message->
-            state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.media.fileId) }
+            state.override {
+                FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.media.fileId)
+            }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
@@ -125,9 +131,11 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                     message.chat,
                     Strings.IncorrectNumOfDocs
                 )
-                state.override {FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs)}
+                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
             } else
-            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.media.fileId) }
+            state.override {
+                FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.media.fileId)
+            }
         }
     }
     state<FillingProvisionOfServicesState.UploadExtraDocs> {
