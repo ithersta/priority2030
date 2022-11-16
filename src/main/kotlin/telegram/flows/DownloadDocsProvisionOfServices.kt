@@ -16,6 +16,7 @@ import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings
 
+const val MinNumOfCommercialOffers = 3
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
     state<FillingProvisionOfServicesState.DownloadDocs>{
         onEnter{chatId->
@@ -126,7 +127,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocumentMediaGroup{ message->
-            if (message.content.group.size < 3) {
+            if (message.content.group.size < MinNumOfCommercialOffers) {
                 sendTextMessage(
                     message.chat,
                     Strings.IncorrectNumOfDocs
