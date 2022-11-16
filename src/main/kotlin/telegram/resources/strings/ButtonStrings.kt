@@ -17,6 +17,7 @@ object ButtonStrings {
     const val BackToCreateDocs = "Вернуться к заполнению документов"
     const val UploadDocuments = "Загрузить документы"
     const val Send = "Отправить"
+    const val NotRequired = "Не загружать дополнительные документы"
     const val Back = "⬅️Назад"
 
 }
