@@ -1,20 +1,22 @@
 package parser
 
+import domain.datatypes.OrganizationType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import parser.ConstantsForParsing.orderFullName
+import parser.ConstantsForParsing.orderInn
+import parser.ConstantsForParsing.orderKppOoo
+import parser.ConstantsForParsing.orderOgrnIp
+import parser.ConstantsForParsing.orderOgrnOoo
+import parser.ConstantsForParsing.orderOkpoIp
+import parser.ConstantsForParsing.orderOkpoOoo
+import parser.ConstantsForParsing.statusCodeSuccessful
+import parser.ConstantsForParsing.time
+import telegram.resources.strings.CollectorStrings
 
 class Parser {
     //     0 -  ООО , 1  - ИП
-    private var type: Byte = 0
-    private val time = 25000
-    private val statusCodeSuccessful = 200
-    private val orderFullName = 0
-    private val orderInn = 1
-    private val orderKppOoo = 2
-    private val orderOgrnOoo = 3
-    private val orderOkpoOoo = 4
-    private val orderOgrnIp = 2
-    private val orderOkpoIp = 3
+    private var type: OrganizationType = OrganizationType.Ooo
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private lateinit var document: Document
     fun parsing(inn: String): Int {
@@ -22,7 +24,7 @@ class Parser {
         val response = Jsoup.connect(url + inn).timeout(time).execute()
         if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
-            type = 1
+            type = OrganizationType.IP
         }
         return response.statusCode()
     }
@@ -92,17 +94,16 @@ class Parser {
 
 
     val fullNameOfOrg: String
-        get() = if (type.toInt() == 0) mainInfoAboutOrg[orderFullName] else "ИП " + mainInfoAboutOrg[orderFullName]
+        get() = if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderFullName]
+        else "ИП " + mainInfoAboutOrg[orderFullName]
     val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     val kppOfOrg: String
         get() = mainInfoAboutOrg[orderKppOoo].replace("КПП ".toRegex(), "")
     val ogrnOfOrg: String
-        get() = (if (type.toInt() == 0) mainInfoAboutOrg[orderOgrnOoo] else mainInfoAboutOrg[orderOgrnIp]).replace(
-            "ОГРН ".toRegex(), ""
-        )
+        get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOgrnOoo]
+        else mainInfoAboutOrg[orderOgrnIp]).replace("ОГРН ".toRegex(), "")
     val okpoOfOrg: String
-        get() = (if (type.toInt() == 0) mainInfoAboutOrg[orderOkpoOoo] else mainInfoAboutOrg[orderOkpoIp]).replace(
-            "ОКПО ".toRegex(), ""
-        )
+        get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOkpoOoo]
+        else mainInfoAboutOrg[orderOkpoIp]).replace("ОКПО ".toRegex(), "")
 }

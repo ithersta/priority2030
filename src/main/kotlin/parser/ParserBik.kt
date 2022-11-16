@@ -2,12 +2,11 @@ package parser
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.io.IOException
+import parser.ConstantsForParsing.statusCodeSuccessful
+import parser.ConstantsForParsing.time
 
 class ParserBik {
     private lateinit var document: Document
-    private val time = 25000
-    private val statusCodeSuccessful = 200
     fun parseWebPage(bik: String): Int {
         val url = "https://bik-info.ru/bik_"
         val response = Jsoup.connect("$url$bik.html").timeout(time).execute()

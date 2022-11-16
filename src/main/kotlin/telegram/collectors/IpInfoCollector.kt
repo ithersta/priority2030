@@ -111,12 +111,8 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsEmailValid(it.content.text)) {
                     val info = IpInfo(
-                        state.snapshot.inn,
-                        state.snapshot.ogrn,
-                        state.snapshot.dataOgrn,
-                        state.snapshot.fullNameOfHolder,
-                        state.snapshot.phone,
-                        it.content.text
+                        state.snapshot.inn, state.snapshot.ogrn, state.snapshot.dataOgrn,
+                        state.snapshot.fullNameOfHolder, state.snapshot.phone, it.content.text
                     )
                     this@collector.exit(state, listOf(info))
                 } else {

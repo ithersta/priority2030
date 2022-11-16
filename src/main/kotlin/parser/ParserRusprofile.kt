@@ -1,10 +1,10 @@
 package parser
 
 import org.jsoup.Jsoup
+import parser.ConstantsForParsing.statusCodeSuccessful
+import parser.ConstantsForParsing.time
 
 class ParserRusprofile {
-    private val time = 25000
-    private val statusCodeSuccessful = 200
     fun parseWebPage(ogrnIp: String): String {
         val url = "https://www.rusprofile.ru/ip/"
         val selectorData = "#ab-test-wrp > div.tile-area.td1 > div > div:nth-child(1) >" +
