@@ -6,9 +6,7 @@ import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import mu.KotlinLogging
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
-import telegram.flows.documentBuildingLoop
-import telegram.flows.mainMenu
-import telegram.flows.startCommand
+import telegram.flows.*
 import telegram.resources.strings.Strings
 
 private val logger = KotlinLogging.logger { }
