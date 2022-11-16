@@ -1,5 +1,6 @@
 package telegram.entities.state
 
+import dev.inmo.tgbotapi.requests.abstracts.FileId
 import dev.inmo.tgbotapi.types.files.DocumentFile
 import dev.inmo.tgbotapi.types.message.content.DocumentMediaGroupPartContent
 import dev.inmo.tgbotapi.types.message.content.MediaGroupCollectionContent
@@ -23,27 +24,27 @@ object FillingProvisionOfServicesState {
 
     @Serializable
     data class UploadDocOfficialMemo(
-        val docs: List<MediaGroupCollectionContent.PartWrapper<DocumentMediaGroupPartContent>>
+        val docs: List<FileId>
     ) : DialogState
 
     @Serializable
     data class UploadDocDraftAgreement (
-        val docs: List<MediaGroupCollectionContent.PartWrapper<DocumentMediaGroupPartContent>>
+        val docs: List<FileId>
     ): DialogState
 
     @Serializable
     data class UploadDocsCommercialOffers (
-        val docs: List<MediaGroupCollectionContent.PartWrapper<DocumentMediaGroupPartContent>>
+        val docs: List<FileId>
     ) : DialogState
 
     @Serializable
     data class UploadExtraDocs (
-        val docs: List<MediaGroupCollectionContent.PartWrapper<DocumentMediaGroupPartContent>>
+        val docs: List<FileId>
     ): DialogState
 
     @Serializable
     data class SendDocs (
-        val docs: List<MediaGroupCollectionContent.PartWrapper<DocumentMediaGroupPartContent>>
+        val docs: List<FileId>
     ): DialogState
 
 }

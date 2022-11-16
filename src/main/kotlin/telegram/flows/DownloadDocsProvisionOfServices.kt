@@ -1,12 +1,14 @@
 package telegram.flows
 
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
+import com.ithersta.tgbotapi.fsm.entities.triggers.onDocument
 import com.ithersta.tgbotapi.fsm.entities.triggers.onDocumentMediaGroup
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
+import dev.inmo.tgbotapi.requests.abstracts.FileId
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
@@ -85,8 +87,14 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.ApplicationForPlacement
             )
         }
-        onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.UploadDocOfficialMemo(message.content.group) }
+        onDocument{message->
+//            val x = message.content.media
+//            val pp: ArrayList<FileId> = ArrayList()
+//            pp.add(x.fileId)
+//            x.forEach { y->
+//                pp.add(y.content.media.fileId)
+//            }
+            state.override {FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId))}
         }
     }
     state<FillingProvisionOfServicesState.UploadDocOfficialMemo> {
@@ -96,8 +104,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.OfficialMemo
             )
         }
-        onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.group) }
+        onDocument{ message->
+            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.media.fileId) }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocDraftAgreement> {
@@ -107,32 +115,33 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.DraftAgreement
             )
         }
-        onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.group) }
+        onDocument{ message->
+            //state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.media.fileId) }
+            state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.media.fileId) }
         }
     }
-    state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
-        onEnter{chatId->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.CommercialOffers
-            )
-        }
-        onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.group) }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadExtraDocs> {
-        onEnter{chatId->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.ExtraDocs
-            )
-        }
-        onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.group) }
-        }
-    }
+//    state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
+//        onEnter{chatId->
+//            sendTextMessage(
+//                chatId,
+//                Strings.UploadDocs.CommercialOffers
+//            )
+//        }
+//        onDocumentMediaGroup{ message->
+//            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.media.fileId) }
+//        }
+//    }
+//    state<FillingProvisionOfServicesState.UploadExtraDocs> {
+//        onEnter{chatId->
+//            sendTextMessage(
+//                chatId,
+//                Strings.UploadDocs.ExtraDocs
+//            )
+//        }
+//        onDocumentMediaGroup{ message->
+//            state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.media.fileId) }
+//        }
+//    }
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter{chatId->
             sendTextMessage(
