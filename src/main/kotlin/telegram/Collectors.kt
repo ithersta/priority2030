@@ -13,4 +13,6 @@ fun StateFilterBuilder<DialogState, Unit, CollectingDataState, Unit, UserId>.col
     purchasePointCollector()
     purchaseIniciatorCollector()
     purchaseCostCollector()
+    financiallyResponsiblePersonCollector()
+    responsibleForDocumentsPersonCollector()
 }

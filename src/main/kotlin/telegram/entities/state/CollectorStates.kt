@@ -50,3 +50,32 @@ object PurchaseIniciatorState : DialogState
 
 @Serializable
 object PurchaseCostState : DialogState
+
+object FinanciallyResponsiblePersonState {
+    @Serializable
+    object WaitingForFIO : DialogState
+
+    @Serializable
+    data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
+
+    @Serializable
+    data class WaitingForWorkPhoneNumber(val FIO: String, val contactPhoneNumber: String) : DialogState
+}
+
+object ResponsibleForDocumentsPersonState {
+    @Serializable
+    object WaitingForFIO : DialogState
+
+    @Serializable
+    data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
+
+    @Serializable
+    data class WaitingForWorkPhoneNumber(val FIO: String, val contactPhoneNumber: String) : DialogState
+
+    @Serializable
+    data class WaitingForEmail(
+        val FIO: String,
+        val contactPhoneNumber: String,
+        val workPhoneNumber:String
+    ) : DialogState
+}

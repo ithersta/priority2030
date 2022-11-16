@@ -24,7 +24,7 @@ fun CollectorMapBuilder.purchaseIniciatorCollector() {
                     val inic = PurchaseIniciator(FIO)
                     this@collector.exit(state, listOf(inic))
                 } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.PurchaseIniciator)
+                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidFIO)
                     return@onText
                 }
             }

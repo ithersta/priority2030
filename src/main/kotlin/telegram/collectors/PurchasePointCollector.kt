@@ -29,7 +29,7 @@ fun CollectorMapBuilder.purchasePointCollector() {
                     val purchasePoint = PurchasePoint(number = point)
                     this@collector.exit(state, listOf(purchasePoint))
                 } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.PurchasePoint)
+                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidPurchasePoint)
                     return@onText
                 }
             }
