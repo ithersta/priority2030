@@ -24,5 +24,11 @@ data class CompanyInfo(
             val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
             return fAndIO[1].replace("[а-я]+".toRegex(), ".") + " " + fAndIO[0]
         }
+//    ФИО ГЕНДИРА В РОДИТЕЛЬНОМ ПАДЕЖЕ
+//    val fullNameOfHolderInGenitiveCase: String
+//        get(){
+//
+//        }
+
 //    val shortNameOfCompany : String = fullNameOfOrg
 }
