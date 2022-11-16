@@ -12,7 +12,7 @@ object Strings {
     const val Welcome = "Этот бот поможет Вам с оформлением документов, необходимых для оформления закупки на оказание услуг с ООО или ИП (Закупка у единственного поставщика)"
     const val CreateDocumentsMessage = "Давайте начнём заполнение"
     const val InProcess = "Функция находится на этапе разработки"
-    const val SendDocuments = "Отправка документов на почту"
+    const val SendDocuments = "Отправить документы на почту"
     fun checkingListOfDocs():String{
         return(
         """|Проверьте список документов:
@@ -33,4 +33,6 @@ object Strings {
         const val CommercialOffers = "Загрузите три и более коммерческих предложения"
         const val ExtraDocs = "Загрузите дополнительные документы при необходимости"
     }
+
+    const val IncorrectNumOfDocs = "Загружено недостаточное количество документов. "
 }

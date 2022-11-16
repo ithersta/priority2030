@@ -88,12 +88,6 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument{message->
-//            val x = message.content.media
-//            val pp: ArrayList<FileId> = ArrayList()
-//            pp.add(x.fileId)
-//            x.forEach { y->
-//                pp.add(y.content.media.fileId)
-//            }
             state.override {FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId))}
         }
     }
@@ -127,6 +121,13 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocumentMediaGroup{ message->
+            if (message.content.group.size < 3) {
+                sendTextMessage(
+                    message.chat,
+                    Strings.IncorrectNumOfDocs
+                )
+                state.override {FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs)}
+            } else
             state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.media.fileId) }
         }
     }
@@ -148,6 +149,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText(ButtonStrings.NotRequired){
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
         }
+        //тут не будет работать, если будет ровно один документ
+        //пока что не знаю, как исправить
         onDocumentMediaGroup{ message->
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.media.fileId) }
         }
