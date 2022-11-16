@@ -26,6 +26,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServic
                 ) {
                     row {
                         simpleButton(CreateDocuments)
+                    }
+                    row{
                         simpleButton(Back)
                     }
                 }

@@ -49,6 +49,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 ) {
                     row {
                         simpleButton(ButtonStrings.UploadPackageDoc)
+                    }
+                    row{
                         simpleButton(ButtonStrings.BackToCreateDocs)
                     }
                 }
