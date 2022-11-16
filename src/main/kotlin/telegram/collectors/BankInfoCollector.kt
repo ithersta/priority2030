@@ -4,6 +4,8 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.BankInfo
+import parser.ConstantsForParsing
+import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ParserBik
 import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
@@ -18,7 +20,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText {
                 val parser = ParserBik()
                 if (IsBicValid(it.content.text)) {
-                    if (parser.parseWebPage(it.content.text) == 200) {
+                    if (parser.parseWebPage(it.content.text) == statusCodeSuccessful) {
                         state.override {
                             BankCollectorState.WaitingForPaymentAccount(
                                 it.content.text, parser.corrAccount, parser.bakName

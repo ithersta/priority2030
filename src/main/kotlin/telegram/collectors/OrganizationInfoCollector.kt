@@ -4,6 +4,8 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.CompanyInfo
+import parser.ConstantsForParsing
+import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.Parser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
@@ -27,7 +29,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.kpp) }
             onText {
                 if (IsKppValid(it.content.text)) {
-                    if (parser.parsing(state.snapshot.inn, it.content.text) == 200) {
+                    if (parser.parsing(state.snapshot.inn, it.content.text) == statusCodeSuccessful) {
                         state.override {
                             CompanyCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg)
                         }

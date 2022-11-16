@@ -4,6 +4,8 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.IpInfo
+import parser.ConstantsForParsing
+import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.Parser
 import parser.ParserRusprofile
 import telegram.entities.state.IpCollectorState
@@ -18,7 +20,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText { message ->
                 if (IsInnValidForIp(message.content.text)) {
-                    if (parser.parsing(message.content.text) != 200) {
+                    if (parser.parsing(message.content.text) != statusCodeSuccessful) {
                         state.override {
                             IpCollectorState.HandsWaitingOgrn(
                                 message.content.text
