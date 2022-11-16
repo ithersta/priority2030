@@ -3,6 +3,7 @@ package telegram.flows
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import dev.inmo.tgbotapi.extensions.api.send.media.sendDocument
+import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.api.send.withUploadDocumentAction
 import dev.inmo.tgbotapi.requests.abstracts.asMultipartFile
 import dev.inmo.tgbotapi.types.UserId
@@ -13,6 +14,7 @@ import telegram.collectors
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
+import telegram.resources.strings.Strings
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.documentBuildingLoop() {
     state<CollectingDataState> {
@@ -20,6 +22,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.documentBuildingLoop() {
         onEnter { chatId ->
             when (val result = documentSet.build(state.snapshot.fieldsData.associateBy { it::class })) {
                 is DocumentSet.Result.MissingData -> {
+                    sendTextMessage(chatId, Strings.collectingDataStep(state.snapshot.fieldsData.size + 1))
                     state.push(collectors.getValue(result.kClass))
                 }
 

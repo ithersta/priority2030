@@ -35,7 +35,7 @@ fun CollectorMapBuilder.fullNameCollector() {
                     firstName = state.snapshot.firstName,
                     patronymic = message.content.text.takeIf { it != CollectorStrings.FullName.NoPatronymic }
                 )
-                this@collector.exit(state, listOf(name))
+                this@collector.exit(state, name)
             }
         }
     }

@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package telegram.resources.strings
 
 object Strings {
@@ -11,4 +12,11 @@ object Strings {
 
     const val Welcome = "Этот бот поможет Вам с оформлением документов, необходимых для оформления закупки на оказание услуг с ООО или ИП (Закупка у единственного поставщика)"
     const val CreateDocumentsMessage = "Давайте начнём заполнение"
+
+    fun collectingDataStep(step: Int) = buildString {
+        append("Шаг $step")
+        if (step > 1) {
+            append(". /back – вернуться на шаг назад")
+        }
+    }
 }
