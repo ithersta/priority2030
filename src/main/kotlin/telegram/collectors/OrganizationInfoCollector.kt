@@ -16,11 +16,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
             onText {
                 if (IsInnValidForOoo(it.content.text)) {
-                    state.override {
-                        CompanyCollectorState.WaitingForKpp(
-                            inn = it.content.text
-                        )
-                    }
+                    state.override { CompanyCollectorState.WaitingForKpp(it.content.text) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.innForOoo)
                     return@onText
@@ -33,18 +29,10 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (IsKppValid(it.content.text)) {
                     if (parser.parsing(state.snapshot.inn, it.content.text) == 200) {
                         state.override {
-                            CompanyCollectorState.WaitingInspection(
-                                inn = it.content.text,
-                                fullNameOfOrg = parser.fullNameOfOrg
-                            )
+                            CompanyCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg)
                         }
                     } else {
-                        state.override {
-                            CompanyCollectorState.HandsWaitingOgrn(
-                                inn = state.snapshot.inn,
-                                kpp = it.content.text
-                            )
-                        }
+                        state.override { CompanyCollectorState.HandsWaitingOgrn(this.inn, it.content.text) }
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.kpp)
@@ -57,11 +45,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onText {
                 if (IsOgrnipValidForOoo(it.content.text)) {
                     state.override {
-                        CompanyCollectorState.HandsWaitingFullNameOfOrg(
-                            inn = state.snapshot.inn,
-                            kpp = state.snapshot.kpp,
-                            ogrn = it.content.text
-                        )
+                        CompanyCollectorState.HandsWaitingFullNameOfOrg(this.inn, this.kpp, it.content.text)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.ogrnForOoo)
@@ -73,12 +57,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.fullNameofOrg) }
             onText {
                 state.override {
-                    CompanyCollectorState.HandsWaitingFullNameOfHolder(
-                        inn = state.snapshot.inn,
-                        kpp = state.snapshot.kpp,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfOrg = it.content.text
-                    )
+                    CompanyCollectorState.HandsWaitingFullNameOfHolder(this.inn, this.kpp, this.ogrn, it.content.text)
                 }
             }
         }
@@ -88,11 +67,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (IsFullNameValid(it.content.text)) {
                     state.override {
                         CompanyCollectorState.HandsWaitingPost(
-                            inn = state.snapshot.inn,
-                            kpp = state.snapshot.kpp,
-                            ogrn = state.snapshot.ogrn,
-                            fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                            fullNameOfHolder = it.content.text
+                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, it.content.text
                         )
                     }
                 } else {
@@ -107,12 +82,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
 //              Не возможно проверить !
                 state.override {
                     CompanyCollectorState.HandsWaitingLocation(
-                        inn = state.snapshot.inn,
-                        kpp = state.snapshot.kpp,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                        fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                        post = it.content.text
+                        this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, it.content.text
                     )
                 }
             }
@@ -123,13 +93,8 @@ fun CollectorMapBuilder.organizationInfoCollector() {
 //              Не возможно проверить !
                 state.override {
                     CompanyCollectorState.WaitingPhone(
-                        inn = state.snapshot.inn,
-                        kpp = state.snapshot.kpp,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                        fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                        post = state.snapshot.post,
-                        location = it.content.text
+                        this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, this.post,
+                        it.content.text
                     )
                 }
             }
@@ -148,13 +113,8 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (response == "Да") {
                     state.override {
                         CompanyCollectorState.WaitingPhone(
-                            inn = parser.innOfOrg,
-                            kpp = parser.kppOfOrg,
-                            ogrn = parser.ogrnOfOrg,
-                            fullNameOfOrg = parser.fullNameOfOrg,
-                            fullNameOfHolder = parser.fullNameOfHolder,
-                            post = parser.post,
-                            location = parser.location
+                            parser.innOfOrg, parser.kppOfOrg, parser.ogrnOfOrg, parser.fullNameOfOrg,
+                            parser.fullNameOfHolder, parser.post, parser.location
                         )
                     }
                 } else {
@@ -168,14 +128,8 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (IsPhoneNumberValid(it.content.text)) {
                     state.override {
                         CompanyCollectorState.WaitingEmail(
-                            inn = state.snapshot.inn,
-                            kpp = state.snapshot.kpp,
-                            ogrn = state.snapshot.ogrn,
-                            fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                            fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                            post = state.snapshot.post,
-                            location = state.snapshot.location,
-                            phone = it.content.text
+                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, this.post,
+                            this.location, it.content.text
                         )
                     }
                 } else {
@@ -189,15 +143,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onText {
                 if (IsEmailValid(it.content.text)) {
                     val info = CompanyInfo(
-                        inn = state.snapshot.inn,
-                        kpp = state.snapshot.kpp,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfOrg = state.snapshot.fullNameOfOrg,
-                        fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                        post = state.snapshot.post,
-                        location = state.snapshot.location,
-                        phone = state.snapshot.phone,
-                        email = it.content.text
+                        state.snapshot.inn, state.snapshot.kpp, state.snapshot.ogrn, state.snapshot.fullNameOfOrg,
+                        state.snapshot.fullNameOfHolder, state.snapshot.post, state.snapshot.location,
+                        state.snapshot.phone, it.content.text
                     )
                     this@collector.exit(state, listOf(info))
                 } else {

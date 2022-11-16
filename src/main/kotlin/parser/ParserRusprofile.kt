@@ -13,6 +13,6 @@ class ParserRusprofile {
         if (response.statusCode() == statusCodeSuccessful) {
             return response.parse().select(selectorData).html().replace("от ".toRegex(), "")
         }
-        return "ДАННЫХ НЕТ!!!"
+        return null.toString()
     }
 }
