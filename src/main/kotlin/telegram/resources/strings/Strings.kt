@@ -10,6 +10,7 @@ object Strings {
     const val Welcome = "Этот бот поможет Вам с оформлением документов, необходимых для оформления закупки на оказание услуг с ООО или ИП (Закупка у единственного поставщика)"
     const val CreateDocumentsMessage = "Давайте начнём заполнение"
     const val InProcess = "Функция находится на этапе разработки"
+    const val SendDocuments = "Отправка документов на почту"
     fun checkingListOfDocs():String{
         return(
         """|Проверьте список документов:

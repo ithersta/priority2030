@@ -1,6 +1,7 @@
 package telegram.flows
 
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
+import com.ithersta.tgbotapi.fsm.entities.triggers.onDocumentMediaGroup
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
@@ -84,8 +85,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.ApplicationForPlacement
             )
         }
-        onText{
-            state.override { FillingProvisionOfServicesState.UploadDocOfficialMemo }
+        onDocumentMediaGroup{ message->
+            state.override { FillingProvisionOfServicesState.UploadDocOfficialMemo(message.content.group) }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocOfficialMemo> {
@@ -95,8 +96,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.OfficialMemo
             )
         }
-        onText{
-            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement }
+        onDocumentMediaGroup{ message->
+            state.override { FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.group) }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocDraftAgreement> {
@@ -106,8 +107,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.DraftAgreement
             )
         }
-        onText{
-            state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers }
+        onDocumentMediaGroup{ message->
+            state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.group) }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
@@ -117,8 +118,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.CommercialOffers
             )
         }
-        onText{
-            state.override { FillingProvisionOfServicesState.UploadExtraDocs }
+        onDocumentMediaGroup{ message->
+            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.group) }
         }
     }
     state<FillingProvisionOfServicesState.UploadExtraDocs> {
@@ -128,11 +129,27 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 Strings.UploadDocs.ExtraDocs
             )
         }
-        onText{
-            state.override { FillingProvisionOfServicesState.SendDocs }
+        onDocumentMediaGroup{ message->
+            state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.group) }
         }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
-
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.SendDocuments,
+                replyMarkup = replyKeyboard(
+                    resizeKeyboard = true,
+                    oneTimeKeyboard = true
+                ) {
+                    row {
+                        simpleButton(ButtonStrings.Send)
+                    }
+                }
+            )
+        }
+        onText(ButtonStrings.Send){
+            state.override { EmptyState }
+        }
     }
 }
