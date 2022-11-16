@@ -12,17 +12,12 @@ import validation.IsIndicatorValid
 import validation.IsLetterEventValid
 
 fun CollectorMapBuilder.purchaseDescriptionCollector() {
-    collector<PurchaseDescription>(initialState = PurchaseDescriptionState.WaitingForShortName) {
-        state<PurchaseDescriptionState.WaitingForShortName> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortName) }
-            onText { state.override { PurchaseDescriptionState.WaitingForShortJustification(it.content.text) } }
-        }
+    collector<PurchaseDescription>(initialState = PurchaseDescriptionState.WaitingForShortJustification) {
         state<PurchaseDescriptionState.WaitingForShortJustification> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortJustification) }
             onText {
                 state.override {
                     PurchaseDescriptionState.WaitingForSelectionLetter(
-                        state.snapshot.shortName,
                         it.content.text
                     )
                 }
@@ -40,7 +35,6 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 if (IsLetterEventValid(letter)) {
                     state.override {
                         PurchaseDescriptionState.WaitingForSelectionIdentifier(
-                            state.snapshot.shortName,
                             state.snapshot.shortJustification,
                             letter
                         )
@@ -67,7 +61,6 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 if (IsIndicatorValid(indicator)) {
                     state.override {
                         PurchaseDescriptionState.WaitingForFullJustification(
-                            state.snapshot.shortName,
                             state.snapshot.shortJustification,
                             state.snapshot.selectionLetter,
                             indicator
@@ -83,7 +76,6 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.FullJustification) }
             onText {
                 val purchaseDescription = PurchaseDescription(
-                    shortName = state.snapshot.shortName,
                     shortJustification = state.snapshot.shortJustification,
                     selectionLetter = state.snapshot.selectionLetter,
                     selectionIdentifier = state.snapshot.selectionIdentifier,

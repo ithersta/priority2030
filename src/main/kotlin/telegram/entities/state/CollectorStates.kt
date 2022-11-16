@@ -18,27 +18,22 @@ object OrganizationTypeState : DialogState
 
 object PurchaseDescriptionState {
     @Serializable
-    object WaitingForShortName : DialogState
+    object WaitingForShortJustification : DialogState
 
     @Serializable
-    data class WaitingForShortJustification(val shortName: String) : DialogState
-
-    @Serializable
-    data class WaitingForSelectionLetter(val shortName: String, val shortJustification: String) : DialogState
+    data class WaitingForSelectionLetter(val shortJustification: String) : DialogState
 
     @Serializable
     data class WaitingForSelectionIdentifier(
-        val shortName: String,
         val shortJustification: String,
-        val selectionLetter:String
+        val selectionLetter: String
     ) : DialogState
 
     @Serializable
     data class WaitingForFullJustification(
-        val shortName: String,
         val shortJustification: String,
-        val selectionLetter:String,
-        val selectionIdentifier:String
+        val selectionLetter: String,
+        val selectionIdentifier: String
     ) : DialogState
 }
 
@@ -76,6 +71,26 @@ object ResponsibleForDocumentsPersonState {
     data class WaitingForEmail(
         val FIO: String,
         val contactPhoneNumber: String,
-        val workPhoneNumber:String
+        val workPhoneNumber: String
     ) : DialogState
 }
+
+@Serializable
+object PurchaseObjectState : DialogState
+
+@Serializable
+object PurchaseInitiatorDepartmentState : DialogState
+
+object PurchaseDeadlineAndDeliveryAddressState {
+    @Serializable
+    object WaitingForDeadline : DialogState
+
+    @Serializable
+    data class WaitingForDeliveryAddress(val deadline: String) : DialogState
+}
+
+@Serializable
+object MaterialObjectNumberState : DialogState
+
+@Serializable
+object TermOfPaymentState : DialogState
