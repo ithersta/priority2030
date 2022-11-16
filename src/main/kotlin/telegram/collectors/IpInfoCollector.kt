@@ -21,14 +21,14 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     if (parser.parsing(message.content.text) != 200) {
                         state.override {
                             IpCollectorState.HandsWaitingOgrn(
-                                inn = message.content.text
+                                message.content.text
                             )
                         }
                     } else {
                         state.override {
                             IpCollectorState.WaitingInspection(
-                                inn = message.content.text,
-                                fullNameOfHolder = parser.fullNameOfOrg
+                                message.content.text,
+                                parser.fullNameOfOrg
                             )
                         }
                     }
@@ -52,10 +52,8 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 if (response == "Да") {
                     state.override {
                         IpCollectorState.WaitingPhone(
-                            inn = parser.innOfOrg,
-                            ogrn = parser.ogrnOfOrg,
-                            fullNameOfHolder = parser.fullNameOfHolder,
-                            dataOgrn = parserForData.parseWebPage(parser.ogrnOfOrg)
+                            parser.innOfOrg, parser.ogrnOfOrg, parser.fullNameOfHolder,
+                            parserForData.parseWebPage(parser.ogrnOfOrg)
                         )
                     }
                 } else {
@@ -67,12 +65,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.ogrn) }
             onText {
                 if (IsOgrnipValidForIp(it.content.text)) {
-                    state.override {
-                        IpCollectorState.HandsWaitingDataOfOgrn(
-                            inn = state.snapshot.inn,
-                            ogrn = it.content.text
-                        )
-                    }
+                    state.override { IpCollectorState.HandsWaitingDataOfOgrn(this.inn, it.content.text) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.ogrnForIp)
                     return@onText
@@ -82,13 +75,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
         state<IpCollectorState.HandsWaitingDataOfOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.data) }
             onText {
-                state.override {
-                    IpCollectorState.HandsWaitingfullNameOfHolder(
-                        inn = state.snapshot.inn,
-                        ogrn = state.snapshot.ogrn,
-                        dataOgrn = it.content.text
-                    )
-                }
+                state.override { IpCollectorState.HandsWaitingfullNameOfHolder(this.inn, this.ogrn, it.content.text) }
             }
         }
         state<IpCollectorState.HandsWaitingfullNameOfHolder> {
@@ -96,12 +83,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsFullNameValid(it.content.text)) {
                     state.override {
-                        IpCollectorState.WaitingPhone(
-                            inn = state.snapshot.inn,
-                            ogrn = state.snapshot.ogrn,
-                            dataOgrn = state.snapshot.dataOgrn,
-                            fullNameOfHolder = it.content.text
-                        )
+                        IpCollectorState.WaitingPhone(this.inn, this.ogrn, this.dataOgrn, it.content.text)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
@@ -115,11 +97,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 if (IsPhoneNumberValid(it.content.text)) {
                     state.override {
                         IpCollectorState.WaitingEmail(
-                            inn = state.snapshot.inn,
-                            ogrn = state.snapshot.ogrn,
-                            fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                            dataOgrn = state.snapshot.dataOgrn,
-                            phone = it.content.text
+                            this.inn, this.ogrn, this.dataOgrn, this.fullNameOfHolder, it.content.text
                         )
                     }
                 } else {
@@ -133,12 +111,12 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsEmailValid(it.content.text)) {
                     val info = IpInfo(
-                        inn = state.snapshot.inn,
-                        ogrn = state.snapshot.ogrn,
-                        fullNameOfHolder = state.snapshot.fullNameOfHolder,
-                        orgrnData = state.snapshot.dataOgrn,
-                        phone = state.snapshot.phone,
-                        email = it.content.text
+                        state.snapshot.inn,
+                        state.snapshot.ogrn,
+                        state.snapshot.dataOgrn,
+                        state.snapshot.fullNameOfHolder,
+                        state.snapshot.phone,
+                        it.content.text
                     )
                     this@collector.exit(state, listOf(info))
                 } else {
