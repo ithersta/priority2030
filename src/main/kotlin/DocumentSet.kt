@@ -21,13 +21,6 @@ val documentSet = documentSet {
         iniciatorFIO()
         purchaseCost()
     }
-    document("/documents/Заявка на оплату.docx"){
-        purchaseCost()
-        iniciatorFIO()
-        financiallyResponsiblePerson()
-        responsibleForDocumentsPerson()
-        materialObjectNumber()
-    }
     document("/documents/Заявка на размещение.docx"){
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
@@ -39,7 +32,16 @@ val documentSet = documentSet {
         responsibleForDocumentsPerson()
         field("DOC_PHONE",get<ResponsibleForDocumentsPerson>().workPhoneNumber)
         field("EM",get<ResponsibleForDocumentsPerson>().email)
+        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline)
+        field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorFIO()
+    }
+    document("/documents/Заявка на оплату.docx"){
+        purchaseCost()
+        iniciatorFIO()
+        financiallyResponsiblePerson()
+        responsibleForDocumentsPerson()
+        materialObjectNumber()
     }
 }
 

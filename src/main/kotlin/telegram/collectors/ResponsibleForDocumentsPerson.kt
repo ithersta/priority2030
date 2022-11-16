@@ -3,10 +3,8 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import domain.datatypes.FinanciallyResponsiblePerson
 import domain.datatypes.ResponsibleForDocumentsPerson
 import org.apache.commons.validator.routines.EmailValidator
-import telegram.entities.state.FinanciallyResponsiblePersonState
 import telegram.entities.state.ResponsibleForDocumentsPersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
@@ -32,7 +30,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                 val contactPhoneNumber = it.content.text
                 if (IsPhoneNumberValid(contactPhoneNumber)) {
                     state.override {
-                        FinanciallyResponsiblePersonState.WaitingForWorkPhoneNumber(
+                        ResponsibleForDocumentsPersonState.WaitingForWorkPhoneNumber(
                             state.snapshot.FIO,
                             contactPhoneNumber
                         )
