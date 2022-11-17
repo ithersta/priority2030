@@ -1,5 +1,6 @@
 package telegram.entities.state
 
+import domain.datatypes.BankInfo
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
@@ -24,9 +25,7 @@ object BankCollectorState {
 
     @Serializable
     data class WaitingForPaymentAccount(
-        val bik: String,
-        val correspondentAccount: String,
-        val bankName: String
+        val mainInfo: BankInfo,
     ) : DialogState
 
     @Serializable

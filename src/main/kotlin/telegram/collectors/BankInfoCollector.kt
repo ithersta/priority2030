@@ -3,8 +3,8 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
+import domain.datatypes.BankInfo
 import domain.datatypes.InformationBank
-import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ParserBik
 import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
@@ -19,11 +19,10 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText {
                 val parser = ParserBik()
                 if (IsBicValid(it.content.text)) {
-                    if (parser.parseWebPage(it.content.text) == statusCodeSuccessful) {
+                    val mainInfo = parser.parseWebPage(bik = it.content.text)
+                    if (mainInfo != null) {
                         state.override {
-                            BankCollectorState.WaitingForPaymentAccount(
-                                it.content.text, parser.corrAccount, parser.bakName
-                            )
+                            BankCollectorState.WaitingForPaymentAccount(mainInfo)
                         }
                     } else {
                         state.override { BankCollectorState.HandsWaitingForCorrAccount(it.content.text) }
@@ -50,7 +49,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText {
                 state.override {
                     BankCollectorState.WaitingForPaymentAccount(
-                        state.snapshot.bik, state.snapshot.correspondentAccount, it.content.text
+                        BankInfo(this.bik, this.correspondentAccount, it.content.text)
                     )
                 }
             }
@@ -60,9 +59,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText { message ->
                 if (IsPaymentAccountValid(message.content.text)) {
                     val info = InformationBank(
-                        bik = state.snapshot.bik,
-                        correspondentAccount = state.snapshot.correspondentAccount,
-                        bankName = state.snapshot.bankName,
+                        mainInfo = state.snapshot.mainInfo,
                         settlementAccountNumber = message.content.text
                     )
                     this@collector.exit(state, listOf(info))
