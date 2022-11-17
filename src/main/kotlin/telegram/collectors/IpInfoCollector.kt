@@ -3,8 +3,7 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import domain.datatypes.IpInfo
-import parser.ConstantsForParsing
+import domain.datatypes.EntrepreneurInformation
 import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.Parser
 import parser.ParserRusprofile
@@ -13,7 +12,7 @@ import telegram.resources.strings.CollectorStrings
 import validation.*
 
 fun CollectorMapBuilder.ipInfoCollector() {
-    collector<IpInfo>(initialState = IpCollectorState.WaitingForInn) {
+    collector<EntrepreneurInformation>(initialState = IpCollectorState.WaitingForInn) {
         val parser = Parser()
         val parserForData = ParserRusprofile()
         state<IpCollectorState.WaitingForInn> {
@@ -112,7 +111,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.email) }
             onText {
                 if (IsEmailValid(it.content.text)) {
-                    val info = IpInfo(
+                    val info = EntrepreneurInformation(
                         state.snapshot.inn, state.snapshot.ogrn, state.snapshot.dataOgrn,
                         state.snapshot.fullNameOfHolder, state.snapshot.phone, it.content.text
                     )

@@ -7,9 +7,7 @@ data class IpInfo(
     val inn: String,
     val ogrn: String,
     val fullNameOfHolder: String,
-    val orgrnData: String,
-    val phone: String,
-    val email: String
+    val orgrnData: String
 ) : FieldData {
     val surnameAfterInitials: String
         get() {

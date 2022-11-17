@@ -3,8 +3,7 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import domain.datatypes.CompanyInfo
-import parser.ConstantsForParsing
+import domain.datatypes.CompanyInformation
 import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.Parser
 import telegram.entities.state.CompanyCollectorState
@@ -12,7 +11,7 @@ import telegram.resources.strings.CollectorStrings
 import validation.*
 
 fun CollectorMapBuilder.organizationInfoCollector() {
-    collector<CompanyInfo>(initialState = CompanyCollectorState.WaitingForInn) {
+    collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
         val parser = Parser()
         state<CompanyCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
@@ -144,7 +143,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.email) }
             onText {
                 if (IsEmailValid(it.content.text)) {
-                    val info = CompanyInfo(
+                    val info = CompanyInformation(
                         state.snapshot.inn, state.snapshot.kpp, state.snapshot.ogrn, state.snapshot.fullNameOfOrg,
                         state.snapshot.fullNameOfHolder, state.snapshot.post, state.snapshot.location,
                         state.snapshot.phone, it.content.text
