@@ -4,9 +4,8 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.EntrepreneurInformation
-import parser.ConstantsForParsing.statusCodeSuccessful
+import domain.datatypes.IpInfo
 import parser.Parser
-import parser.ParserRusprofile
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
 import validation.*
@@ -14,24 +13,15 @@ import validation.*
 fun CollectorMapBuilder.ipInfoCollector() {
     collector<EntrepreneurInformation>(initialState = IpCollectorState.WaitingForInn) {
         val parser = Parser()
-        val parserForData = ParserRusprofile()
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText { message ->
                 if (IsInnValidForIp(message.content.text)) {
-                    if (parser.parsing(message.content.text) != statusCodeSuccessful) {
-                        state.override {
-                            IpCollectorState.HandsWaitingOgrn(
-                                message.content.text
-                            )
-                        }
+                    val mainInfo = parser.parsing(message.content.text)
+                    if (mainInfo != null) {
+                        state.override { IpCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfHolder) }
                     } else {
-                        state.override {
-                            IpCollectorState.WaitingInspection(
-                                message.content.text,
-                                parser.fullNameOfOrg
-                            )
-                        }
+                        state.override { IpCollectorState.HandsWaitingOgrn(message.content.text) }
                     }
                 } else {
                     sendTextMessage(message.chat, CollectorStrings.Recommendations.innForIp)
@@ -51,12 +41,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     }
                 }
                 if (response == "Да") {
-                    state.override {
-                        IpCollectorState.WaitingPhone(
-                            parser.innOfOrg, parser.ogrnOfOrg, parser.fullNameOfHolder,
-                            parserForData.parseWebPage(parser.ogrnOfOrg)
-                        )
-                    }
+                    state.override { IpCollectorState.WaitingPhone(mainInfo) }
                 } else {
                     state.override { IpCollectorState.WaitingForInn }
                 }
@@ -83,9 +68,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
             onText {
                 if (IsFullNameValid(it.content.text)) {
-                    state.override {
-                        IpCollectorState.WaitingPhone(this.inn, this.ogrn, this.dataOgrn, it.content.text)
-                    }
+                    state.override { IpCollectorState.WaitingPhone(IpInfo(this.inn,this.ogrn,this.ogrn,this.dataOgrn)) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
                     return@onText
@@ -97,9 +80,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsPhoneNumberValid(it.content.text)) {
                     state.override {
-                        IpCollectorState.WaitingEmail(
-                            this.inn, this.ogrn, this.dataOgrn, this.fullNameOfHolder, it.content.text
-                        )
+                        IpCollectorState.WaitingEmail(mainInfo , it.content.text)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
@@ -112,8 +93,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsEmailValid(it.content.text)) {
                     val info = EntrepreneurInformation(
-                        state.snapshot.inn, state.snapshot.ogrn, state.snapshot.dataOgrn,
-                        state.snapshot.fullNameOfHolder, state.snapshot.phone, it.content.text
+                        state.snapshot.mainInfo, state.snapshot.phone, it.content.text
                     )
                     this@collector.exit(state, listOf(info))
                 } else {

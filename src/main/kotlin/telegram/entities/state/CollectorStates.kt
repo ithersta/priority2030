@@ -1,6 +1,7 @@
 package telegram.entities.state
 
 import domain.datatypes.BankInfo
+import domain.datatypes.IpInfo
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
@@ -129,7 +130,7 @@ object IpCollectorState {
 
     @Serializable
     data class WaitingInspection(
-        val inn: String,
+        val mainInfo: IpInfo,
         val fullNameOfHolder: String
     ) : DialogState
 
@@ -153,18 +154,12 @@ object IpCollectorState {
 
     @Serializable
     data class WaitingPhone(
-        val inn: String,
-        val ogrn: String,
-        val fullNameOfHolder: String,
-        val dataOgrn: String
+        val mainInfo: IpInfo
     ) : DialogState
 
     @Serializable
     data class WaitingEmail(
-        val inn: String,
-        val ogrn: String,
-        val fullNameOfHolder: String,
-        val dataOgrn: String,
+        val mainInfo: IpInfo,
         val phone: String
     ) : DialogState
 }
