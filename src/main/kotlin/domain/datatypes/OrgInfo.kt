@@ -11,7 +11,7 @@ data class OrgInfo(
     val post: String,
     val fullNameOfHolder: String,
     val location: String
-) : FieldData {
+)  {
     val surnameAfterInitials: String
         get() {
             val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()

@@ -8,7 +8,7 @@ data class IpInfo(
     val ogrn: String,
     val fullNameOfHolder: String,
     val orgrnData: String
-) : FieldData {
+) {
     val surnameAfterInitials: String
         get() {
             val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
