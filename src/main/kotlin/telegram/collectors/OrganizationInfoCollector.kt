@@ -4,6 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.CompanyInformation
+import domain.datatypes.OrgInfo
 import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.Parser
 import telegram.entities.state.CompanyCollectorState
@@ -28,10 +29,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.kpp) }
             onText {
                 if (IsKppValid(it.content.text)) {
-                    if (parser.parsing(state.snapshot.inn, it.content.text) == statusCodeSuccessful) {
-                        state.override {
-                            CompanyCollectorState.WaitingInspection(it.content.text, parser.fullNameOfOrg)
-                        }
+                    val mainInfo = parser.parsing(state.snapshot.inn, it.content.text)
+                    if (mainInfo != null) {
+                        state.override { CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfOrg) }
                     } else {
                         state.override { CompanyCollectorState.HandsWaitingOgrn(this.inn, it.content.text) }
                     }
@@ -94,8 +94,10 @@ fun CollectorMapBuilder.organizationInfoCollector() {
 //              Не возможно проверить !
                 state.override {
                     CompanyCollectorState.WaitingPhone(
-                        this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, this.post,
-                        it.content.text
+                        OrgInfo(
+                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.post, this.fullNameOfHolder,
+                            it.content.text
+                        )
                     )
                 }
             }
@@ -114,8 +116,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (response == "Да") {
                     state.override {
                         CompanyCollectorState.WaitingPhone(
-                            parser.innOfOrg, parser.kppOfOrg, parser.ogrnOfOrg, parser.fullNameOfOrg,
-                            parser.fullNameOfHolder, parser.post, parser.location
+                            mainInfo
                         )
                     }
                 } else {
@@ -127,12 +128,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.phone) }
             onText {
                 if (IsPhoneNumberValid(it.content.text)) {
-                    state.override {
-                        CompanyCollectorState.WaitingEmail(
-                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, this.post,
-                            this.location, it.content.text
-                        )
-                    }
+                    state.override { CompanyCollectorState.WaitingEmail(mainInfo, it.content.text) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
                     return@onText
@@ -143,11 +139,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.email) }
             onText {
                 if (IsEmailValid(it.content.text)) {
-                    val info = CompanyInformation(
-                        state.snapshot.inn, state.snapshot.kpp, state.snapshot.ogrn, state.snapshot.fullNameOfOrg,
-                        state.snapshot.fullNameOfHolder, state.snapshot.post, state.snapshot.location,
-                        state.snapshot.phone, it.content.text
-                    )
+                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, it.content.text)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.email)

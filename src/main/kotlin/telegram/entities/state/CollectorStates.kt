@@ -2,6 +2,7 @@ package telegram.entities.state
 
 import domain.datatypes.BankInfo
 import domain.datatypes.IpInfo
+import domain.datatypes.OrgInfo
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
@@ -55,7 +56,7 @@ object CompanyCollectorState {
 
     @Serializable
     data class WaitingInspection(
-        val inn: String,
+        val mainInfo: OrgInfo,
         val fullNameOfOrg: String
     ) : DialogState
 
@@ -102,24 +103,12 @@ object CompanyCollectorState {
 
     @Serializable
     data class WaitingPhone(
-        val inn: String,
-        val kpp: String,
-        val ogrn: String,
-        val fullNameOfOrg: String,
-        val fullNameOfHolder: String,
-        val post: String,
-        val location: String
+        val mainInfo: OrgInfo
     ) : DialogState
 
     @Serializable
     data class WaitingEmail(
-        val inn: String,
-        val kpp: String,
-        val ogrn: String,
-        val fullNameOfOrg: String,
-        val fullNameOfHolder: String,
-        val location: String,
-        val post: String,
+        val mainInfo: OrgInfo,
         val phone: String
     ) : DialogState
 }
