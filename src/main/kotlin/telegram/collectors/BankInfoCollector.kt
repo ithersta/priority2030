@@ -3,8 +3,7 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import domain.datatypes.BankInfo
-import parser.ConstantsForParsing
+import domain.datatypes.InformationBank
 import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ParserBik
 import telegram.entities.state.BankCollectorState
@@ -14,7 +13,7 @@ import validation.IsCorrAccountValid
 import validation.IsPaymentAccountValid
 
 fun CollectorMapBuilder.bankInfoCollector() {
-    collector<BankInfo>(initialState = BankCollectorState.WaitingForBik) {
+    collector<InformationBank>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
@@ -60,7 +59,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
             onText { message ->
                 if (IsPaymentAccountValid(message.content.text)) {
-                    val info = BankInfo(
+                    val info = InformationBank(
                         bik = state.snapshot.bik,
                         correspondentAccount = state.snapshot.correspondentAccount,
                         bankName = state.snapshot.bankName,

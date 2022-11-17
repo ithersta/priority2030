@@ -24,10 +24,10 @@ val documentSet = documentSet {
 //            field("PURCHASE_RUB") // Стоимость закупки прописью
 //            field("SUMM_COP_NUMB ") // Сумма цифрами в копейках
             field("ENTERPRENEUR_INN", get<EntrepreneurInformation>().inn) // ИНН ИЗ ОРГНИП
-            field("ENTERPRENEUR_WALLET", get<BankInfo>().settlementAccountNumber) // Расчётный счёт
-            field("ENTERPRENEUR_BANK", get<BankInfo>().bankName) // Название банка полностью
-            field("ENTERPRENEUR_COR_WALLET", get<BankInfo>().correspondentAccount) // Корреспондентский счёт
-            field("ENT_BIK", get<BankInfo>().bik) // БИК
+            field("ENTERPRENEUR_WALLET", get<InformationBank>().settlementAccountNumber) // Расчётный счёт
+            field("ENTERPRENEUR_BANK", get<InformationBank>().bankName) // Название банка полностью
+            field("ENTERPRENEUR_COR_WALLET", get<InformationBank>().correspondentAccount) // Корреспондентский счёт
+            field("ENT_BIK", get<InformationBank>().bik) // БИК
             field("ENTERPRENEUR_EMAIL", get<EntrepreneurInformation>().email) // Адрес электронной почты предпринимателя
             field("ENTERPRENEUR_PHONE", get<EntrepreneurInformation>().phone) // Номер телефона предпринимателя
         }
@@ -43,12 +43,12 @@ val documentSet = documentSet {
 //            field("PURCHASE_RUB") //Стоимость закупки прописью
 //            field("SUMM_COP_NUMB") //Сумма цифрами  в копейках
             field("CONTRAGENT_ADDRESS", get<CompanyInformation>().location) //Юридический адрес ИЗ ИНН
-            field("CONTRAGENT_COR_WALLET", get<BankInfo>().correspondentAccount) //Корреспондентский счёт
+            field("CONTRAGENT_COR_WALLET", get<InformationBank>().correspondentAccount) //Корреспондентский счёт
             field("INN", get<CompanyInformation>().inn) //ИНН
             field("KPP", get<CompanyInformation>().kpp) //КПП ИЗ ИНН
             field("OGRN", get<CompanyInformation>().ogrn) //ОГРН ИЗ ИНН
-            field("CONTRAGENT_WALLET", get<BankInfo>().settlementAccountNumber) //Расчётный счёт
-            field("BIK", get<BankInfo>().bik) //БИК
+            field("CONTRAGENT_WALLET", get<InformationBank>().settlementAccountNumber) //Расчётный счёт
+            field("BIK", get<InformationBank>().bik) //БИК
             field("CONTRAGENT_FIO", get<CompanyInformation>().fullNameOfHolder) //ФИО ответсвенного от ООО
             field("CONTRAGENT_PROF", get<CompanyInformation>().post) //Должность ответственного от ООО
             field("CONTRAGENT_EMAIL", get<CompanyInformation>().email) //Адрес электронной почты ответственного от ООО

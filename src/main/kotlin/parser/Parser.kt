@@ -1,5 +1,7 @@
 package parser
 
+import domain.datatypes.IpInfo
+import domain.datatypes.OrgInfo
 import domain.datatypes.OrganizationType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -15,31 +17,34 @@ import parser.ConstantsForParsing.time
 import telegram.resources.strings.CollectorStrings
 
 class Parser {
-    //     0 -  ООО , 1  - ИП
     private var type: OrganizationType = OrganizationType.Ooo
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private lateinit var document: Document
-    fun parsing(inn: String): Int {
+    fun parsing(inn: String): IpInfo? {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect(url + inn).timeout(time).execute()
-        if (response.statusCode() == statusCodeSuccessful) {
+        return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
             type = OrganizationType.IP
+            IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg))
+        } else {
+            null;
         }
-        return response.statusCode()
     }
 
     // для ООО у которых есть несколкьо организаций внутри себя
-    fun parsing(inn: String, kpp: String): Int {
+    fun parsing(inn: String, kpp: String): OrgInfo? {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect("$url$inn/$kpp").timeout(time).execute()
-        if (response.statusCode() == statusCodeSuccessful) {
+        return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
+            OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg, post, fullNameOfHolder, location)
+        } else {
+            null
         }
-        return response.statusCode()
     }
 
-    val post: String
+    private val post: String
         get() {
             val post =
                 document.select(
@@ -52,7 +57,7 @@ class Parser {
             return post
         }
 
-    val location: String
+    private val location: String
         get() {
             val location = document.select(
                 "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div > " +
@@ -62,7 +67,7 @@ class Parser {
             return location
         }
 
-    val fullNameOfHolder: String
+    private val fullNameOfHolder: String
         get() {
             var fullName = document.select(
                 select + (" div:nth-child(1) > div.cCard__MainReq >" +
@@ -93,17 +98,17 @@ class Parser {
         }
 
 
-    val fullNameOfOrg: String
+    private val fullNameOfOrg: String
         get() = if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderFullName]
         else "ИП " + mainInfoAboutOrg[orderFullName]
-    val innOfOrg: String
+    private val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
-    val kppOfOrg: String
+    private val kppOfOrg: String
         get() = mainInfoAboutOrg[orderKppOoo].replace("КПП ".toRegex(), "")
-    val ogrnOfOrg: String
+    private val ogrnOfOrg: String
         get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOgrnOoo]
         else mainInfoAboutOrg[orderOgrnIp]).replace("ОГРН ".toRegex(), "")
-    val okpoOfOrg: String
+    private val okpoOfOrg: String
         get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOkpoOoo]
         else mainInfoAboutOrg[orderOkpoIp]).replace("ОКПО ".toRegex(), "")
 }

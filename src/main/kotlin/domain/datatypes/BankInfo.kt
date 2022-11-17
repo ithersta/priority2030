@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class BankInfo(
     val bik: String,
     val correspondentAccount: String,
-    val bankName: String,
-    val settlementAccountNumber: String
-    ) : FieldData
+    val bankName: String
+) : FieldData
