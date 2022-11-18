@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
     id("com.google.devtools.ksp") version "1.7.20-1.0.7"
-    id("io.gitlab.arturbosch.detekt").version("1.22.0-RC2")
+    id("io.gitlab.arturbosch.detekt").version("1.22.0-RC3")
 }
 
 group = "ru.spbstu"

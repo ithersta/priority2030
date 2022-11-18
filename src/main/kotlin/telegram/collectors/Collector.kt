@@ -10,12 +10,12 @@ import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import kotlin.reflect.KClass
 
-private typealias CollectorNestedStateMachineBuilder =
-        NestedStateMachineBuilder<DialogState, *, CollectingDataState, *, UserId, CollectorResult>
+private typealias CollectorNestedStateMachineBuilder<T> =
+        NestedStateMachineBuilder<DialogState, *, CollectingDataState, *, UserId, CollectorResult<T>>
 
-sealed interface CollectorResult {
-    class OK(val data: List<FieldData>) : CollectorResult
-    object Back : CollectorResult
+sealed interface CollectorResult<T : FieldData> {
+    class OK<T : FieldData>(val data: T) : CollectorResult<T>
+    object Back : CollectorResult<FieldData>
 }
 
 @DslMarker
@@ -23,14 +23,14 @@ annotation class CollectorDsl
 
 @CollectorDsl
 class CollectorMapBuilder {
-    val blocks = mutableListOf<CollectorNestedStateMachineBuilder.() -> Unit>()
+    val blocks = mutableListOf<CollectorNestedStateMachineBuilder<*>.() -> Unit>()
     val map = mutableMapOf<KClass<out FieldData>, DialogState>()
 
     inline fun <reified T : FieldData> collector(
         initialState: DialogState,
-        noinline block: CollectorNestedStateMachineBuilder.() -> Unit
+        noinline block: CollectorNestedStateMachineBuilder<T>.() -> Unit
     ) {
-        blocks += block
+        blocks += block as CollectorNestedStateMachineBuilder<*>.() -> Unit
         map[T::class] = initialState
     }
 
@@ -41,10 +41,10 @@ class CollectorMapBuilder {
         check(missingCollectors.isEmpty()) {
             "Missing collectors for: ${missingCollectors.joinToString()}"
         }
-        stateFilterBuilder.nestedStateMachine<CollectorResult>(
+        stateFilterBuilder.nestedStateMachine(
             onExit = { result ->
                 when (result) {
-                    CollectorResult.Back -> copy(fieldsData = fieldsData.dropLast(1))
+                    is CollectorResult.Back -> copy(fieldsData = fieldsData.dropLast(1))
                     is CollectorResult.OK -> copy(fieldsData = fieldsData + result.data)
                 }
             }
@@ -60,11 +60,11 @@ class CollectorMapBuilder {
     }
 }
 
-suspend fun CollectorNestedStateMachineBuilder.exit(
+suspend fun <T : FieldData> CollectorNestedStateMachineBuilder<T>.exit(
     state: StateMachine<DialogState, *, *>.StateHolder<*>,
-    vararg data: FieldData
+    data: T
 ) {
-    exit(state, CollectorResult.OK(data.toList()))
+    exit(state, CollectorResult.OK(data))
 }
 
 fun StateFilterBuilder<DialogState, *, CollectingDataState, *, UserId>.buildCollectorMap(
