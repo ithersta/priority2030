@@ -34,9 +34,9 @@ jobs:
           arguments: detektMain detektTest --continue
 
       - name: Post to PR
-        uses: machine-learning-apps/pr-comment@master
+        uses: mshick/add-pr-comment@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: (success() || failure()) && startsWith(github.ref, 'refs/pull/')
         with:
-          path: "./build/reports/detekt/main.md"
+          message-path: "./build/reports/detekt/main.md"
