@@ -16,8 +16,6 @@ suspend fun main() {
     val application = startKoin { modules(priority2030Module) }
     val mainProperties: MainProperties by application.koin.inject()
     val token = mainProperties.token
-    val emailSender: EmailSender by application.koin.inject()
-    emailSender.sendFiles("molchanov.ir@gmail.com", listOf())
     telegramBot(token) {
         requestsLimiter = CommonLimiter(lockCount = 30, regenTime = 1000)
         client = HttpClient(OkHttp)
