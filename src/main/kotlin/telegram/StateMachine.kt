@@ -1,5 +1,7 @@
 package telegram
 
+import com.ithersta.tgbotapi.commands.cancelCommand
+import com.ithersta.tgbotapi.commands.fallback
 import com.ithersta.tgbotapi.fsm.builders.rolelessStateMachine
 import com.ithersta.tgbotapi.persistence.SqliteStateRepository
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
@@ -19,9 +21,12 @@ val stateMachine = rolelessStateMachine(
     onException = { userId, throwable ->
         logger.info(throwable) { userId }
         sendTextMessage(userId, Strings.InternalError)
-    }
+    },
+    includeHelp = true
 ) {
+    cancelCommand(EmptyState)
     startCommand()
     mainMenu.run { invoke() }
     documentBuildingLoop()
+    fallback()
 }
