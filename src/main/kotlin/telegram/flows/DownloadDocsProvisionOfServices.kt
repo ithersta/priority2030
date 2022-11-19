@@ -34,7 +34,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText(ButtonStrings.CheckingDoc){
-            //отправка доков в чат
+            //отправка доков в чат + добавить кнопку выбора отправить в чат или на почту(запрашивать адрес почты для отправки)
             state.override { FillingProvisionOfServicesState.UploadDocs }
         }
     }
@@ -159,10 +159,11 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText(ButtonStrings.NotRequired){
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
         }
-        //тут не будет работать, если будет ровно один документ
-        //пока что не знаю, как исправить
         onDocumentMediaGroup{ message->
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.media.fileId) }
+        }
+        onDocument{ message->
+            state.override { copy(docs = docs + message.content.media.fileId) }
         }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
