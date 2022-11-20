@@ -26,22 +26,24 @@ val documentSet = documentSet {
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
         termOfPaymentToStrings.get(get())?.let { field("PAYMENT_WAY", it) }
         purchaseCost()
+
         financiallyResponsiblePerson()
-        field("RESP_PHONE",get<FinanciallyResponsiblePerson>().workPhoneNumber)
         materialObjectNumber()
+
         responsibleForDocumentsPerson()
-        field("DOC_PHONE",get<ResponsibleForDocumentsPerson>().workPhoneNumber)
         field("EM",get<ResponsibleForDocumentsPerson>().email)
         field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline)
         field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorFIO()
+
     }
     document("/documents/Заявка на оплату.docx"){
         purchaseCost()
         iniciatorFIO()
+
         financiallyResponsiblePerson()
-        responsibleForDocumentsPerson()
         materialObjectNumber()
+        responsibleForDocumentsPerson()
     }
 }
 
@@ -55,8 +57,14 @@ private fun DocumentBuilder.purchaseCost(){
 }
 
 private fun DocumentBuilder.financiallyResponsiblePerson(){
-    field("RESPONSIBLE_MEMBER_FIO", get<FinanciallyResponsiblePerson>().FIO)
-    field("RESP_PRIVATE_PHONE", get<FinanciallyResponsiblePerson>().contactPhoneNumber)
+    var FIO=""
+    var contactNumber=""
+    if (get<PurchaseDescription>().materialValuesAreNeeded){
+        FIO=get<FinanciallyResponsiblePerson>().FIO
+        contactNumber=get<FinanciallyResponsiblePerson>().contactPhoneNumber
+    }
+    field("RESPONSIBLE_MEMBER_FIO", FIO)
+    field("RESP_PRIVATE_PHONE", contactNumber)
 }
 
 private fun DocumentBuilder.responsibleForDocumentsPerson(){
@@ -65,7 +73,11 @@ private fun DocumentBuilder.responsibleForDocumentsPerson(){
 }
 
 private fun DocumentBuilder.materialObjectNumber(){
-    field("RESP_POINT", get<MaterialObjectNumber>().number)
+    var number=""
+    if(get<PurchaseDescription>().materialValuesAreNeeded){
+        number=get<MaterialObjectNumber>().number
+    }
+    field("RESP_POINT", number)
 }
 
 private fun DocumentBuilder.purchaseObject(){

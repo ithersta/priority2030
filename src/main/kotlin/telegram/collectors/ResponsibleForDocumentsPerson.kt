@@ -30,27 +30,9 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                 val contactPhoneNumber = it.content.text
                 if (IsPhoneNumberValid(contactPhoneNumber)) {
                     state.override {
-                        ResponsibleForDocumentsPersonState.WaitingForWorkPhoneNumber(
-                            state.snapshot.FIO,
-                            contactPhoneNumber
-                        )
-                    }
-                } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidPhoneNumber)
-                }
-            }
-        }
-
-        state<ResponsibleForDocumentsPersonState.WaitingForWorkPhoneNumber> {
-            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.WorkPhoneNumber) }
-            onText {
-                val workPhoneNumber = it.content.text
-                if (IsPhoneNumberValid(workPhoneNumber)) {
-                    state.override {
                         ResponsibleForDocumentsPersonState.WaitingForEmail(
-                            state.snapshot.FIO,
-                            state.snapshot.contactPhoneNumber,
-                            workPhoneNumber
+                            this.FIO,
+                            contactPhoneNumber
                         )
                     }
                 } else {
@@ -68,7 +50,6 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                     val responsibleForDocumentsPerson = ResponsibleForDocumentsPerson(
                         state.snapshot.FIO,
                         state.snapshot.contactPhoneNumber,
-                        state.snapshot.workPhoneNumber,
                         email
                     )
                     this@collector.exit(state, listOf(responsibleForDocumentsPerson))

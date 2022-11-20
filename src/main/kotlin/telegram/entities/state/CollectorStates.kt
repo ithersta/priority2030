@@ -35,6 +35,14 @@ object PurchaseDescriptionState {
         val selectionLetter: String,
         val selectionIdentifier: String
     ) : DialogState
+
+    @Serializable
+    data class WaitingForMaterialValuesNeed(
+        val shortJustification: String,
+        val selectionLetter: String,
+        val selectionIdentifier: String,
+        val fullJustification: String
+    ) : DialogState
 }
 
 @Serializable
@@ -52,9 +60,6 @@ object FinanciallyResponsiblePersonState {
 
     @Serializable
     data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
-
-    @Serializable
-    data class WaitingForWorkPhoneNumber(val FIO: String, val contactPhoneNumber: String) : DialogState
 }
 
 object ResponsibleForDocumentsPersonState {
@@ -65,13 +70,8 @@ object ResponsibleForDocumentsPersonState {
     data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
 
     @Serializable
-    data class WaitingForWorkPhoneNumber(val FIO: String, val contactPhoneNumber: String) : DialogState
-
-    @Serializable
     data class WaitingForEmail(
-        val FIO: String,
-        val contactPhoneNumber: String,
-        val workPhoneNumber: String
+        val FIO: String, val contactPhoneNumber: String
     ) : DialogState
 }
 
