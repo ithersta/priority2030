@@ -11,15 +11,15 @@ import validation.IsFullNameValid
 import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
-    collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForFIO) {
-        state<FinanciallyResponsiblePersonState.WaitingForFIO> {
-            onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.FIO) }
+    collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForfio) {
+        state<FinanciallyResponsiblePersonState.WaitingForfio> {
+            onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.fio) }
             onText {
-                val FIO = it.content.text
-                if (IsFullNameValid(FIO)) {
-                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(FIO) }
+                val fio = it.content.text
+                if (IsFullNameValid(fio)) {
+                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(fio) }
                 } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidFIO)
+                    sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
             }
         }
@@ -29,7 +29,7 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
                 val contactPhoneNumber = it.content.text
                 if (IsPhoneNumberValid(contactPhoneNumber)) {
                         val financiallyResponsiblePerson=FinanciallyResponsiblePerson(
-                            state.snapshot.FIO,
+                            state.snapshot.fio,
                             contactPhoneNumber
                         )
                         this@collector.exit(state, listOf(financiallyResponsiblePerson))

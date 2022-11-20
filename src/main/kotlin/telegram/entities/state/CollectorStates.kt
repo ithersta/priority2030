@@ -56,22 +56,22 @@ object PurchaseCostState : DialogState
 
 object FinanciallyResponsiblePersonState {
     @Serializable
-    object WaitingForFIO : DialogState
+    object WaitingForfio : DialogState
 
     @Serializable
-    data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
+    data class WaitingForContactPhoneNumber(val fio: String) : DialogState
 }
 
 object ResponsibleForDocumentsPersonState {
     @Serializable
-    object WaitingForFIO : DialogState
+    object WaitingForfio : DialogState
 
     @Serializable
-    data class WaitingForContactPhoneNumber(val FIO: String) : DialogState
+    data class WaitingForContactPhoneNumber(val fio: String) : DialogState
 
     @Serializable
     data class WaitingForEmail(
-        val FIO: String, val contactPhoneNumber: String
+        val fio: String, val contactPhoneNumber: String
     ) : DialogState
 }
 

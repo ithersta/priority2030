@@ -17,6 +17,7 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                 .useToken(morpherToken)
                 .build()
             /// ну тут видимо проверка, что ещё можно просить деньги..........
+            ///если деньги уже нельзя просить, до заставить всё пользователя самого вводить..........
             onEnter {
                 sendTextMessage(
                     it,
@@ -28,10 +29,15 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                 val totalCost = it.content.text
                 val rubles=totalCost.substringBefore('.').toInt()
                 val cops=totalCost.substringAfter('.').toInt()
-                val rublesRu=client.russian().spell(rubles,"рубль").numberDeclension.nominative
-                val rubl=client.russian().spell(rubles,"рубль").unitDeclension.nominative
-                val copsRu=client.russian().spell(cops,"копейка").numberDeclension.nominative
-                val cop=client.russian().spell(cops,"копейка").unitDeclension.nominative
+
+                val purchaseRub=client.russian().spell(rubles,"рубль")
+                val rublesRu=purchaseRub.numberDeclension.nominative
+                val rubl=purchaseRub.unitDeclension.nominative
+
+                val purchaseCop=client.russian().spell(cops,"копейка")
+                val copsRu=purchaseCop.numberDeclension.nominative
+                val cop=purchaseCop.unitDeclension.nominative
+
                 val purchaseCost =PurchaseCost(
                     costInRubles = rubles.toString(),
                     costInCops = cops.toString(),

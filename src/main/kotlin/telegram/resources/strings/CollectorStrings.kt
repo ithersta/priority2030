@@ -73,7 +73,7 @@ object CollectorStrings {
             "(например: 120000.00 эквивалентно 120000 рублей 0 копеек )"
 
     object FinanciallyResponsiblePerson {
-        const val FIO = "Введите Инициалы и фамилию материально-ответственного лица\n" +
+        const val fio = "Введите Инициалы и фамилию материально-ответственного лица\n" +
                 "\n" +
                 "(Пример: Т.М. Дударенко)"
         const val ContactPhoneNumber =
@@ -81,7 +81,7 @@ object CollectorStrings {
     }
 
     object ResponsibleForDocumentsPerson {
-        const val FIO = "Введите Инициалы и фамилию ответственного за предоставление отчетных документов\n" +
+        const val fio = "Введите Инициалы и фамилию ответственного за предоставление отчетных документов\n" +
                 "\n" +
                 "(Пример: Т.М. Дударенко)"
         const val ContactPhoneNumber =
@@ -91,7 +91,7 @@ object CollectorStrings {
     }
 
     const val PurchaseInitiatorDepartment="Введите наименование структурного подразделения для которого осуществляется закупка"
-    const val PurchaseDeadline ="Введите сроки поставки товара, выполнения работ, оказания услуг"
+    const val PurchaseDeadline ="Введите сроки поставки товара, выполнения работ, оказания услуг в формате дд.мм.гггг"
     const val PurchaseDeliveryAddress="Введите место поставки товара, выполнения работ, оказания услуг"
     const val MaterialObjectNumber="Введите номер материальной точки"
 
@@ -99,7 +99,7 @@ object CollectorStrings {
         const val Prepaid="аванс 30%"
         const val Fact="по факту"
         const val Partially="частями"
-        const val Question="Выберите способоплаты из кнопочного меню"
+        const val Question="Выберите способ оплаты из кнопочного меню"
     }
 }
 

@@ -10,15 +10,18 @@ import telegram.resources.strings.InvalidInputStrings
 import validation.IsDateValid
 
 fun CollectorMapBuilder.purchaseDeadlineAndDeliveryAddressCollector() {
-    collector<PurchaseDeadlineAndDeliveryAddress>(initialState = PurchaseDeadlineAndDeliveryAddressState.WaitingForDeadline) {
+    collector<PurchaseDeadlineAndDeliveryAddress>(
+        initialState = PurchaseDeadlineAndDeliveryAddressState.WaitingForDeadline
+    ) {
         state<PurchaseDeadlineAndDeliveryAddressState.WaitingForDeadline> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDeadline) }
             onText {
                 val purchaseDeadline = it.content.text
-                if (IsDateValid(purchaseDeadline)){
-                    state.override { PurchaseDeadlineAndDeliveryAddressState.WaitingForDeliveryAddress(purchaseDeadline) }
-                }
-                else{
+                if (IsDateValid(purchaseDeadline)) {
+                    state.override {
+                        PurchaseDeadlineAndDeliveryAddressState.WaitingForDeliveryAddress(purchaseDeadline)
+                    }
+                } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidDate)
                 }
             }
@@ -27,7 +30,11 @@ fun CollectorMapBuilder.purchaseDeadlineAndDeliveryAddressCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDeliveryAddress) }
             onText {
                 val purchaseDeliveryAddress = it.content.text
-                val purchaseDeadlineAndDeliveryAddress=PurchaseDeadlineAndDeliveryAddress(state.snapshot.deadline,purchaseDeliveryAddress)
+                val purchaseDeadlineAndDeliveryAddress =
+                    PurchaseDeadlineAndDeliveryAddress(
+                        state.snapshot.deadline,
+                        purchaseDeliveryAddress
+                    )
                 this@collector.exit(state, listOf(purchaseDeadlineAndDeliveryAddress))
             }
         }

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class TermOfPayment : FieldData {
-    prepaid, fact, partially
+    Prepaid, Fact, Partially
 }

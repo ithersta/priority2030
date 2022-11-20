@@ -34,9 +34,9 @@ fun CollectorMapBuilder.termOfPaymentCollector() {
             }
             onText { message ->
                 val type = when (message.content.text) {
-                    CollectorStrings.TermOfPayment.Prepaid -> TermOfPayment.prepaid
-                    CollectorStrings.TermOfPayment.Fact -> TermOfPayment.fact
-                    CollectorStrings.TermOfPayment.Partially -> TermOfPayment.partially
+                    CollectorStrings.TermOfPayment.Prepaid -> TermOfPayment.Prepaid
+                    CollectorStrings.TermOfPayment.Fact -> TermOfPayment.Fact
+                    CollectorStrings.TermOfPayment.Partially -> TermOfPayment.Partially
                     else -> {
                         sendTextMessage(message.chat, InvalidInputStrings.InvalidTermOfPayment)
                         return@onText

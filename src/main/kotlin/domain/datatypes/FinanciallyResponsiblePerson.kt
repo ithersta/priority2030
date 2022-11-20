@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FinanciallyResponsiblePerson(
-    val FIO: String,
+    val fio: String,
     val contactPhoneNumber: String
 ) : FieldData

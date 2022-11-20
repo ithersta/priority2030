@@ -19,12 +19,12 @@ fun CollectorMapBuilder.purchaseIniciatorCollector() {
                 )
             }
             onText {
-                val FIO = it.content.text
-                if (IsFullNameValid(FIO)) {
-                    val inic = PurchaseIniciator(FIO)
+                val fio = it.content.text
+                if (IsFullNameValid(fio)) {
+                    val inic = PurchaseIniciator(fio)
                     this@collector.exit(state, listOf(inic))
                 } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidFIO)
+                    sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                     return@onText
                 }
             }

@@ -5,20 +5,20 @@ import domain.documents.get
 import telegram.resources.strings.CollectorStrings
 
 private val termOfPaymentToStrings:Map<TermOfPayment,String> = mapOf(
-    TermOfPayment.prepaid to CollectorStrings.TermOfPayment.Prepaid,
-    TermOfPayment.fact to CollectorStrings.TermOfPayment.Fact,
-    TermOfPayment.partially to CollectorStrings.TermOfPayment.Partially
+    TermOfPayment.Prepaid to CollectorStrings.TermOfPayment.Prepaid,
+    TermOfPayment.Fact to CollectorStrings.TermOfPayment.Fact,
+    TermOfPayment.Partially to CollectorStrings.TermOfPayment.Partially
 )
 
 val documentSet = documentSet {
     document("/documents/Служебная записка.docx"){
         purchaseObject()
         field("SHORT_DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("SEL_LETTER", get<PurchaseDescription>().selectionLetter)
-        field("SEL_NUMB", get<PurchaseDescription>().selectionIdentifier)
+        field("SEL_NUMB", get<PurchaseDescription>().selectionLetter)
+        field("SEL_LETTER", get<PurchaseDescription>().selectionIdentifier)
         field("PURCHASE_REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number)
-        iniciatorFIO()
+        iniciatorfio()
         purchaseCost()
     }
     document("/documents/Заявка на размещение.docx"){
@@ -34,12 +34,12 @@ val documentSet = documentSet {
         field("EM",get<ResponsibleForDocumentsPerson>().email)
         field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline)
         field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
-        iniciatorFIO()
+        iniciatorfio()
 
     }
     document("/documents/Заявка на оплату.docx"){
         purchaseCost()
-        iniciatorFIO()
+        iniciatorfio()
 
         financiallyResponsiblePerson()
         materialObjectNumber()
@@ -57,18 +57,18 @@ private fun DocumentBuilder.purchaseCost(){
 }
 
 private fun DocumentBuilder.financiallyResponsiblePerson(){
-    var FIO=""
+    var fio=""
     var contactNumber=""
     if (get<PurchaseDescription>().materialValuesAreNeeded){
-        FIO=get<FinanciallyResponsiblePerson>().FIO
+        fio=get<FinanciallyResponsiblePerson>().fio
         contactNumber=get<FinanciallyResponsiblePerson>().contactPhoneNumber
     }
-    field("RESPONSIBLE_MEMBER_FIO", FIO)
+    field("RESPONSIBLE_MEMBER_fio", fio)
     field("RESP_PRIVATE_PHONE", contactNumber)
 }
 
 private fun DocumentBuilder.responsibleForDocumentsPerson(){
-    field("DOCUMENT_FIO", get<ResponsibleForDocumentsPerson>().FIO)
+    field("DOCUMENT_fio", get<ResponsibleForDocumentsPerson>().fio)
     field("DOC_PRIVATE_PHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber)
 }
 
@@ -84,7 +84,7 @@ private fun DocumentBuilder.purchaseObject(){
     field("PURCHASE_NAME", get<PurchaseObject>().shortName)
 }
 
-private fun DocumentBuilder.iniciatorFIO(){
-    field("INICIATOR_FIO", get<PurchaseIniciator>().FIO)
+private fun DocumentBuilder.iniciatorfio(){
+    field("INICIATOR_fio", get<PurchaseIniciator>().fio)
 }
 

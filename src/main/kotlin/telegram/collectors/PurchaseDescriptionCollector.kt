@@ -136,7 +136,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                     )
                     this@collector.exit(state, listOf(purchaseDescription))
                 }
-                sendTextMessage(it.chat.id, InvalidInputStrings.InvalidAnswer)
+                else {
+                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidAnswer)
+                }
             }
         }
     }

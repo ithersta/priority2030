@@ -12,15 +12,15 @@ import validation.IsFullNameValid
 import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
-    collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForFIO) {
-        state<ResponsibleForDocumentsPersonState.WaitingForFIO> {
-            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.FIO) }
+    collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForfio) {
+        state<ResponsibleForDocumentsPersonState.WaitingForfio> {
+            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.fio) }
             onText {
-                val FIO = it.content.text
-                if (IsFullNameValid(FIO)) {
-                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(FIO) }
+                val fio = it.content.text
+                if (IsFullNameValid(fio)) {
+                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(fio) }
                 } else {
-                    sendTextMessage(it.chat.id, InvalidInputStrings.InvalidFIO)
+                    sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
             }
         }
@@ -31,7 +31,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                 if (IsPhoneNumberValid(contactPhoneNumber)) {
                     state.override {
                         ResponsibleForDocumentsPersonState.WaitingForEmail(
-                            this.FIO,
+                            this.fio,
                             contactPhoneNumber
                         )
                     }
@@ -48,7 +48,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                 val emailValidator = EmailValidator.getInstance()
                 if (emailValidator.isValid(email)) {
                     val responsibleForDocumentsPerson = ResponsibleForDocumentsPerson(
-                        state.snapshot.FIO,
+                        state.snapshot.fio,
                         state.snapshot.contactPhoneNumber,
                         email
                     )
