@@ -20,7 +20,7 @@ val documentSet = documentSet {
         field("SEL_LETTER", get<PurchaseDescription>().selectionLetter.letter)
         field("SEL_NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
         field("PURCHASE_REASON", get<PurchaseDescription>().fullJustification)
-        field("PP", get<PurchasePoint>().number.toString())
+        field("PP", get<PurchasePoint>().number.point)
         iniciatorfio()
         purchaseCost()
     }
@@ -72,15 +72,15 @@ private fun DocumentBuilder.payment(){
             val prepaidPayment=(purchase.toFloat()*0.3).toString()
 
             val rubl = prepaidPayment.substringBefore('.')
-            val cop = prepaidPayment.substringAfter('.').substring(0,2)
+            val cop = prepaidPayment.substringAfter('.').take(2)
 
             val ruPrescription = RuleBasedNumberFormat(
                 Locale.forLanguageTag("ru"),
                 RuleBasedNumberFormat.SPELLOUT
             )
 
-            val rublesRu = ruPrescription.format(rubl)
-            val copsRu = ruPrescription.format(cop)
+            val rublesRu = ruPrescription.format(rubl.toInt())
+            val copsRu = ruPrescription.format(cop.toInt())
 
             val rubleFormat = MessageFormat("{0, spellout} {0, plural, " +
                     "one {рубль}" +
@@ -92,12 +92,12 @@ private fun DocumentBuilder.payment(){
                     "few {копейки}" +
                     "other {копеек}}", Locale.forLanguageTag("ru"))
 
-            costInRubles=rubles
-            costInCops=cops
+            costInRubles=rubl
+            costInCops=cop
             costInRublesPrescription=rublesRu
             costInCopsPrescription=copsRu
-            rubles=rubleFormat.format(rubles)
-            cops=copFormat.format(cops)
+            rubles=rubleFormat.format(arrayOf(rubl.toInt()))
+            cops=copFormat.format(arrayOf(cop.toInt()))
         }
         TermOfPayment.Fact->{
             costInRubles=get<PurchaseCost>().costInRubles.number
@@ -123,12 +123,12 @@ private fun DocumentBuilder.financiallyResponsiblePerson(){
         fio=get<FinanciallyResponsiblePerson>().fio.fio
         contactNumber=get<FinanciallyResponsiblePerson>().contactPhoneNumber.number
     }
-    field("RESPONSIBLE_MEMBER_fio", fio)
+    field("RESPONSIBLE_MEMBER_FIO", fio)
     field("RESP_PRIVATE_PHONE", contactNumber)
 }
 
 private fun DocumentBuilder.responsibleForDocumentsPerson(){
-    field("DOCUMENT_fio", get<ResponsibleForDocumentsPerson>().fio.fio)
+    field("DOCUMENT_FIO", get<ResponsibleForDocumentsPerson>().fio.fio)
     field("DOC_PRIVATE_PHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
 
@@ -145,6 +145,6 @@ private fun DocumentBuilder.purchaseObject(){
 }
 
 private fun DocumentBuilder.iniciatorfio(){
-    field("INICIATOR_fio", get<PurchaseIniciator>().fio.fio)
+    field("INICIATOR_FIO", get<PurchaseIniciator>().fio.fio)
 }
 

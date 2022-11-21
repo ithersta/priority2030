@@ -25,17 +25,17 @@ fun CollectorMapBuilder.purchaseCostCollector() {
             }
 
             onText {
-                val totalCost = Numbers.of(it.content.text)
-                if (totalCost!=null) {
-                    val rubles = Numbers.of(totalCost.number.substringBefore('.'))
-                    val cops = Numbers.of(totalCost.number.substringAfter('.'))
+                val totalCost = it.content.text
+                if (IsPurchaseCostValid(totalCost)) {
+                    val rubles = Numbers.of(totalCost.substringBefore('.'))
+                    val cops = Numbers.of(totalCost.substringAfter('.'))
 
                     val ruPrescription = RuleBasedNumberFormat(
                         Locale.forLanguageTag("ru"),
                         RuleBasedNumberFormat.SPELLOUT
                     )
-                    val rublesRu = ruPrescription.format(rubles)
-                    val copsRu = ruPrescription.format(cops)
+                    val rublesRu = ruPrescription.format(rubles!!.number.toInt())
+                    val copsRu = ruPrescription.format(cops!!.number.toInt())
 
                     val rubleFormat = MessageFormat("{0, spellout} {0, plural, " +
                             "one {рубль}" +
@@ -47,12 +47,12 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                             "few {копейки}" +
                             "other {копеек}}", Locale.forLanguageTag("ru"))
 
-                    val rubl = rubleFormat.format(rubles)
-                    val cop = copFormat.format(cops)
+                    val rubl = rubleFormat.format(arrayOf(rubles.number.toInt()))
+                    val cop = copFormat.format(arrayOf(cops.number.toInt()))
 
                     val purchaseCost = PurchaseCost(
-                        costInRubles = rubles!!,
-                        costInCops = cops!!,
+                        costInRubles = rubles,
+                        costInCops = cops,
                         costInRublesPrescription = rublesRu,
                         costInCopsPrescription = copsRu,
                         rubles = rubl,
