@@ -1,10 +1,13 @@
 package domain.datatypes
 
+import domain.entitties.Email
+import domain.entitties.Fio
+import domain.entitties.PhoneNumber
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResponsibleForDocumentsPerson(
-    val fio: String,
-    val contactPhoneNumber: String,
-    val email:String
+    val fio: Fio,
+    val contactPhoneNumber: PhoneNumber,
+    val email: Email
 ) : FieldData

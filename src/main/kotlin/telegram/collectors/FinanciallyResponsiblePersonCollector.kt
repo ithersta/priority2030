@@ -4,6 +4,8 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.FinanciallyResponsiblePerson
+import domain.entitties.Fio
+import domain.entitties.PhoneNumber
 import telegram.entities.state.FinanciallyResponsiblePersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
@@ -17,7 +19,7 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
             onText {
                 val fio = it.content.text
                 if (IsFullNameValid(fio)) {
-                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(fio) }
+                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(Fio(fio))}
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
@@ -30,7 +32,7 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
                 if (IsPhoneNumberValid(contactPhoneNumber)) {
                         val financiallyResponsiblePerson=FinanciallyResponsiblePerson(
                             state.snapshot.fio,
-                            contactPhoneNumber
+                            PhoneNumber(contactPhoneNumber)
                         )
                         this@collector.exit(state, listOf(financiallyResponsiblePerson))
                 } else {

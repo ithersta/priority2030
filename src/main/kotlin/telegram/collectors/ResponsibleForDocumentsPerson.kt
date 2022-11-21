@@ -4,6 +4,9 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.ResponsibleForDocumentsPerson
+import domain.entitties.Email
+import domain.entitties.Fio
+import domain.entitties.PhoneNumber
 import org.apache.commons.validator.routines.EmailValidator
 import telegram.entities.state.ResponsibleForDocumentsPersonState
 import telegram.resources.strings.CollectorStrings
@@ -18,7 +21,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
             onText {
                 val fio = it.content.text
                 if (IsFullNameValid(fio)) {
-                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(fio) }
+                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(Fio(fio)) }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
@@ -32,7 +35,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                     state.override {
                         ResponsibleForDocumentsPersonState.WaitingForEmail(
                             this.fio,
-                            contactPhoneNumber
+                            PhoneNumber(contactPhoneNumber)
                         )
                     }
                 } else {
@@ -50,7 +53,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                     val responsibleForDocumentsPerson = ResponsibleForDocumentsPerson(
                         state.snapshot.fio,
                         state.snapshot.contactPhoneNumber,
-                        email
+                        Email(email)
                     )
                     this@collector.exit(state, listOf(responsibleForDocumentsPerson))
 

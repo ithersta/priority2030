@@ -7,6 +7,8 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.PurchaseDescription
+import domain.entitties.SelectionIdentifier
+import domain.entitties.SelectionLetter
 import telegram.entities.state.PurchaseDescriptionState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.MaterialValuesAreNeeded
@@ -46,7 +48,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                     state.override {
                         PurchaseDescriptionState.WaitingForSelectionIdentifier(
                             state.snapshot.shortJustification,
-                            letter
+                            SelectionLetter(letter)
                         )
                     }
                 } else {
@@ -87,7 +89,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         PurchaseDescriptionState.WaitingForFullJustification(
                             state.snapshot.shortJustification,
                             state.snapshot.selectionLetter,
-                            indicator
+                            SelectionIdentifier(indicator)
                         )
                     }
                 } else {
@@ -102,7 +104,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 state.override {
                     PurchaseDescriptionState.WaitingForMaterialValuesNeed(
                         this.shortJustification,
-                        this.selectionIdentifier, this.selectionLetter, it.content.text
+                        this.selectionLetter,
+                        this.selectionIdentifier,
+                        it.content.text
                     )
                 }
             }

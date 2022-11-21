@@ -1,53 +1,58 @@
 package telegram.collectors
 
+import com.ibm.icu.text.MessageFormat
+import com.ibm.icu.text.RuleBasedNumberFormat
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchaseCost
+import domain.entitties.Numbers
 import telegram.entities.state.PurchaseCostState
 import telegram.resources.strings.CollectorStrings
-import ru.morpher.ws3.ClientBuilder
-import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidPurchaseCost
-import validation.IsNumberValid
 import validation.IsPurchaseCostValid
+import java.util.*
 
 
 fun CollectorMapBuilder.purchaseCostCollector() {
-    collector<PurchaseCost>(initialState = PurchaseCostState.MorpherState) {
-        state<PurchaseCostState.MorpherState> {
-            val morpherToken = System.getenv("MORPHER_TOKEN")
-            val client = ClientBuilder()
-                .useToken(morpherToken)
-                .build()
+    collector<PurchaseCost>(initialState = PurchaseCostState) {
+        state<PurchaseCostState> {
             onEnter {
-                if (client.queriesLeftForToday() > 0) {
-                    sendTextMessage(
-                        it,
-                        CollectorStrings.PurchaseCost.Morpher
-                    )
-                } else {
-                    state.override { PurchaseCostState.WaitingForCostInRubles }
-                }
+                sendTextMessage(
+                    it,
+                    CollectorStrings.PurchaseCost.Morpher
+                )
             }
 
             onText {
                 val totalCost = it.content.text
                 if (IsPurchaseCostValid(totalCost)) {
-                    val rubles = totalCost.substringBefore('.').toInt()
-                    val cops = totalCost.substringAfter('.').toInt()
+                    val rubles = Numbers(totalCost.substringBefore('.'))
+                    val cops = Numbers(totalCost.substringAfter('.'))
 
-                    val purchaseRub = client.russian().spell(rubles, "рубль")
-                    val rublesRu = purchaseRub.numberDeclension.nominative
-                    val rubl = purchaseRub.unitDeclension.nominative
+                    val ruPrescription = RuleBasedNumberFormat(
+                        Locale.forLanguageTag("ru"),
+                        RuleBasedNumberFormat.SPELLOUT
+                    )
+                    val rublesRu = ruPrescription.format(rubles)
+                    val copsRu = ruPrescription.format(cops)
 
-                    val purchaseCop = client.russian().spell(cops, "копейка")
-                    val copsRu = purchaseCop.numberDeclension.nominative
-                    val cop = purchaseCop.unitDeclension.nominative
+                    val rubleFormat = MessageFormat("{0, spellout} {0, plural, " +
+                            "one {рубль}" +
+                            "few {рубля}" +
+                            "other {рублей}}", Locale.forLanguageTag("ru"))
+
+                    val copFormat = MessageFormat("{0, spellout} {0, plural, " +
+                            "one {копейка}" +
+                            "few {копейки}" +
+                            "other {копеек}}", Locale.forLanguageTag("ru"))
+
+                    val rubl = rubleFormat.format(rubles)
+                    val cop = copFormat.format(cops)
 
                     val purchaseCost = PurchaseCost(
-                        costInRubles = rubles.toString(),
-                        costInCops = cops.toString(),
+                        costInRubles = rubles,
+                        costInCops = cops,
                         costInRublesPrescription = rublesRu,
                         costInCopsPrescription = copsRu,
                         rubles = rubl,
@@ -57,87 +62,6 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                 } else {
                     sendTextMessage(it.chat, InvalidPurchaseCost)
                 }
-            }
-        }
-        state<PurchaseCostState.WaitingForCostInRubles> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.CostInRubles) }
-            onText {
-                val costInRubles = it.content.text
-                if (IsNumberValid(costInRubles)) {
-                    state.override { PurchaseCostState.WaitingForRublesPrescription(costInRubles) }
-                } else {
-                    sendTextMessage(it.chat, InvalidInputStrings.InvalidNumber)
-                }
-            }
-        }
-
-        state<PurchaseCostState.WaitingForRublesPrescription> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.CostInRublesPrescription) }
-            onText {
-                state.override { PurchaseCostState.WaitingForCostInCops(this.costInRubles, it.content.text) }
-            }
-        }
-
-        state<PurchaseCostState.WaitingForCostInCops> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.CostInCops) }
-            onText {
-                val costInCops = it.content.text
-                if (IsNumberValid(costInCops)) {
-                    state.override {
-                        PurchaseCostState.WaitingForCopsPrescription(
-                            this.costInRubles,
-                            this.rublesPrescription,
-                            costInCops
-                        )
-                    }
-                } else {
-                    sendTextMessage(it.chat, InvalidInputStrings.InvalidNumber)
-                }
-            }
-        }
-
-        state<PurchaseCostState.WaitingForCopsPrescription> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.CostInCopsPrescription) }
-            onText {
-                state.override {
-                    PurchaseCostState.WaitingForRubles(
-                        this.costInRubles,
-                        this.rublesPrescription,
-                        this.costInCops,
-                        it.content.text
-                    )
-                }
-            }
-        }
-
-        state<PurchaseCostState.WaitingForRubles> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.Rubles) }
-            onText {
-                state.override {
-                    PurchaseCostState.WaitingForCops(
-                        this.costInRubles,
-                        this.rublesPrescription,
-                        this.costInCops,
-                        this.copsPrescription,
-                        it.content.text
-                    )
-                }
-            }
-        }
-
-        state<PurchaseCostState.WaitingForCops> {
-            onEnter { sendTextMessage(it, CollectorStrings.PurchaseCost.Cops) }
-            onText {
-
-                val purchaseCost = PurchaseCost(
-                    costInRubles = state.snapshot.costInRubles,
-                    costInCops = state.snapshot.costInCops,
-                    costInRublesPrescription = state.snapshot.rublesPrescription,
-                    costInCopsPrescription = state.snapshot.copsPrescription,
-                    rubles = state.snapshot.rubles,
-                    cops = it.content.text
-                )
-                this@collector.exit(state, listOf(purchaseCost))
             }
         }
     }

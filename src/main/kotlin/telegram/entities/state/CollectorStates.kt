@@ -1,5 +1,6 @@
 package telegram.entities.state
 
+import domain.entitties.*
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
@@ -26,21 +27,21 @@ object PurchaseDescriptionState {
     @Serializable
     data class WaitingForSelectionIdentifier(
         val shortJustification: String,
-        val selectionLetter: String
+        val selectionLetter: SelectionLetter
     ) : DialogState
 
     @Serializable
     data class WaitingForFullJustification(
         val shortJustification: String,
-        val selectionLetter: String,
-        val selectionIdentifier: String
+        val selectionLetter: SelectionLetter,
+        val selectionIdentifier: SelectionIdentifier
     ) : DialogState
 
     @Serializable
     data class WaitingForMaterialValuesNeed(
         val shortJustification: String,
-        val selectionLetter: String,
-        val selectionIdentifier: String,
+        val selectionLetter: SelectionLetter,
+        val selectionIdentifier: SelectionIdentifier,
         val fullJustification: String
     ) : DialogState
 }
@@ -52,46 +53,8 @@ object PurchasePointState : DialogState
 object PurchaseIniciatorState : DialogState
 
 
-object PurchaseCostState {
-    @Serializable
-    object MorpherState : DialogState
-
-    @Serializable
-    object WaitingForCostInRubles : DialogState
-
-    @Serializable
-    data class WaitingForRublesPrescription(val costInRubles: String) : DialogState
-
-    @Serializable
-    data class WaitingForCostInCops(
-        val costInRubles: String,
-        val rublesPrescription: String
-    ) : DialogState
-
-    @Serializable
-    data class WaitingForCopsPrescription(
-        val costInRubles: String,
-        val rublesPrescription: String,
-        val costInCops: String
-    ) : DialogState
-
-    @Serializable
-    data class WaitingForRubles(
-        val costInRubles: String,
-        val rublesPrescription: String,
-        val costInCops: String,
-        val copsPrescription: String
-    ) : DialogState
-
-    @Serializable
-    data class WaitingForCops(
-        val costInRubles: String,
-        val rublesPrescription: String,
-        val costInCops: String,
-        val copsPrescription: String,
-        val rubles:String
-    ) : DialogState
-}
+@Serializable
+object PurchaseCostState : DialogState
 
 
 object FinanciallyResponsiblePersonState {
@@ -99,7 +62,7 @@ object FinanciallyResponsiblePersonState {
     object WaitingForfio : DialogState
 
     @Serializable
-    data class WaitingForContactPhoneNumber(val fio: String) : DialogState
+    data class WaitingForContactPhoneNumber(val fio: Fio) : DialogState
 }
 
 object ResponsibleForDocumentsPersonState {
@@ -107,11 +70,11 @@ object ResponsibleForDocumentsPersonState {
     object WaitingForfio : DialogState
 
     @Serializable
-    data class WaitingForContactPhoneNumber(val fio: String) : DialogState
+    data class WaitingForContactPhoneNumber(val fio: Fio) : DialogState
 
     @Serializable
     data class WaitingForEmail(
-        val fio: String, val contactPhoneNumber: String
+        val fio: Fio, val contactPhoneNumber: PhoneNumber
     ) : DialogState
 }
 
@@ -126,7 +89,7 @@ object PurchaseDeadlineAndDeliveryAddressState {
     object WaitingForDeadline : DialogState
 
     @Serializable
-    data class WaitingForDeliveryAddress(val deadline: String) : DialogState
+    data class WaitingForDeliveryAddress(val deadline: Date) : DialogState
 }
 
 @Serializable

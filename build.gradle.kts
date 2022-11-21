@@ -1,4 +1,3 @@
-import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,6 +33,7 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter:5.9.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
+    implementation("com.ibm.icu:icu4j:72.1")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))
