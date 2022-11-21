@@ -12,8 +12,7 @@ fun CollectorMapBuilder.purchaseInitiatorDepartmentCollector() {
         state<PurchaseInitiatorDepartmentState> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseInitiatorDepartment) }
             onText {
-                val purchseInitiatorDepartment = it.content.text
-                val purchaseInitiator = PurchaseInitiatorDepartment(purchseInitiatorDepartment)
+                val purchaseInitiator = PurchaseInitiatorDepartment(it.content.text)
                 this@collector.exit(state, listOf(purchaseInitiator))
             }
         }

@@ -17,9 +17,9 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
         state<FinanciallyResponsiblePersonState.WaitingForfio> {
             onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.fio) }
             onText {
-                val fio = it.content.text
-                if (IsFullNameValid(fio)) {
-                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(Fio(fio))}
+                val fio = Fio.of(it.content.text)
+                if (fio!=null) {
+                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(fio)}
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
@@ -28,11 +28,11 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
         state<FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber> {
             onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.ContactPhoneNumber) }
             onText {
-                val contactPhoneNumber = it.content.text
-                if (IsPhoneNumberValid(contactPhoneNumber)) {
+                val contactPhoneNumber = PhoneNumber.of(it.content.text)
+                if (contactPhoneNumber!=null) {
                         val financiallyResponsiblePerson=FinanciallyResponsiblePerson(
                             state.snapshot.fio,
-                            PhoneNumber(contactPhoneNumber)
+                            contactPhoneNumber
                         )
                         this@collector.exit(state, listOf(financiallyResponsiblePerson))
                 } else {

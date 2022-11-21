@@ -25,10 +25,10 @@ fun CollectorMapBuilder.purchaseCostCollector() {
             }
 
             onText {
-                val totalCost = it.content.text
-                if (IsPurchaseCostValid(totalCost)) {
-                    val rubles = Numbers(totalCost.substringBefore('.'))
-                    val cops = Numbers(totalCost.substringAfter('.'))
+                val totalCost = Numbers.of(it.content.text)
+                if (totalCost!=null) {
+                    val rubles = Numbers.of(totalCost.number.substringBefore('.'))
+                    val cops = Numbers.of(totalCost.number.substringAfter('.'))
 
                     val ruPrescription = RuleBasedNumberFormat(
                         Locale.forLanguageTag("ru"),
@@ -51,8 +51,8 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                     val cop = copFormat.format(cops)
 
                     val purchaseCost = PurchaseCost(
-                        costInRubles = rubles,
-                        costInCops = cops,
+                        costInRubles = rubles!!,
+                        costInCops = cops!!,
                         costInRublesPrescription = rublesRu,
                         costInCopsPrescription = copsRu,
                         rubles = rubl,

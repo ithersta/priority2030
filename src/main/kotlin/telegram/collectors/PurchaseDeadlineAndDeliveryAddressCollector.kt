@@ -4,6 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchaseDeadlineAndDeliveryAddress
+import domain.entitties.Date
 import telegram.entities.state.PurchaseDeadlineAndDeliveryAddressState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
@@ -16,8 +17,8 @@ fun CollectorMapBuilder.purchaseDeadlineAndDeliveryAddressCollector() {
         state<PurchaseDeadlineAndDeliveryAddressState.WaitingForDeadline> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDeadline) }
             onText {
-                val purchaseDeadline = it.content.text
-                if (IsDateValid(purchaseDeadline)) {
+                val purchaseDeadline = Date.of(it.content.text)
+                if (purchaseDeadline!=null) {
                     state.override {
                         PurchaseDeadlineAndDeliveryAddressState.WaitingForDeliveryAddress(purchaseDeadline)
                     }

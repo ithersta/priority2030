@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import telegram.resources.strings.CollectorStrings
 
 @Serializable
-data class SelectionIdentifier (
+data class SelectionIdentifier private constructor (
     val indicator:String){
     companion object{
         fun of(indicator: String)=if (

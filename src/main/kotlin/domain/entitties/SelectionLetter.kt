@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import validation.IsLetterEventValid
 
 @Serializable
-data class SelectionLetter (
+data class SelectionLetter private constructor (
     val letter: String
 ){
     companion object{

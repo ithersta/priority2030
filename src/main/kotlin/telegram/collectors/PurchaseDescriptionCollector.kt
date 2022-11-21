@@ -18,7 +18,7 @@ import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
 import validation.IsLetterEventValid
 
-private val answerToBoolean = mapOf<String,Boolean>(
+private val answerToBoolean = mapOf<String, Boolean>(
     No to false,
     Yes to true
 )
@@ -43,12 +43,12 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 )
             }
             onText {
-                val letter = it.content.text
-                if (IsLetterEventValid(letter)) {
+                val letter = SelectionLetter.of(it.content.text)
+                if (letter != null) {
                     state.override {
                         PurchaseDescriptionState.WaitingForSelectionIdentifier(
                             state.snapshot.shortJustification,
-                            SelectionLetter(letter)
+                            letter
                         )
                     }
                 } else {
@@ -80,16 +80,13 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 )
             }
             onText {
-                val indicator = it.content.text
-                if (CollectorStrings.PurchaseDescription.SelectionIdentifier.SelectionIdentifierOptions.contains(
-                        indicator
-                    )
-                ) {
+                val indicator = SelectionIdentifier.of(it.content.text)
+                if (indicator != null) {
                     state.override {
                         PurchaseDescriptionState.WaitingForFullJustification(
                             state.snapshot.shortJustification,
                             state.snapshot.selectionLetter,
-                            SelectionIdentifier(indicator)
+                            indicator
                         )
                     }
                 } else {
@@ -130,7 +127,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             }
             onText {
                 if (answerToBoolean.contains(it.content.text)) {
-                    val areNeeded= answerToBoolean[it.content.text]
+                    val areNeeded = answerToBoolean[it.content.text]
                     val purchaseDescription = PurchaseDescription(
                         shortJustification = state.snapshot.shortJustification,
                         selectionLetter = state.snapshot.selectionLetter,
@@ -139,8 +136,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         materialValuesAreNeeded = areNeeded!!
                     )
                     this@collector.exit(state, listOf(purchaseDescription))
-                }
-                else {
+                } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidAnswer)
                 }
             }

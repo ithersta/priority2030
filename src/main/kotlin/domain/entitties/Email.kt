@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import org.apache.commons.validator.routines.EmailValidator
 
 @Serializable
-data class Email (
+data class Email private constructor(
     val email:String){
     companion object{
         val emailValidator = EmailValidator.getInstance()

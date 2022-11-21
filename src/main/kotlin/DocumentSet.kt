@@ -92,15 +92,12 @@ private fun DocumentBuilder.payment(){
                     "few {копейки}" +
                     "other {копеек}}", Locale.forLanguageTag("ru"))
 
-
             costInRubles=rubles
             costInCops=cops
             costInRublesPrescription=rublesRu
             costInCopsPrescription=copsRu
             rubles=rubleFormat.format(rubles)
             cops=copFormat.format(cops)
-
-
         }
         TermOfPayment.Fact->{
             costInRubles=get<PurchaseCost>().costInRubles.number

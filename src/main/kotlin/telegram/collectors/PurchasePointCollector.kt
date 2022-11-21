@@ -4,6 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchasePoint
+import domain.entitties.PurchasePoints
 import telegram.entities.state.PurchasePointState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
@@ -24,8 +25,8 @@ fun CollectorMapBuilder.purchasePointCollector() {
                 )
             }
             onText {
-                val point = it.content.text
-                if (IsPointNumberValid(point)) {
+                val point = PurchasePoints.of(it.content.text)
+                if (point!=null) {
                     val purchasePoint = PurchasePoint(number = point)
                     this@collector.exit(state, listOf(purchasePoint))
                 } else {

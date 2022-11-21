@@ -19,9 +19,9 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
         state<ResponsibleForDocumentsPersonState.WaitingForfio> {
             onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.fio) }
             onText {
-                val fio = it.content.text
-                if (IsFullNameValid(fio)) {
-                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(Fio(fio)) }
+                val fio = Fio.of(it.content.text)
+                if (fio!=null) {
+                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(fio) }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
@@ -30,12 +30,12 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
         state<ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber> {
             onEnter { sendTextMessage(it,  CollectorStrings.ResponsibleForDocumentsPerson.ContactPhoneNumber) }
             onText {
-                val contactPhoneNumber = it.content.text
-                if (IsPhoneNumberValid(contactPhoneNumber)) {
+                val contactPhoneNumber = PhoneNumber.of(it.content.text)
+                if (contactPhoneNumber!=null) {
                     state.override {
                         ResponsibleForDocumentsPersonState.WaitingForEmail(
                             this.fio,
-                            PhoneNumber(contactPhoneNumber)
+                            contactPhoneNumber
                         )
                     }
                 } else {
@@ -47,13 +47,12 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
         state<ResponsibleForDocumentsPersonState.WaitingForEmail> {
             onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.Email) }
             onText {
-                val email = it.content.text
-                val emailValidator = EmailValidator.getInstance()
-                if (emailValidator.isValid(email)) {
+                val email = Email.of(it.content.text)
+                if (email!=null) {
                     val responsibleForDocumentsPerson = ResponsibleForDocumentsPerson(
                         state.snapshot.fio,
                         state.snapshot.contactPhoneNumber,
-                        Email(email)
+                        email
                     )
                     this@collector.exit(state, listOf(responsibleForDocumentsPerson))
 
