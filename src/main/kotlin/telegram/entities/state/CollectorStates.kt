@@ -51,8 +51,48 @@ object PurchasePointState : DialogState
 @Serializable
 object PurchaseIniciatorState : DialogState
 
-@Serializable
-object PurchaseCostState : DialogState
+
+object PurchaseCostState {
+    @Serializable
+    object MorpherState : DialogState
+
+    @Serializable
+    object WaitingForCostInRubles : DialogState
+
+    @Serializable
+    data class WaitingForRublesPrescription(val costInRubles: String) : DialogState
+
+    @Serializable
+    data class WaitingForCostInCops(
+        val costInRubles: String,
+        val rublesPrescription: String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingForCopsPrescription(
+        val costInRubles: String,
+        val rublesPrescription: String,
+        val costInCops: String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingForRubles(
+        val costInRubles: String,
+        val rublesPrescription: String,
+        val costInCops: String,
+        val copsPrescription: String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingForCops(
+        val costInRubles: String,
+        val rublesPrescription: String,
+        val costInCops: String,
+        val copsPrescription: String,
+        val rubles:String
+    ) : DialogState
+}
+
 
 object FinanciallyResponsiblePersonState {
     @Serializable
