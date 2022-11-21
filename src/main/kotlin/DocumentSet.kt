@@ -1,4 +1,3 @@
-import com.ibm.icu.text.MessageFormat
 import com.ibm.icu.text.RuleBasedNumberFormat
 import domain.datatypes.*
 import domain.documents.DocumentBuilder
@@ -64,8 +63,7 @@ private fun DocumentBuilder.payment(){
     var costInCops=""
     var costInRublesPrescription=""
     var costInCopsPrescription=""
-    var rubles=""
-    var cops=""
+
     when (get<TermOfPayment>()){
         TermOfPayment.Prepaid->{
             val purchase=get<PurchaseCost>().costInRubles.number+"."+get<PurchaseCost>().costInCops.number
@@ -82,30 +80,16 @@ private fun DocumentBuilder.payment(){
             val rublesRu = ruPrescription.format(rubl.toInt())
             val copsRu = ruPrescription.format(cop.toInt())
 
-            val rubleFormat = MessageFormat("{0, spellout} {0, plural, " +
-                    "one {рубль}" +
-                    "few {рубля}" +
-                    "other {рублей}}", Locale.forLanguageTag("ru"))
-
-            val copFormat = MessageFormat("{0, spellout} {0, plural, " +
-                    "one {копейка}" +
-                    "few {копейки}" +
-                    "other {копеек}}", Locale.forLanguageTag("ru"))
-
             costInRubles=rubl
             costInCops=cop
             costInRublesPrescription=rublesRu
             costInCopsPrescription=copsRu
-            rubles=rubleFormat.format(arrayOf(rubl.toInt()))
-            cops=copFormat.format(arrayOf(cop.toInt()))
         }
         TermOfPayment.Fact->{
             costInRubles=get<PurchaseCost>().costInRubles.number
             costInCops=get<PurchaseCost>().costInCops.number
             costInRublesPrescription=get<PurchaseCost>().costInRublesPrescription
             costInCopsPrescription=get<PurchaseCost>().costInCopsPrescription
-            rubles=get<PurchaseCost>().rubles
-            cops=get<PurchaseCost>().cops
         }
         TermOfPayment.Partially->{}
     }
@@ -113,8 +97,6 @@ private fun DocumentBuilder.payment(){
     field("PURCHASE_COP_NUMB", costInCops)
     field("PURCHASE_RUB", costInRublesPrescription)
     field("PURCHASE_COP", costInCopsPrescription)
-    field("RUB", rubles)
-    field("COP", cops)
 }
 private fun DocumentBuilder.financiallyResponsiblePerson(){
     var fio=""
