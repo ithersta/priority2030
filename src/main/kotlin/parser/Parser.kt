@@ -23,9 +23,9 @@ class Parser {
     fun parsing(inn: String): IpInfo? {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect(url + inn).timeout(time).execute()
+        type = OrganizationType.IP
         return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
-            type = OrganizationType.IP
             IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
         } else {
             null
@@ -36,9 +36,10 @@ class Parser {
     fun parsing(inn: String, kpp: String): OrgInfo? {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect("$url$inn/$kpp").timeout(time).execute()
+        type = OrganizationType.Ooo
         return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
-            OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg, post, fullNameOfHolder, location)
+            OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
         } else {
             null
         }
@@ -94,7 +95,7 @@ class Parser {
             return fullName
         }
     private val mainInfoAboutOrg: Array<String>
-        private get() {
+        get() {
             val infoAboutOrg = document.select(
                 select + " div.cCard__CompanyDescription >" +
                         " p:nth-child(5)"
@@ -105,9 +106,13 @@ class Parser {
         }
 
 
-    private val fullNameOfOrg: String
-        get() = if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderFullName]
-        else "ИП " + mainInfoAboutOrg[orderFullName]
+    private fun fullNameOfOrg(): String {
+        return if (type.equals(OrganizationType.Ooo)) {
+            mainInfoAboutOrg[orderFullName]
+        } else {
+            "ИП " + mainInfoAboutOrg[orderFullName]
+        }
+    }
     private val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     private val kppOfOrg: String
