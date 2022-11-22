@@ -15,10 +15,11 @@ val documentSet = documentSet {
         OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
             commonFields()
             field("ENPREPRENEUR_FIO", get<EntrepreneurInformation>().mainInfo.fullNameOfHolder) // ФИО предпринимателя ИЗ ОГРНИП
-            field("ENPREPRENEUR_INIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials) // Фамилия и  инициалы предпринимателя
             field("ENPREPRENEUR_INIC_F", get<EntrepreneurInformation>().mainInfo.initialsAfterSurname) // Инициалы и фамилия предпринимателя
+            field("ENPREPRENEUR_INIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials) // Фамилия и  инициалы предпринимателя
             field("OGRNIP_NUMB", get<EntrepreneurInformation>().mainInfo.ogrn) // ОГРНИП
             field("OGRNIP_DATE", get<EntrepreneurInformation>().mainInfo.orgrnData) // дата
+            field("CONTRAGENT_ADDRESS", get<EntrepreneurInformation>().mainInfo.location) //Юридический адрес ИЗ ИНН
 //            field("PP") // Пункт обоснования закупок
 //            field("PURCHASE_RUB_NUMB") // Стоимость закупки цифрами
 //            field("PURCHASE_RUB") // Стоимость закупки прописью
