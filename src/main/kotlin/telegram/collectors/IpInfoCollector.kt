@@ -68,10 +68,22 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.IP.fullName) }
             onText {
                 if (IsFullNameValid(it.content.text)) {
-                    state.override { IpCollectorState.WaitingPhone(IpInfo(this.inn,this.ogrn,this.ogrn,this.dataOgrn)) }
+                    state.override {
+                        IpCollectorState.HandsWaitingLocation(this.inn, this.ogrn, this.dataOgrn, it.content.text)
+                    }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
                     return@onText
+                }
+            }
+        }
+        state<IpCollectorState.HandsWaitingLocation> {
+            onEnter{sendTextMessage(it, CollectorStrings.IP.location)}
+            onText{
+                state.override {
+                    IpCollectorState.WaitingPhone(
+                        IpInfo(this.inn,this.ogrn,this.fullNameOfHolder, this.dataOgrn, it.content.text)
+                    )
                 }
             }
         }

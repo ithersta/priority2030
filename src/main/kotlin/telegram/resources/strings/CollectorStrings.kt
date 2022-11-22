@@ -27,6 +27,7 @@ object CollectorStrings {
         const val Yes = "Да"
         const val No = "Нет"
         const val Invalid = "Доступные варианты ответа: Да, Нет"
+        const val location = "Введите юридический адрес предпринимателя"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
         fun isRight(string: String): String {
@@ -36,7 +37,7 @@ object CollectorStrings {
 
     object Ooo {
         const val inn = "Введите ИНН предприятия"
-        const val kpp = "Введите КРР предприятия"
+        const val kpp = "Введите КПП предприятия"
         const val ogrn = "Введите ОГРН предприятия"
         const val okpo = "Введите ОКПО  предприятия"
         const val fullNameofOrg = "Введите название предприятия"
@@ -75,7 +76,5 @@ object CollectorStrings {
         const val bik = "Введите нормальный БИК из 9 цифр"
         const val corrAccount = "Введите нормальный корреспондентский счет из 20 цифр"
         const val paymentAccount = "Введите нормальный расчетный счет из 20 цифр"
-
-
     }
 }

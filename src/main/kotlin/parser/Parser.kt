@@ -26,9 +26,9 @@ class Parser {
         return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
             type = OrganizationType.IP
-            IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg))
+            IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
         } else {
-            null;
+            null
         }
     }
 
@@ -64,7 +64,14 @@ class Parser {
                         "div:nth-child(1) > div.cCard__Contacts > div.cCard__Contacts-AddressBlock.cCard__" +
                         "Main-Grid-Element > div.cCard__Contacts-Address"
             ).html()
-            return location
+            return location.ifEmpty {
+                (document.select(
+                    "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div > " +
+                            "div:nth-child(1) > div.cCard__MainReq.cCard__MainReq-IP > " +
+                            "div.ws-flexbox.ws-justify-content-between > div.cCard__MainReq-Left > div > " +
+                            "div.cCard__Status-Value-IP > div.cCard__MainReq-City.cCard__Contacts-Address"
+                ).html())
+            }
         }
 
     private val fullNameOfHolder: String

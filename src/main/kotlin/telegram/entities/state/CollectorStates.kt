@@ -140,6 +140,12 @@ object IpCollectorState {
         val ogrn: String,
         val dataOgrn: String
     ) : DialogState
+    data class HandsWaitingLocation(
+        val inn: String,
+        val ogrn: String,
+        val dataOgrn: String,
+        val fullNameOfHolder :String
+    ) : DialogState
 
     @Serializable
     data class WaitingPhone(
