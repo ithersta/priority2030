@@ -6,8 +6,6 @@ import domain.documents.get
 val documentSet = documentSet {
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
-            bankInfo()
-            PPandPrice()
             field("ENPREPRENEUR_FIO", get<EntrepreneurInformation>().mainInfo.fullNameOfHolder) // ФИО предпринимателя ИЗ ОГРНИП
             field("ENPREPRENEUR_INIC_F", get<EntrepreneurInformation>().mainInfo.initialsAfterSurname) // Инициалы и фамилия предпринимателя
             field("ENPREPRENEUR_INIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials) // Фамилия и  инициалы предпринимателя
@@ -17,11 +15,10 @@ val documentSet = documentSet {
             field("ENTERPRENEUR_INN", get<EntrepreneurInformation>().mainInfo.inn) // ИНН ИЗ ОРГНИП
             field("ENTERPRENEUR_EMAIL", get<EntrepreneurInformation>().email) // Адрес электронной почты предпринимателя
             field("ENTERPRENEUR_PHONE", get<EntrepreneurInformation>().phone) // Номер телефона предпринимателя
-        }
-
-        OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
             bankInfo()
             PPandPrice()
+        }
+        OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
             field("CONTRAGENT_FULL_NAME", get<CompanyInformation>().mainInfo.fullNameOfOrg) //Наименование контрагента полностью ИЗ ИНН
             field("CONTRAGENT_SHORT_NAME", get<CompanyInformation>().mainInfo.abbreviatedNameOfOrg) //Наименование контрагента сокращённо ИЗ ИНН
 //            field("GENERAL_MANAGER_R",get<CompanyInfo>().fullNameOfHolderInGenitiveCase) //Генеральный директор ФИО в родительном полностью
@@ -35,6 +32,8 @@ val documentSet = documentSet {
             field("CONTRAGENT_PROF", get<CompanyInformation>().mainInfo.post) //Должность ответственного от ООО
             field("CONTRAGENT_EMAIL", get<CompanyInformation>().email) //Адрес электронной почты ответственного от ООО
             field("CONTRAGENT_PHONE", get<CompanyInformation>().phone) //Номер телефона ответственного от ООО
+            bankInfo()
+            PPandPrice()
         }
     }
 }
