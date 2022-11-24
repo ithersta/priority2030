@@ -4,9 +4,9 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.ResponsibleForDocumentsPerson
-import domain.entitties.Email
-import domain.entitties.Fio
-import domain.entitties.PhoneNumber
+import domain.entities.Email
+import domain.entities.Fio
+import domain.entities.PhoneNumber
 import org.apache.commons.validator.routines.EmailValidator
 import telegram.entities.state.ResponsibleForDocumentsPersonState
 import telegram.resources.strings.CollectorStrings

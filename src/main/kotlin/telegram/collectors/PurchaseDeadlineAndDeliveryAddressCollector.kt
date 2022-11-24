@@ -4,7 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchaseDeadlineAndDeliveryAddress
-import domain.entitties.Date
+import domain.entities.Date
 import telegram.entities.state.PurchaseDeadlineAndDeliveryAddressState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings

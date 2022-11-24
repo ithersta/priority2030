@@ -1,6 +1,6 @@
 package domain.datatypes
 
-import domain.entitties.Date
+import domain.entities.Date
 import kotlinx.serialization.Serializable
 
 @Serializable

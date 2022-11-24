@@ -1,6 +1,6 @@
 package domain.datatypes
 
-import domain.entitties.Fio
+import domain.entities.Fio
 import kotlinx.serialization.Serializable
 
 @Serializable

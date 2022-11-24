@@ -7,8 +7,8 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.PurchaseDescription
-import domain.entitties.SelectionIdentifier
-import domain.entitties.SelectionLetter
+import domain.entities.SelectionIdentifier
+import domain.entities.SelectionLetter
 import telegram.entities.state.PurchaseDescriptionState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.MaterialValuesAreNeeded

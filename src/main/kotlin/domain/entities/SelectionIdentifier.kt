@@ -1,4 +1,4 @@
-package domain.entitties
+package domain.entities
 
 import kotlinx.serialization.Serializable
 import telegram.resources.strings.CollectorStrings

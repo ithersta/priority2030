@@ -1,6 +1,6 @@
 package telegram.entities.state
 
-import domain.entitties.*
+import domain.entities.*
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {

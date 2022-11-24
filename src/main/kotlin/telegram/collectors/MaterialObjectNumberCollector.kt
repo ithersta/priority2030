@@ -4,7 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.MaterialObjectNumber
-import domain.entitties.Numbers
+import domain.entities.Numbers
 import telegram.entities.state.MaterialObjectNumberState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
