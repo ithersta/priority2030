@@ -34,6 +34,7 @@ dependencies {
     implementation("commons-validator:commons-validator:1.7")
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
     implementation("com.ibm.icu:icu4j:72.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))

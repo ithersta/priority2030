@@ -3,7 +3,10 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
+import extensions.format
+import kotlinx.datetime.toJavaLocalDate
 import telegram.resources.strings.CollectorStrings
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 private val termOfPaymentToStrings:Map<TermOfPayment,String> = mapOf(
@@ -34,7 +37,7 @@ val documentSet = documentSet {
 
         responsibleForDocumentsPerson()
         field("EM",get<ResponsibleForDocumentsPerson>().email.email)
-        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.date)
+        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
         field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorfio()
 
