@@ -17,7 +17,7 @@ import telegram.resources.strings.CollectorStrings.PurchaseDescription.Yes
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
 
-private val answerToBoolean = mapOf<String, Boolean>(
+private val answerToBoolean = mapOf(
     No to false,
     Yes to true
 )
@@ -28,9 +28,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortJustification) }
             onText {
                 state.override {
-                    PurchaseDescriptionState.WaitingForSelectionLetter(
-                        it.content.text
-                    )
+                    PurchaseDescriptionState.WaitingForSelectionLetter(it.content.text)
                 }
             }
         }
@@ -45,10 +43,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 val letter = SelectionLetter.of(it.content.text)
                 if (letter != null) {
                     state.override {
-                        PurchaseDescriptionState.WaitingForSelectionIdentifier(
-                            state.snapshot.shortJustification,
-                            letter
-                        )
+                        PurchaseDescriptionState.WaitingForSelectionIdentifier(shortJustification, letter)
                     }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.PurchaseDescription.InvalidSelectionLetter)
@@ -82,8 +77,8 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 if (indicator != null) {
                     state.override {
                         PurchaseDescriptionState.WaitingForFullJustification(
-                            state.snapshot.shortJustification,
-                            state.snapshot.selectionLetter,
+                            shortJustification,
+                            selectionLetter,
                             indicator
                         )
                     }
@@ -98,9 +93,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             onText {
                 state.override {
                     PurchaseDescriptionState.WaitingForMaterialValuesNeed(
-                        this.shortJustification,
-                        this.selectionLetter,
-                        this.selectionIdentifier,
+                        shortJustification,
+                        selectionLetter,
+                        selectionIdentifier,
                         it.content.text
                     )
                 }
@@ -124,14 +119,14 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 )
             }
             onText {
-                if (answerToBoolean.contains(it.content.text)) {
-                    val areNeeded = answerToBoolean[it.content.text]
+                val areNeeded = answerToBoolean[it.content.text]
+                if (areNeeded != null) {
                     val purchaseDescription = PurchaseDescription(
                         shortJustification = state.snapshot.shortJustification,
                         selectionLetter = state.snapshot.selectionLetter,
                         selectionIdentifier = state.snapshot.selectionIdentifier,
                         fullJustification = state.snapshot.fullJustification,
-                        materialValuesAreNeeded = areNeeded!!
+                        materialValuesAreNeeded = areNeeded
                     )
                     this@collector.exit(state, listOf(purchaseDescription))
                 } else {
