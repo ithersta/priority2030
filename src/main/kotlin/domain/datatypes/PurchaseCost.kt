@@ -12,5 +12,5 @@ data class PurchaseCost(
     val rubles get() = value / COPECKS_IN_RUBLE
     val copecks get() = value % COPECKS_IN_RUBLE
 
-    operator fun times(other: BigDecimal) = PurchaseCost(other.multiply(value.toBigDecimal()).longValueExact())
+    operator fun times(other: BigDecimal) = PurchaseCost(other.multiply(value.toBigDecimal()).toLong())
 }
