@@ -9,7 +9,6 @@ import telegram.entities.state.PurchasePointState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
-import validation.IsPointNumberValid
 
 fun CollectorMapBuilder.purchasePointCollector() {
     collector<PurchasePoint>(initialState = PurchasePointState) {

@@ -8,7 +8,6 @@ import domain.entities.Date
 import telegram.entities.state.PurchaseDeadlineAndDeliveryAddressState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsDateValid
 
 fun CollectorMapBuilder.purchaseDeadlineAndDeliveryAddressCollector() {
     collector<PurchaseDeadlineAndDeliveryAddress>(

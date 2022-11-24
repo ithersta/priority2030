@@ -16,7 +16,6 @@ import telegram.resources.strings.CollectorStrings.PurchaseDescription.No
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.Yes
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
-import validation.IsLetterEventValid
 
 private val answerToBoolean = mapOf<String, Boolean>(
     No to false,
@@ -58,9 +57,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             }
         }
         state<PurchaseDescriptionState.WaitingForSelectionIdentifier> {
-            onEnter {
+            onEnter { chatId ->
                 sendTextMessage(
-                    it,
+                    chatId,
                     infoWithLink(
                         CollectorStrings.PurchaseDescription.SelectionIdentifier.Question,
                         CollectorStrings.PurchaseDescription.SelectionIdentifier.ClickMe,
@@ -70,12 +69,11 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         resizeKeyboard = true,
                         oneTimeKeyboard = true
                     ) {
-                        CollectorStrings.PurchaseDescription.SelectionIdentifier.SelectionIdentifierOptions.chunked(4)
-                            .forEach {
-                                row {
-                                    it.forEach { simpleButton(it) }
-                                }
+                        SelectionIdentifier.options.chunked(4).forEach {
+                            row {
+                                it.forEach { simpleButton(it) }
                             }
+                        }
                     }
                 )
             }

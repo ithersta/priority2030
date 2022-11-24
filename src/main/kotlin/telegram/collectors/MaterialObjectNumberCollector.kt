@@ -8,7 +8,6 @@ import domain.entities.Numbers
 import telegram.entities.state.MaterialObjectNumberState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsNumberValid
 
 fun CollectorMapBuilder.materialObjectNumberCollector() {
     collector<MaterialObjectNumber>(initialState = MaterialObjectNumberState) {

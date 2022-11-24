@@ -8,7 +8,6 @@ import domain.entities.Fio
 import telegram.entities.state.PurchaseIniciatorState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
 
 fun CollectorMapBuilder.purchaseIniciatorCollector() {
     collector<PurchaseIniciator>(initialState = PurchaseIniciatorState) {

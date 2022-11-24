@@ -7,12 +7,9 @@ import domain.datatypes.ResponsibleForDocumentsPerson
 import domain.entities.Email
 import domain.entities.Fio
 import domain.entities.PhoneNumber
-import org.apache.commons.validator.routines.EmailValidator
 import telegram.entities.state.ResponsibleForDocumentsPersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
-import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
     collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForfio) {

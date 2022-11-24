@@ -9,8 +9,6 @@ import domain.entities.PhoneNumber
 import telegram.entities.state.FinanciallyResponsiblePersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
-import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
     collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForfio) {
