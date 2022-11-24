@@ -1,7 +1,7 @@
 package domain.datatypes
 
-import domain.entitties.SelectionIdentifier
-import domain.entitties.SelectionLetter
+import domain.entities.SelectionIdentifier
+import domain.entities.SelectionLetter
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,6 +1,7 @@
 package telegram.entities.state
 
-import domain.entitties.*
+import domain.entities.*
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
@@ -89,7 +90,7 @@ object PurchaseDeadlineAndDeliveryAddressState {
     object WaitingForDeadline : DialogState
 
     @Serializable
-    data class WaitingForDeliveryAddress(val deadline: Date) : DialogState
+    data class WaitingForDeliveryAddress(val deadline: LocalDate) : DialogState
 }
 
 @Serializable

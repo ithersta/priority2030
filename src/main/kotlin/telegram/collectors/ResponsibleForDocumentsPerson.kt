@@ -4,15 +4,12 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.ResponsibleForDocumentsPerson
-import domain.entitties.Email
-import domain.entitties.Fio
-import domain.entitties.PhoneNumber
-import org.apache.commons.validator.routines.EmailValidator
+import domain.entities.Email
+import domain.entities.Fio
+import domain.entities.PhoneNumber
 import telegram.entities.state.ResponsibleForDocumentsPersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
-import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
     collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForfio) {

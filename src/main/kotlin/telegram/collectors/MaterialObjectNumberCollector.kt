@@ -4,23 +4,20 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.MaterialObjectNumber
-import domain.entitties.Numbers
 import telegram.entities.state.MaterialObjectNumberState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsNumberValid
 
 fun CollectorMapBuilder.materialObjectNumberCollector() {
     collector<MaterialObjectNumber>(initialState = MaterialObjectNumberState) {
         state<MaterialObjectNumberState> {
             onEnter { sendTextMessage(it, CollectorStrings.MaterialObjectNumber) }
             onText {
-                val materialObjectNumber = Numbers.of(it.content.text)
-                if (materialObjectNumber!=null) {
+                val materialObjectNumber = it.content.text.toIntOrNull()
+                if (materialObjectNumber != null) {
                     val materialObj = MaterialObjectNumber(materialObjectNumber)
                     this@collector.exit(state, listOf(materialObj))
-                }
-                else{
+                } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidNumber)
                 }
             }

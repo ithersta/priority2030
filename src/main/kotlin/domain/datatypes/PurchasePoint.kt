@@ -1,6 +1,6 @@
 package domain.datatypes
 
-import domain.entitties.PurchasePoints
+import domain.entities.PurchasePoints
 import kotlinx.serialization.Serializable
 
 @Serializable
