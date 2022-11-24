@@ -117,8 +117,8 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(Yes)
                             simpleButton(No)
+                            simpleButton(Yes)
                         }
                     }
                 )
