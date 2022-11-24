@@ -1,14 +1,14 @@
 package domain.datatypes
 
-import domain.entities.Numbers
 import kotlinx.serialization.Serializable
+import java.math.BigDecimal
 
 @Serializable
 data class PurchaseCost(
-    val costInRubles: Numbers,
-    val costInRublesPrescription: String,
-    val costInCops: Numbers,
-    val costInCopsPrescription: String,
-    val rubles:String,
-    val cops: String
-) : FieldData
+    val value: Long
+) : FieldData {
+    val rubles get() = value / 100
+    val copecks get() = value % 100
+
+    operator fun times(other: BigDecimal) = PurchaseCost(other.multiply(value.toBigDecimal()).longValueExact())
+}
