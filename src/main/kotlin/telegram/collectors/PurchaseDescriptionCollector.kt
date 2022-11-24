@@ -17,11 +17,14 @@ import telegram.resources.strings.CollectorStrings.PurchaseDescription.Yes
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
 
+const val SELECTION_IDENTIFIERS_PER_ROW = 4
+
 private val answerToBoolean = mapOf(
     No to false,
     Yes to true
 )
 
+@Suppress("LongMethod")
 fun CollectorMapBuilder.purchaseDescriptionCollector() {
     collector<PurchaseDescription>(initialState = PurchaseDescriptionState.WaitingForShortJustification) {
         state<PurchaseDescriptionState.WaitingForShortJustification> {
@@ -64,7 +67,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         resizeKeyboard = true,
                         oneTimeKeyboard = true
                     ) {
-                        SelectionIdentifier.options.chunked(4).forEach {
+                        SelectionIdentifier.options.chunked(SELECTION_IDENTIFIERS_PER_ROW).forEach {
                             row {
                                 it.forEach { simpleButton(it) }
                             }

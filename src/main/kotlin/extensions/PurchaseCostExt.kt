@@ -1,3 +1,6 @@
+@file:Suppress("ArrayPrimitive")
+// MessageFormat doesn't work with primitive arrays
+
 package extensions
 
 import com.ibm.icu.text.MessageFormat
