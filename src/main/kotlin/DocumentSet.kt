@@ -51,7 +51,7 @@ val documentSet = documentSet {
 
 private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
     field("PURCHASE_RUB_NUMB", rubles.toString())
-    field("PURCHASE_COP_NUMB", copecks.toString())
+    field("PURCHASE_COP_NUMB", "%02d".format(copecks))
     field("PURCHASE_RUB", spelloutRubles())
     field("PURCHASE_COP", spelloutCopecks())
     field("RUB", rublesUnit())
@@ -65,7 +65,7 @@ private fun DocumentBuilder.payment() {
         TermOfPayment.Partially -> null
     }
     field("PURCHASE_RUB_NUMB", payment?.rubles?.toString().orEmpty())
-    field("PURCHASE_COP_NUMB", payment?.copecks?.toString().orEmpty())
+    field("PURCHASE_COP_NUMB", payment?.copecks?.let { "%02d".format(it) }.orEmpty())
     field("PURCHASE_RUB", payment?.spelloutRubles().orEmpty())
     field("PURCHASE_COP", payment?.spelloutCopecks().orEmpty())
 }
