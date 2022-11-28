@@ -15,10 +15,10 @@ private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
 val documentSet = documentSet {
     document("/documents/Служебная записка.docx") {
         purchaseObject()
-        field("SHORT_DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("SEL_LETTER", get<PurchaseDescription>().selectionLetter.letter)
-        field("SEL_NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
-        field("PURCHASE_REASON", get<PurchaseDescription>().fullJustification)
+        field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
+        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
+        field("NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
+        field("REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number.point)
         iniciatorfio()
         purchaseCost()
@@ -26,7 +26,7 @@ val documentSet = documentSet {
     document("/documents/Заявка на размещение.docx"){
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
-        termOfPaymentToStrings.get(get())?.let { field("PAYMENT_WAY", it) }
+        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
         purchaseCost()
 
         financiallyResponsiblePerson()
