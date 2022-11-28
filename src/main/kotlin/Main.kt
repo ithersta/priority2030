@@ -6,6 +6,7 @@ import io.ktor.client.engine.okhttp.*
 import telegram.stateMachine
 import java.io.File
 
+
 suspend fun main() {
     val token = System.getenv()["TOKEN"] ?: File(System.getenv("TOKEN_FILE")).readText()
     telegramBot(token) {

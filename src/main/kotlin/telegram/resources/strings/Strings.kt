@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package telegram.resources.strings
 
 object Strings {
