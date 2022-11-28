@@ -7,8 +7,8 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.PurchaseDescription
-import domain.entitties.SelectionIdentifier
-import domain.entitties.SelectionLetter
+import domain.entities.SelectionIdentifier
+import domain.entities.SelectionLetter
 import telegram.entities.state.PurchaseDescriptionState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.MaterialValuesAreNeeded
@@ -16,22 +16,22 @@ import telegram.resources.strings.CollectorStrings.PurchaseDescription.No
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.Yes
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
-import validation.IsLetterEventValid
 
-private val answerToBoolean = mapOf<String, Boolean>(
+const val SELECTION_IDENTIFIERS_PER_ROW = 4
+
+private val answerToBoolean = mapOf(
     No to false,
     Yes to true
 )
 
+@Suppress("LongMethod")
 fun CollectorMapBuilder.purchaseDescriptionCollector() {
     collector<PurchaseDescription>(initialState = PurchaseDescriptionState.WaitingForShortJustification) {
         state<PurchaseDescriptionState.WaitingForShortJustification> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortJustification) }
             onText {
                 state.override {
-                    PurchaseDescriptionState.WaitingForSelectionLetter(
-                        it.content.text
-                    )
+                    PurchaseDescriptionState.WaitingForSelectionLetter(it.content.text)
                 }
             }
         }
@@ -46,10 +46,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 val letter = SelectionLetter.of(it.content.text)
                 if (letter != null) {
                     state.override {
-                        PurchaseDescriptionState.WaitingForSelectionIdentifier(
-                            state.snapshot.shortJustification,
-                            letter
-                        )
+                        PurchaseDescriptionState.WaitingForSelectionIdentifier(shortJustification, letter)
                     }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.PurchaseDescription.InvalidSelectionLetter)
@@ -58,9 +55,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             }
         }
         state<PurchaseDescriptionState.WaitingForSelectionIdentifier> {
-            onEnter {
+            onEnter { chatId ->
                 sendTextMessage(
-                    it,
+                    chatId,
                     infoWithLink(
                         CollectorStrings.PurchaseDescription.SelectionIdentifier.Question,
                         CollectorStrings.PurchaseDescription.SelectionIdentifier.ClickMe,
@@ -70,12 +67,11 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         resizeKeyboard = true,
                         oneTimeKeyboard = true
                     ) {
-                        CollectorStrings.PurchaseDescription.SelectionIdentifier.SelectionIdentifierOptions.chunked(4)
-                            .forEach {
-                                row {
-                                    it.forEach { simpleButton(it) }
-                                }
+                        SelectionIdentifier.options.chunked(SELECTION_IDENTIFIERS_PER_ROW).forEach {
+                            row {
+                                it.forEach { simpleButton(it) }
                             }
+                        }
                     }
                 )
             }
@@ -84,8 +80,8 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                 if (indicator != null) {
                     state.override {
                         PurchaseDescriptionState.WaitingForFullJustification(
-                            state.snapshot.shortJustification,
-                            state.snapshot.selectionLetter,
+                            shortJustification,
+                            selectionLetter,
                             indicator
                         )
                     }
@@ -100,9 +96,9 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
             onText {
                 state.override {
                     PurchaseDescriptionState.WaitingForMaterialValuesNeed(
-                        this.shortJustification,
-                        this.selectionLetter,
-                        this.selectionIdentifier,
+                        shortJustification,
+                        selectionLetter,
+                        selectionIdentifier,
                         it.content.text
                     )
                 }
@@ -119,21 +115,21 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(Yes)
                             simpleButton(No)
+                            simpleButton(Yes)
                         }
                     }
                 )
             }
             onText {
-                if (answerToBoolean.contains(it.content.text)) {
-                    val areNeeded = answerToBoolean[it.content.text]
+                val areNeeded = answerToBoolean[it.content.text]
+                if (areNeeded != null) {
                     val purchaseDescription = PurchaseDescription(
                         shortJustification = state.snapshot.shortJustification,
                         selectionLetter = state.snapshot.selectionLetter,
                         selectionIdentifier = state.snapshot.selectionIdentifier,
                         fullJustification = state.snapshot.fullJustification,
-                        materialValuesAreNeeded = areNeeded!!
+                        materialValuesAreNeeded = areNeeded
                     )
                     this@collector.exit(state, listOf(purchaseDescription))
                 } else {

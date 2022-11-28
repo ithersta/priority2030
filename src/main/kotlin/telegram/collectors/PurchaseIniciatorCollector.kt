@@ -4,11 +4,10 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchaseIniciator
-import domain.entitties.Fio
+import domain.entities.Fio
 import telegram.entities.state.PurchaseIniciatorState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
 
 fun CollectorMapBuilder.purchaseIniciatorCollector() {
     collector<PurchaseIniciator>(initialState = PurchaseIniciatorState) {

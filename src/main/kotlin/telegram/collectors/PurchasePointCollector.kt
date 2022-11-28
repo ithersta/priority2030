@@ -4,12 +4,11 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.PurchasePoint
-import domain.entitties.PurchasePoints
+import domain.entities.PurchasePoints
 import telegram.entities.state.PurchasePointState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
-import validation.IsPointNumberValid
 
 fun CollectorMapBuilder.purchasePointCollector() {
     collector<PurchasePoint>(initialState = PurchasePointState) {

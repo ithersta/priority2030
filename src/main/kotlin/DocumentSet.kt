@@ -3,22 +3,23 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
+import extensions.*
 import telegram.resources.strings.CollectorStrings
-import java.util.*
+import java.math.BigDecimal
 
-private val termOfPaymentToStrings:Map<TermOfPayment,String> = mapOf(
+private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
     TermOfPayment.Prepaid to CollectorStrings.TermOfPayment.Prepaid,
     TermOfPayment.Fact to CollectorStrings.TermOfPayment.Fact,
     TermOfPayment.Partially to CollectorStrings.TermOfPayment.Partially
 )
 
 val documentSet = documentSet {
-    document("/documents/Служебная записка.docx"){
+    document("/documents/Служебная записка.docx") {
         purchaseObject()
-        field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
-        field("NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
-        field("REASON", get<PurchaseDescription>().fullJustification)
+        field("SHORT_DESCRIPTION", get<PurchaseDescription>().shortJustification)
+        field("SEL_LETTER", get<PurchaseDescription>().selectionLetter.letter)
+        field("SEL_NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
+        field("PURCHASE_REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number.point)
         iniciatorfio()
         purchaseCost()
@@ -26,7 +27,7 @@ val documentSet = documentSet {
     document("/documents/Заявка на размещение.docx"){
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
-        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
+        termOfPaymentToStrings.get(get())?.let { field("PAYMENT_WAY", it) }
         purchaseCost()
 
         financiallyResponsiblePerson()
@@ -49,64 +50,35 @@ val documentSet = documentSet {
     }
 }
 
-private fun DocumentBuilder.purchaseCost(){
-    field("RUBLESNUMB", get<PurchaseCost>().costInRubles.number)
-    field("COPEEKSNUMB", get<PurchaseCost>().costInCops.number)
-    field("RUBLES", get<PurchaseCost>().costInRublesPrescription)
-    field("COPEEKS", get<PurchaseCost>().costInCopsPrescription)
-    field("RUB", get<PurchaseCost>().rubles)
-    field("COP", get<PurchaseCost>().cops)
+private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
+    field("RUBLESNUMB", rubles.toString())
+    field("COPEEKSNUMB", "%02d".format(copecks))
+    field("RUBLES", spelloutRubles())
+    field("COPEEKS", spelloutCopecks())
+    field("RUB", rublesUnit())
+    field("COP", copecksUnit())
 }
 
-private fun DocumentBuilder.payment(){
-    var costInRubles =""
-    var costInCops=""
-    var costInRublesPrescription=""
-    var costInCopsPrescription=""
-
-    when (get<TermOfPayment>()){
-        TermOfPayment.Prepaid->{
-            val purchase=get<PurchaseCost>().costInRubles.number+"."+get<PurchaseCost>().costInCops.number
-            val prepaidPayment=(purchase.toFloat()*0.3).toString()
-
-            val rubl = prepaidPayment.substringBefore('.')
-            val cop = prepaidPayment.substringAfter('.').take(2)
-
-            val ruPrescription = RuleBasedNumberFormat(
-                Locale.forLanguageTag("ru"),
-                RuleBasedNumberFormat.SPELLOUT
-            )
-
-            val rublesRu = ruPrescription.format(rubl.toInt())
-            val copsRu = ruPrescription.format(cop.toInt())
-
-            costInRubles=rubl
-            costInCops=cop
-            costInRublesPrescription=rublesRu
-            costInCopsPrescription=copsRu
-        }
-        TermOfPayment.Fact->{
-            costInRubles=get<PurchaseCost>().costInRubles.number
-            costInCops=get<PurchaseCost>().costInCops.number
-            costInRublesPrescription=get<PurchaseCost>().costInRublesPrescription
-            costInCopsPrescription=get<PurchaseCost>().costInCopsPrescription
-        }
-        TermOfPayment.Partially->{}
+private fun DocumentBuilder.payment() {
+    val payment = when (get<TermOfPayment>()) {
+        TermOfPayment.Prepaid -> get<PurchaseCost>() * BigDecimal("0.3")
+        TermOfPayment.Fact -> get()
+        TermOfPayment.Partially -> null
     }
-    field("RUBLESNUMB", costInRubles)
-    field("COPEEKSNUMB", costInCops)
-    field("RUBLES", costInRublesPrescription)
-    field("COPEEKS", costInCopsPrescription)
+    field("RUBLESNUMB", payment?.rubles?.toString().orEmpty())
+    field("COPEEKSNUMB", payment?.copecks?.let { "%02d".format(it) }.orEmpty())
+    field("RUBLES", payment?.spelloutRubles().orEmpty())
+    field("COPEEKS", payment?.spelloutCopecks().orEmpty())
 }
-private fun DocumentBuilder.financiallyResponsiblePerson(){
-    var fio=""
-    var contactNumber=""
-    if (get<PurchaseDescription>().materialValuesAreNeeded){
-        fio=get<FinanciallyResponsiblePerson>().fio.fio
-        contactNumber=get<FinanciallyResponsiblePerson>().contactPhoneNumber.number
+
+private fun DocumentBuilder.financiallyResponsiblePerson() {
+    val person = if (get<PurchaseDescription>().materialValuesAreNeeded) {
+        get<FinanciallyResponsiblePerson>()
+    } else {
+        null
     }
-    field("RESPONSIBLEMEMBERFIO", fio)
-    field("RESPPRIVATEPHONE", contactNumber)
+    field("RESPONSIBLEMEMBERFIO", person?.fio?.fio.orEmpty())
+    field("RESPPRIVATEPHONE", person?.contactPhoneNumber?.number.orEmpty())
 }
 
 private fun DocumentBuilder.responsibleForDocumentsPerson(){
@@ -114,12 +86,13 @@ private fun DocumentBuilder.responsibleForDocumentsPerson(){
     field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
 
-private fun DocumentBuilder.materialObjectNumber(){
-    var number=""
-    if(get<PurchaseDescription>().materialValuesAreNeeded){
-        number=get<MaterialObjectNumber>().number.number
+private fun DocumentBuilder.materialObjectNumber() {
+    val number = if (get<PurchaseDescription>().materialValuesAreNeeded) {
+        get<MaterialObjectNumber>().number
+    } else {
+        null
     }
-    field("RESPPOINT", number)
+    field("RESPPOINT", number?.toString().orEmpty())
 }
 
 private fun DocumentBuilder.purchaseObject(){

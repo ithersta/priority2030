@@ -1,5 +1,6 @@
-package telegram.resources.strings
+@file:Suppress("MaxLineLength")
 
+package telegram.resources.strings
 
 object InvalidInputStrings {
     object PurchaseDescription {

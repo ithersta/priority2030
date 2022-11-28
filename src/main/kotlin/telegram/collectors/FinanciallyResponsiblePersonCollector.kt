@@ -4,13 +4,11 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.FinanciallyResponsiblePerson
-import domain.entitties.Fio
-import domain.entitties.PhoneNumber
+import domain.entities.Fio
+import domain.entities.PhoneNumber
 import telegram.entities.state.FinanciallyResponsiblePersonState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
-import validation.IsFullNameValid
-import validation.IsPhoneNumberValid
 
 fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
     collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForfio) {

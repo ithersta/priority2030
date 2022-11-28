@@ -1,8 +1,8 @@
 package domain.datatypes
 
-import domain.entitties.Email
-import domain.entitties.Fio
-import domain.entitties.PhoneNumber
+import domain.entities.Email
+import domain.entities.Fio
+import domain.entities.PhoneNumber
 import kotlinx.serialization.Serializable
 
 @Serializable
