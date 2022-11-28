@@ -144,9 +144,18 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onEnter{chatId->
             sendTextMessage(
                 chatId,
-                Strings.UploadDocs.CommercialOffers
+                Strings.UploadDocs.CommercialOffers,
+                replyMarkup = replyKeyboard(
+                    resizeKeyboard = true,
+                    oneTimeKeyboard = true
+                ) {
+                    row {
+                        simpleButton(ButtonStrings.UploadadAllDocs)
+                    }
+                }
             )
         }
+        //тут тогда проверка на количество как-то по-другому реализуется..
         onDocumentMediaGroup{ message->
             if (message.content.group.size < MIN_NUM_OF_COMMERCIAL_OFFERS) {
                 sendTextMessage(
@@ -156,8 +165,14 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
             } else
             state.override {
-                FillingProvisionOfServicesState.UploadExtraDocs(this.docs + message.content.media.fileId)
+                copy(docs = docs + message.content.group.map { it.content.media.fileId })
             }
+        }
+        onDocument{message->
+            state.override { copy(docs = docs + message.content.media.fileId) }
+        }
+        onText(ButtonStrings.UploadadAllDocs){
+            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs) }
         }
     }
     state<FillingProvisionOfServicesState.UploadExtraDocs> {
@@ -172,6 +187,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                     row {
                         simpleButton(ButtonStrings.NotRequired)
                     }
+                    row {
+                        simpleButton(ButtonStrings.UploadadAllDocs)
+                    }
                 }
             )
         }
@@ -179,10 +197,13 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
         }
         onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs + message.content.media.fileId) }
+            state.override { FillingProvisionOfServicesState.SendDocs(docs + message.content.group.map { it.content.media.fileId }) }
         }
         onDocument{ message->
             state.override { copy(docs = docs + message.content.media.fileId) }
+        }
+        onText(ButtonStrings.UploadadAllDocs){
+            state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
         }
     }
     state<FillingProvisionOfServicesState.SendDocs> {

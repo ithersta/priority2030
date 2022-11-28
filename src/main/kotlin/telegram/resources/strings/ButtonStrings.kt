@@ -16,7 +16,7 @@ object ButtonStrings {
 
     // тут бы немного другое название у кнопки, чтобы
     // пользователь не подумал, что при нажатии он перейдет сразу к отправке
-    const val UploadadAllDocs = "Все документы загружены"
+    const val UploadadAllDocs = "Документы загружены"
     const val Send = "Отправить"
     const val NotRequired = "Не загружать дополнительные документы"
     const val Back = "⬅️Назад"
