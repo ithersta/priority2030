@@ -15,10 +15,10 @@ private val termOfPaymentToStrings:Map<TermOfPayment,String> = mapOf(
 val documentSet = documentSet {
     document("/documents/Служебная записка.docx"){
         purchaseObject()
-        field("SHORT_DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("SEL_LETTER", get<PurchaseDescription>().selectionLetter.letter)
-        field("SEL_NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
-        field("PURCHASE_REASON", get<PurchaseDescription>().fullJustification)
+        field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
+        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
+        field("NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
+        field("REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number.point)
         iniciatorfio()
         purchaseCost()
@@ -26,7 +26,7 @@ val documentSet = documentSet {
     document("/documents/Заявка на размещение.docx"){
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
-        termOfPaymentToStrings.get(get())?.let { field("PAYMENT_WAY", it) }
+        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
         purchaseCost()
 
         financiallyResponsiblePerson()
@@ -50,10 +50,10 @@ val documentSet = documentSet {
 }
 
 private fun DocumentBuilder.purchaseCost(){
-    field("PURCHASE_RUB_NUMB", get<PurchaseCost>().costInRubles.number)
-    field("PURCHASE_COP_NUMB", get<PurchaseCost>().costInCops.number)
-    field("PURCHASE_RUB", get<PurchaseCost>().costInRublesPrescription)
-    field("PURCHASE_COP", get<PurchaseCost>().costInCopsPrescription)
+    field("RUBLESNUMB", get<PurchaseCost>().costInRubles.number)
+    field("COPEEKSNUMB", get<PurchaseCost>().costInCops.number)
+    field("RUBLES", get<PurchaseCost>().costInRublesPrescription)
+    field("COPEEKS", get<PurchaseCost>().costInCopsPrescription)
     field("RUB", get<PurchaseCost>().rubles)
     field("COP", get<PurchaseCost>().cops)
 }
@@ -93,10 +93,10 @@ private fun DocumentBuilder.payment(){
         }
         TermOfPayment.Partially->{}
     }
-    field("PURCHASE_RUB_NUMB", costInRubles)
-    field("PURCHASE_COP_NUMB", costInCops)
-    field("PURCHASE_RUB", costInRublesPrescription)
-    field("PURCHASE_COP", costInCopsPrescription)
+    field("RUBLESNUMB", costInRubles)
+    field("COPEEKSNUMB", costInCops)
+    field("RUBLES", costInRublesPrescription)
+    field("COPEEKS", costInCopsPrescription)
 }
 private fun DocumentBuilder.financiallyResponsiblePerson(){
     var fio=""
@@ -105,13 +105,13 @@ private fun DocumentBuilder.financiallyResponsiblePerson(){
         fio=get<FinanciallyResponsiblePerson>().fio.fio
         contactNumber=get<FinanciallyResponsiblePerson>().contactPhoneNumber.number
     }
-    field("RESPONSIBLE_MEMBER_FIO", fio)
-    field("RESP_PRIVATE_PHONE", contactNumber)
+    field("RESPONSIBLEMEMBERFIO", fio)
+    field("RESPPRIVATEPHONE", contactNumber)
 }
 
 private fun DocumentBuilder.responsibleForDocumentsPerson(){
-    field("DOCUMENT_FIO", get<ResponsibleForDocumentsPerson>().fio.fio)
-    field("DOC_PRIVATE_PHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
+    field("DOCUMENTFIO", get<ResponsibleForDocumentsPerson>().fio.fio)
+    field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
 
 private fun DocumentBuilder.materialObjectNumber(){
@@ -119,14 +119,14 @@ private fun DocumentBuilder.materialObjectNumber(){
     if(get<PurchaseDescription>().materialValuesAreNeeded){
         number=get<MaterialObjectNumber>().number.number
     }
-    field("RESP_POINT", number)
+    field("RESPPOINT", number)
 }
 
 private fun DocumentBuilder.purchaseObject(){
-    field("PURCHASE_NAME", get<PurchaseObject>().shortName)
+    field("NAME", get<PurchaseObject>().shortName)
 }
 
 private fun DocumentBuilder.iniciatorfio(){
-    field("INICIATOR_FIO", get<PurchaseIniciator>().fio.fio)
+    field("INICIATORFIO", get<PurchaseIniciator>().fio.fio)
 }
 
