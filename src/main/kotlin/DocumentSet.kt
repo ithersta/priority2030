@@ -1,4 +1,3 @@
-import com.ibm.icu.text.RuleBasedNumberFormat
 import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
@@ -35,7 +34,7 @@ val documentSet = documentSet {
 
         responsibleForDocumentsPerson()
         field("EM",get<ResponsibleForDocumentsPerson>().email.email)
-        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.date)
+        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
         field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorfio()
 
