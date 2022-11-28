@@ -17,6 +17,9 @@ object FillingProvisionOfServicesState {
     object UploadDocs : DialogState
 
     @Serializable
+    object UploadDocsEmail : DialogState
+
+    @Serializable
     object CheckAndUploadDocs : DialogState
 
     @Serializable

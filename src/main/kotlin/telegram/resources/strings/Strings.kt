@@ -18,6 +18,8 @@ object Strings {
     const val Welcome = "Этот бот поможет Вам с оформлением документов, необходимых для оформления закупки на оказание услуг с ООО или ИП (Закупка у единственного поставщика)"
     const val CreateDocumentsMessage = "Давайте начнём заполнение"
     const val PackageDocsReady = "Пакет документов сформирован"
+    const val Email = "Введите адрес электронной почты"
+    const val SuccessfulSendDocsEmail = "Документы успешно отправлены на электронную почту"
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
     const val SendDocuments = "Отправить документы на почту"

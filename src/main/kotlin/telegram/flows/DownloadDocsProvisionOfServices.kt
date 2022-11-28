@@ -22,7 +22,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onEnter{chatId->
             sendTextMessage(
                 chatId,
-                ButtonStrings.CheckingDoc,
+                Strings.PackageDocsReady,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
@@ -30,11 +30,30 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                     row {
                         simpleButton(ButtonStrings.CheckingDoc)
                     }
+                    row{
+                        simpleButton(ButtonStrings.GetByEmail)
+                    }
                 }
             )
         }
         onText(ButtonStrings.CheckingDoc){
-            //отправка доков в чат + добавить кнопку выбора отправить в чат или на почту(запрашивать адрес почты для отправки)
+            //отправка доков в чат
+            state.override { FillingProvisionOfServicesState.UploadDocs }
+        }
+        onText(ButtonStrings.GetByEmail){
+            state.override{ FillingProvisionOfServicesState.UploadDocsEmail }
+        }
+    }
+    state<FillingProvisionOfServicesState.UploadDocsEmail>{
+        onEnter{chatId->
+            sendTextMessage(
+                chatId,
+                Strings.Email
+            )
+        }
+        onText{message->
+            //тут надо реализовать отправку на введенный адрес + валидация
+            sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
             state.override { FillingProvisionOfServicesState.UploadDocs }
         }
     }
@@ -181,7 +200,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        onText(ButtonStrings.Send){
+        onText(ButtonStrings.Send){message->
+            //тут отправка всех документов на почту Тамары
+            sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
     }

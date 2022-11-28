@@ -11,33 +11,33 @@ import telegram.entities.state.FillingProvisionOfServicesState.BeginFillDoc
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.*
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
-import telegram.resources.strings.ButtonStrings.Back
-import telegram.resources.strings.Strings.Menu.CreateDocuments
+import telegram.resources.strings.ButtonStrings
+import telegram.resources.strings.Strings
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServices() {
     state<BeginFillDoc> {
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
-                CreateDocuments,
+                Strings.CreateDocumentsMessage,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
                 ) {
                     row {
-                        simpleButton(CreateDocuments)
+                        simpleButton(Strings.Menu.CreateDocuments)
                     }
                     row{
-                        simpleButton(Back)
+                        simpleButton(ButtonStrings.Back)
                     }
                 }
             )
         }
-        onText(CreateDocuments) {
+        onText(Strings.Menu.CreateDocuments) {
             //(Для Саши) тут переход к состоянию заполнения полей документов
             state.override { FillingProvisionOfServicesState.DownloadDocs }
         }
-        onText(Back) {
+        onText(ButtonStrings.Back) {
             state.override { EmptyState }
         }
     }
