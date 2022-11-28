@@ -155,17 +155,18 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        //тут тогда проверка на количество как-то по-другому реализуется..
+        //Тут тогда проверка на количество как-то по-другому реализуется..
+        //Каждый раз при отправке сгруппированных объектов или по одному
+        //всплывает сообщение из этого состояния(не думаю, что это ок)
         onDocumentMediaGroup{ message->
-            if (message.content.group.size < MIN_NUM_OF_COMMERCIAL_OFFERS) {
-                sendTextMessage(
-                    message.chat,
-                    Strings.IncorrectNumOfDocs
-                )
-                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
-            } else
-            state.override {
-                copy(docs = docs + message.content.group.map { it.content.media.fileId })
+//            if (message.content.group.size < MIN_NUM_OF_COMMERCIAL_OFFERS) {
+//                sendTextMessage(
+//                    message.chat,
+//                    Strings.IncorrectNumOfDocs
+//                )
+//                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
+//            } else
+            state.override {copy(docs = docs + message.content.group.map { it.content.media.fileId })
             }
         }
         onDocument{message->
