@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package telegram.resources.strings
 
 import dev.inmo.tgbotapi.utils.bold

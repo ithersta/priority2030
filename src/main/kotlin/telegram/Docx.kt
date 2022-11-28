@@ -17,6 +17,7 @@ object Docx {
             val wordReplacer = WordReplacer(document)
             replacements.forEach {
                 wordReplacer.replaceWordsInText(it.first, it.second)
+                wordReplacer.replaceWordsInTables(it.first, it.second)
             }
             wordReplacer.moddedXWPFDoc.use { moddedDocument ->
                 ByteArrayOutputStream().also {
