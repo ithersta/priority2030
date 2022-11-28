@@ -7,6 +7,4 @@ data class EntrepreneurInformation(
     val mainInfo: IpInfo,
     val phone: String,
     val email: String
-) : FieldData {
-
-}
+) : FieldData

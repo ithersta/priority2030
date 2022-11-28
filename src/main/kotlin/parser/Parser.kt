@@ -120,7 +120,7 @@ class Parser {
     private val ogrnOfOrg: String
         get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOgrnOoo]
         else mainInfoAboutOrg[orderOgrnIp]).replace("ОГРН ".toRegex(), "")
-    private val okpoOfOrg: String
-        get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOkpoOoo]
-        else mainInfoAboutOrg[orderOkpoIp]).replace("ОКПО ".toRegex(), "")
+//    private val okpoOfOrg: String
+//        get() = (if (type.equals(CollectorStrings.Ooo)) mainInfoAboutOrg[orderOkpoOoo]
+//        else mainInfoAboutOrg[orderOkpoIp]).replace("ОКПО ".toRegex(), "")
 }
