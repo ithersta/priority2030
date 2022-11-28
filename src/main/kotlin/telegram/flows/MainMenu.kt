@@ -22,7 +22,7 @@ val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
         state.override { EmptyState }
     }
     button(ButtonStrings.ChoiceFillingDoc.ViewingExample) { message ->
-        sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
+        sendTextMessage(message.chat, Strings.comemrcialOfferHint(), replyMarkup = ReplyKeyboardRemove())
         state.override { EmptyState }
     }
 }
