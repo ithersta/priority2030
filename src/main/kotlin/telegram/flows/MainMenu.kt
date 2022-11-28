@@ -13,7 +13,7 @@ import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.Strings
 
 val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
-    button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) { message ->
+    button(ButtonStrings.ChoiceFillingDoc.ProvisionOfServices) {
         state.override { FillingProvisionOfServicesState.BeginFillDoc}
     }
     button(ButtonStrings.ChoiceFillingDoc.DeliveryOfGoods) { message ->

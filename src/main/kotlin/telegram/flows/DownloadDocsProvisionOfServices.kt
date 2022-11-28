@@ -10,10 +10,12 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
+import domain.entities.Email
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
+import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.Strings
 
 const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
@@ -52,9 +54,15 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText{message->
-            //тут надо реализовать отправку на введенный адрес + валидация
-            sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
-            state.override { FillingProvisionOfServicesState.UploadDocs }
+            val email = Email.of(message.content.text)
+            if(email != null) {
+                //отправка на введенный адрес
+                sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
+                state.override { FillingProvisionOfServicesState.UploadDocs }
+            }
+            else {
+                sendTextMessage(message.chat, InvalidInputStrings.InvalidEmail)
+            }
         }
     }
     state<FillingProvisionOfServicesState.UploadDocs>{
