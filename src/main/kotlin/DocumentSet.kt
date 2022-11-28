@@ -17,7 +17,7 @@ val documentSet = documentSet {
         purchaseObject()
         field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
         field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
-        field("NUMB", get<PurchaseDescription>().selectionIdentifier.indicator)
+        field("NUMBER", get<PurchaseDescription>().selectionIdentifier.indicator)
         field("REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number.point)
         iniciatorfio()
@@ -33,7 +33,7 @@ val documentSet = documentSet {
         materialObjectNumber()
 
         responsibleForDocumentsPerson()
-        field("EM",get<ResponsibleForDocumentsPerson>().email.email)
+        field("EMAIL",get<ResponsibleForDocumentsPerson>().email.email)
         field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
         field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorfio()
