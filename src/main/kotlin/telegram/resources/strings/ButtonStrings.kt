@@ -8,10 +8,12 @@ object ButtonStrings {
         const val ConclusionGphCOntract = "Заключение договора ГПХ"
         const val ViewingExample = "Примеры правильных коммерческих предложений"
     }
-    const val CheckingDoc = "Скачать пакет документов для проверки и внесения недостающих данных"
+    const val CheckingDoc = "Скачать пакет документов"
+    const val GetByEmail = "Получить пакет документов на почту"
     const val UploadPackageDoc = "Загрузить готовый пакет документов и отправить на проверку"
     const val BackToCreateDocs = "Вернуться к заполнению документов"
     const val UploadDocuments = "Загрузить документы"
+
     // тут бы немного другое название у кнопки, чтобы
     // пользователь не подумал, что при нажатии он перейдет сразу к отправке
     const val UploadadAllDocs = "Все документы загружены"
