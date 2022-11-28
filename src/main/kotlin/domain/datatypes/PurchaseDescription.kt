@@ -11,4 +11,4 @@ data class PurchaseDescription(
     val selectionIdentifier: SelectionIdentifier,
     val fullJustification: String,
     val materialValuesAreNeeded: Boolean
-):FieldData
+) : FieldData

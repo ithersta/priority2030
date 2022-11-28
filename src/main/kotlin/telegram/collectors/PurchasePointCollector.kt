@@ -25,7 +25,7 @@ fun CollectorMapBuilder.purchasePointCollector() {
             }
             onText {
                 val point = PurchasePoints.of(it.content.text)
-                if (point!=null) {
+                if (point != null) {
                     val purchasePoint = PurchasePoint(number = point)
                     this@collector.exit(state, listOf(purchasePoint))
                 } else {

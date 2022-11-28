@@ -5,9 +5,10 @@ import org.apache.commons.validator.routines.EmailValidator
 
 @Serializable
 data class Email private constructor(
-    val email:String){
-    companion object{
+    val email: String
+) {
+    companion object {
         private val emailValidator = EmailValidator.getInstance()
-        fun of(email: String)=if (emailValidator.isValid(email)) Email(email) else null
+        fun of(email: String) = if (emailValidator.isValid(email)) Email(email) else null
     }
 }

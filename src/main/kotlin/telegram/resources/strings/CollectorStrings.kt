@@ -44,9 +44,10 @@ object CollectorStrings {
                 "\n" +
                 "(Необходимо представить развернутое обоснование закупки с указанием целей закупки и " +
                 "ожидаемого результата, описать влияние закупки на задачи и показатели программы «Приоритет-2030»)"
-        const val MaterialValuesAreNeeded="Услуги по договору предполагают поставку оборудования/материальных ценностей?"
-        const val Yes ="Да"
-        const val No="Нет"
+        const val MaterialValuesAreNeeded =
+            "Услуги по договору предполагают поставку оборудования/материальных ценностей?"
+        const val Yes = "Да"
+        const val No = "Нет"
     }
 
     object PurchasePoint {
@@ -88,16 +89,17 @@ object CollectorStrings {
         const val Email = "Введите адрес электронной почты ответственного за предоставление отчетных документов."
     }
 
-    const val PurchaseInitiatorDepartment="Введите наименование структурного подразделения для которого осуществляется закупка"
-    const val PurchaseDeadline ="Введите сроки поставки товара, выполнения работ, оказания услуг в формате дд.мм.гггг"
-    const val PurchaseDeliveryAddress="Введите место поставки товара, выполнения работ, оказания услуг"
-    const val MaterialObjectNumber="Введите номер материальной точки"
+    const val PurchaseInitiatorDepartment =
+        "Введите наименование структурного подразделения для которого осуществляется закупка"
+    const val PurchaseDeadline = "Введите сроки поставки товара, выполнения работ, оказания услуг в формате дд.мм.гггг"
+    const val PurchaseDeliveryAddress = "Введите место поставки товара, выполнения работ, оказания услуг"
+    const val MaterialObjectNumber = "Введите номер материальной точки"
 
-    object TermOfPayment{
-        const val Prepaid="аванс 30%"
-        const val Fact="по факту"
-        const val Partially="частями"
-        const val Question="Выберите способ оплаты из кнопочного меню"
+    object TermOfPayment {
+        const val Prepaid = "аванс 30%"
+        const val Fact = "по факту"
+        const val Partially = "частями"
+        const val Question = "Выберите способ оплаты из кнопочного меню"
     }
 }
 

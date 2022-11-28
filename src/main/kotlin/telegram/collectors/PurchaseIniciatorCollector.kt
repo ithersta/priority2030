@@ -20,7 +20,7 @@ fun CollectorMapBuilder.purchaseIniciatorCollector() {
             }
             onText {
                 val fio = Fio.of(it.content.text)
-                if (fio!=null) {
+                if (fio != null) {
                     val inic = PurchaseIniciator(fio)
                     this@collector.exit(state, listOf(inic))
                 } else {

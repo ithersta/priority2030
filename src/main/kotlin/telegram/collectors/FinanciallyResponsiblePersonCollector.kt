@@ -11,13 +11,13 @@ import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
 
 fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
-    collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForfio) {
-        state<FinanciallyResponsiblePersonState.WaitingForfio> {
+    collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForFio) {
+        state<FinanciallyResponsiblePersonState.WaitingForFio> {
             onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.fio) }
             onText {
                 val fio = Fio.of(it.content.text)
-                if (fio!=null) {
-                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(fio)}
+                if (fio != null) {
+                    state.override { FinanciallyResponsiblePersonState.WaitingForContactPhoneNumber(fio) }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
@@ -27,12 +27,12 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.ContactPhoneNumber) }
             onText {
                 val contactPhoneNumber = PhoneNumber.of(it.content.text)
-                if (contactPhoneNumber!=null) {
-                        val financiallyResponsiblePerson=FinanciallyResponsiblePerson(
-                            state.snapshot.fio,
-                            contactPhoneNumber
-                        )
-                        this@collector.exit(state, listOf(financiallyResponsiblePerson))
+                if (contactPhoneNumber != null) {
+                    val financiallyResponsiblePerson = FinanciallyResponsiblePerson(
+                        state.snapshot.fio,
+                        contactPhoneNumber
+                    )
+                    this@collector.exit(state, listOf(financiallyResponsiblePerson))
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidPhoneNumber)
                 }

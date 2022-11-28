@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PurchasePoint(
     val number: PurchasePoints
-):FieldData
+) : FieldData

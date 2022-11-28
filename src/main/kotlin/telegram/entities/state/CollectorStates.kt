@@ -1,6 +1,9 @@
 package telegram.entities.state
 
-import domain.entities.*
+import domain.entities.Fio
+import domain.entities.PhoneNumber
+import domain.entities.SelectionIdentifier
+import domain.entities.SelectionLetter
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -60,7 +63,7 @@ object PurchaseCostState : DialogState
 
 object FinanciallyResponsiblePersonState {
     @Serializable
-    object WaitingForfio : DialogState
+    object WaitingForFio : DialogState
 
     @Serializable
     data class WaitingForContactPhoneNumber(val fio: Fio) : DialogState
@@ -68,7 +71,7 @@ object FinanciallyResponsiblePersonState {
 
 object ResponsibleForDocumentsPersonState {
     @Serializable
-    object WaitingForfio : DialogState
+    object WaitingForFio : DialogState
 
     @Serializable
     data class WaitingForContactPhoneNumber(val fio: Fio) : DialogState

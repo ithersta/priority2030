@@ -23,7 +23,7 @@ val documentSet = documentSet {
         iniciatorfio()
         purchaseCost()
     }
-    document("/documents/Заявка на размещение.docx"){
+    document("/documents/Заявка на размещение.docx") {
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
         termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
@@ -33,13 +33,13 @@ val documentSet = documentSet {
         materialObjectNumber()
 
         responsibleForDocumentsPerson()
-        field("EMAIL",get<ResponsibleForDocumentsPerson>().email.email)
-        field("DEADLINE",get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
-        field("PLACE",get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
+        field("EMAIL", get<ResponsibleForDocumentsPerson>().email.email)
+        field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
+        field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorfio()
 
     }
-    document("/documents/Заявка на оплату.docx"){
+    document("/documents/Заявка на оплату.docx") {
         payment()
         iniciatorfio()
 
@@ -80,7 +80,7 @@ private fun DocumentBuilder.financiallyResponsiblePerson() {
     field("RESPPRIVATEPHONE", person?.contactPhoneNumber?.number.orEmpty())
 }
 
-private fun DocumentBuilder.responsibleForDocumentsPerson(){
+private fun DocumentBuilder.responsibleForDocumentsPerson() {
     field("DOCUMENTFIO", get<ResponsibleForDocumentsPerson>().fio.fio)
     field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
@@ -94,11 +94,11 @@ private fun DocumentBuilder.materialObjectNumber() {
     field("RESPPOINT", number?.toString().orEmpty())
 }
 
-private fun DocumentBuilder.purchaseObject(){
+private fun DocumentBuilder.purchaseObject() {
     field("NAME", get<PurchaseObject>().shortName)
 }
 
-private fun DocumentBuilder.iniciatorfio(){
+private fun DocumentBuilder.iniciatorfio() {
     field("INICIATORFIO", get<PurchaseIniciator>().fio.fio)
 }
 

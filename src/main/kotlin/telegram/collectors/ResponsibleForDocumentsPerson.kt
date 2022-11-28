@@ -12,23 +12,23 @@ import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings
 
 fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
-    collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForfio) {
-        state<ResponsibleForDocumentsPersonState.WaitingForfio> {
+    collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForFio) {
+        state<ResponsibleForDocumentsPersonState.WaitingForFio> {
             onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.fio) }
             onText {
                 val fio = Fio.of(it.content.text)
-                if (fio!=null) {
-                    state.override {ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(fio) }
+                if (fio != null) {
+                    state.override { ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber(fio) }
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.Invalidfio)
                 }
             }
         }
         state<ResponsibleForDocumentsPersonState.WaitingForContactPhoneNumber> {
-            onEnter { sendTextMessage(it,  CollectorStrings.ResponsibleForDocumentsPerson.ContactPhoneNumber) }
+            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.ContactPhoneNumber) }
             onText {
                 val contactPhoneNumber = PhoneNumber.of(it.content.text)
-                if (contactPhoneNumber!=null) {
+                if (contactPhoneNumber != null) {
                     state.override {
                         ResponsibleForDocumentsPersonState.WaitingForEmail(
                             this.fio,
@@ -45,7 +45,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.Email) }
             onText {
                 val email = Email.of(it.content.text)
-                if (email!=null) {
+                if (email != null) {
                     val responsibleForDocumentsPerson = ResponsibleForDocumentsPerson(
                         state.snapshot.fio,
                         state.snapshot.contactPhoneNumber,
