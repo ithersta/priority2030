@@ -19,6 +19,9 @@ import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.Strings
 
 const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
+const val NUM_OF_PREVIOUS_DOCS = 3
+//(для Глеба) тут нужно состояние, которое будет хранить заполненные документы
+//из последнего состояния заполнения переход сюда
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
     state<FillingProvisionOfServicesState.DownloadDocs>{
         onEnter{chatId->
@@ -163,24 +166,21 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        //Тут тогда проверка на количество как-то по-другому реализуется..
-        //Каждый раз при отправке сгруппированных объектов или по одному
-        //всплывает сообщение из этого состояния(не думаю, что это ок)
         onDocumentMediaGroup{ message->
-//            if (message.content.group.size < MIN_NUM_OF_COMMERCIAL_OFFERS) {
-//                sendTextMessage(
-//                    message.chat,
-//                    Strings.IncorrectNumOfDocs
-//                )
-//                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
-//            } else
-            state.override {copy(docs = docs + message.content.group.map { it.content.media.fileId })
+            state.overrideQuietly {copy(docs = docs + message.content.group.map { it.content.media.fileId })
             }
         }
         onDocument{message->
-            state.override { copy(docs = docs + message.content.media.fileId) }
+            state.overrideQuietly { copy(docs = docs + message.content.media.fileId) }
         }
         onText(ButtonStrings.UploadadAllDocs){
+            if(( - NUM_OF_PREVIOUS_DOCS) < MIN_NUM_OF_COMMERCIAL_OFFERS){
+                sendTextMessage(
+                    it.chat.id,
+                    Strings.IncorrectNumOfDocs
+                )
+                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
+            } else
             state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs) }
         }
     }
@@ -206,10 +206,10 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
         }
         onDocumentMediaGroup{ message->
-            state.override { FillingProvisionOfServicesState.SendDocs(docs + message.content.group.map { it.content.media.fileId }) }
+            state.overrideQuietly { copy(docs = docs + message.content.group.map { it.content.media.fileId }) }
         }
         onDocument{ message->
-            state.override { copy(docs = docs + message.content.media.fileId) }
+            state.overrideQuietly { copy(docs = docs + message.content.media.fileId) }
         }
         onText(ButtonStrings.UploadadAllDocs){
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
