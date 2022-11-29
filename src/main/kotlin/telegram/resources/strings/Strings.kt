@@ -65,4 +65,5 @@ object Strings {
     }
 
     const val IncorrectNumOfDocs = "Загружено недостаточное количество документов. "
+    const val TooBigFileSize = "Файл слишком большой. Загрузите файл размером не более 20Мб"
 }
