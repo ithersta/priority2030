@@ -174,7 +174,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.overrideQuietly { copy(docs = docs + message.content.media.fileId) }
         }
         onText(ButtonStrings.UploadadAllDocs){
-            if(( - NUM_OF_PREVIOUS_DOCS) < MIN_NUM_OF_COMMERCIAL_OFFERS){
+            if(( state.snapshot.docs.size - NUM_OF_PREVIOUS_DOCS) < MIN_NUM_OF_COMMERCIAL_OFFERS){
                 sendTextMessage(
                     it.chat.id,
                     Strings.IncorrectNumOfDocs

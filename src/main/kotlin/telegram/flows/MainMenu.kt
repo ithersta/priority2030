@@ -27,7 +27,8 @@ val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
     button(ButtonStrings.ChoiceFillingDoc.ViewingExample) { message ->
         sendTextMessage(message.chat, Strings.comemrcialOfferPrompt(), replyMarkup = ReplyKeyboardRemove())
         val prompt1 = object {}::class.java.
-        getResourceAsStream("/prompt/ArticMedia_Коммерческое_предложение_ФГАОУ_ВО_СПбПУ_Внедрение_Битрикс24.pdf")?: run {
+        getResourceAsStream("/prompt/ArticMedia_Коммерческое_предложение_ФГАОУ_ВО_СПбПУ_Внедрение_Битрикс24.pdf")?:
+        run {
             return@button
         }
         val prompt2 = object {}::class.java.getResourceAsStream("/prompt/Asanov КП.pdf")?: run {
@@ -36,8 +37,9 @@ val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
         val prompt3 = object {}::class.java.getResourceAsStream("/prompt/КП_Политех_Nimax.pdf")?: run {
             return@button
         }
-        sendDocument(message.chat, MultipartFile("ArticMedia_Коммерческое_предложение_ФГАОУ_ВО_СПбПУ_Внедрение_Битрикс24.pdf")
-        { prompt1.asInput() })
+        sendDocument(message.chat,
+            MultipartFile("ArticMedia_Коммерческое_предложение_ФГАОУ_ВО_СПбПУ_Внедрение_Битрикс24.pdf")
+            { prompt1.asInput() })
         sendDocument(message.chat, MultipartFile("Asanov КП.pdf") { prompt2.asInput() })
         sendDocument(message.chat, MultipartFile("КП_Политех_Nimax.pdf") { prompt3.asInput() })
         state.override { EmptyState }
