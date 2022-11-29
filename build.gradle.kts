@@ -27,6 +27,7 @@ dependencies {
     implementation("com.ithersta.tgbotapi:commands:0.1.0")
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation("com.github.deividasstr:docx-word-replacer:0.4")
+    implementation("org.apache.commons:commons-email:1.5")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
     implementation("org.slf4j:slf4j-simple:2.0.4")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
