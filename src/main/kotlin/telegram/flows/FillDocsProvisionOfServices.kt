@@ -9,6 +9,7 @@ import dev.inmo.tgbotapi.utils.row
 import telegram.entities.state.DialogState
 import telegram.entities.state.FillingProvisionOfServicesState.BeginFillDoc
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.*
+import telegram.entities.state.CollectingDataState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
 import telegram.resources.strings.ButtonStrings
@@ -34,7 +35,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.fillDocsProvisionOfServic
             )
         }
         onText(Strings.Menu.CreateDocuments) {
-            //(Для Саши) тут переход к состоянию заполнения полей документов
+            //state.override { CollectingDataState(emptyList()) }
             state.override { FillingProvisionOfServicesState.DownloadDocs }
         }
         onText(ButtonStrings.Back) {

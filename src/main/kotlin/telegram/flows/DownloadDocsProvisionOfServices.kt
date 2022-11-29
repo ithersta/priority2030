@@ -5,12 +5,16 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onDocument
 import com.ithersta.tgbotapi.fsm.entities.triggers.onDocumentMediaGroup
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
+import dev.inmo.tgbotapi.extensions.api.files.downloadFile
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
+import email.Attachment
+import email.EmailSender
+import org.koin.core.component.inject
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
@@ -60,7 +64,6 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText{message->
             val email = Email.of(message.content.text)
             if(email != null) {
-                //отправка на введенный адрес
                 sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
                 state.override { FillingProvisionOfServicesState.UploadDocs }
             }
@@ -231,8 +234,12 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
+        val emailSender: EmailSender by inject()
         onText(ButtonStrings.Send){message->
             //тут отправка всех документов на почту Тамары
+            //надо пофиксить отправку
+            val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId),"name"+it.fileId.toString(), "описание")}
+            emailSender.sendFiles(email.Strings.Email, attachments)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
