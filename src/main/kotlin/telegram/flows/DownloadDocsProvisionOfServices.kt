@@ -49,6 +49,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.override{ FillingProvisionOfServicesState.UploadDocsEmail }
         }
     }
+    //тут тоже в состоянии должны храниться документы
     state<FillingProvisionOfServicesState.UploadDocsEmail>{
         onEnter{chatId->
             sendTextMessage(
