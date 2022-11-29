@@ -192,10 +192,15 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocumentMediaGroup { message ->
-            //добавить проверку тут
-            state.overrideQuietly {
-                copy(docs = docs + message.content.group.map { it.content.media.fileId },
-                    docName = docName + message.content.group.map { it.content.media.fileName.toString() })
+            message.content.group.map { it ->
+                if(it.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+                    state.overrideQuietly {
+                        copy(docs = docs + message.content.group.map { it.content.media.fileId },
+                            docName = docName + message.content.group.map { it.content.media.fileName.toString() })
+                    }
+                } else {
+                    sendTextMessage(message.chat, Strings.TooBigFileSize)
+                }
             }
         }
         onDocument { message ->
@@ -243,10 +248,15 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.override { FillingProvisionOfServicesState.SendDocs(this.docs, this.docName) }
         }
         onDocumentMediaGroup { message ->
-           //добавить проверку тут
-            state.overrideQuietly {
-                copy(docs = docs + message.content.group.map { it.content.media.fileId },
-                    docName = docName + message.content.group.map { it.content.media.fileName.toString() })
+            message.content.group.map { it ->
+                if(it.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+                    state.overrideQuietly {
+                        copy(docs = docs + message.content.group.map { it.content.media.fileId },
+                            docName = docName + message.content.group.map { it.content.media.fileName.toString() })
+                    }
+                } else {
+                    sendTextMessage(message.chat, Strings.TooBigFileSize)
+                }
             }
         }
         onDocument { message ->
