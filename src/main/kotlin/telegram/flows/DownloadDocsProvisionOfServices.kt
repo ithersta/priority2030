@@ -10,10 +10,13 @@ import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
+import dev.inmo.tgbotapi.utils.filenameFromUrl
 import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
 import email.Attachment
 import email.EmailSender
+import org.apache.commons.io.FileUtils.getFile
+import org.koin.core.component.getScopeName
 import org.koin.core.component.inject
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
@@ -125,7 +128,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocument{message->
             state.override {
-                FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId))
+                FillingProvisionOfServicesState.UploadDocOfficialMemo(docs = listOf(message.content.media.fileId), docName = listOf(message.content.media.fileName.toString()))
             }
         }
     }
@@ -138,7 +141,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocument{ message->
             state.override {
-                FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.media.fileId)
+                FillingProvisionOfServicesState.UploadDocDraftAgreement(this.docs + message.content.media.fileId, this.docName + message.content.media.fileName.toString())
             }
         }
     }
@@ -151,7 +154,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocument{ message->
             state.override {
-                FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.media.fileId)
+                FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs + message.content.media.fileId, this.docName + message.content.media.fileName.toString())
             }
         }
     }
@@ -171,11 +174,16 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocumentMediaGroup{ message->
-            state.overrideQuietly {copy(docs = docs + message.content.group.map { it.content.media.fileId })
+            state.overrideQuietly {
+                copy(docs = docs + message.content.group.map { it.content.media.fileId },
+                    docName = docName + message.content.group.map { it.content.media.fileName.toString() })
             }
         }
         onDocument{message->
-            state.overrideQuietly { copy(docs = docs + message.content.media.fileId) }
+            state.overrideQuietly {
+                copy(docs = docs + message.content.media.fileId,
+                    docName = docName + message.content.media.fileName.toString())
+            }
         }
         onText(ButtonStrings.UploadadAllDocs){
             if(( state.snapshot.docs.size - NUM_OF_PREVIOUS_DOCS) < MIN_NUM_OF_COMMERCIAL_OFFERS){
@@ -183,9 +191,9 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                     it.chat.id,
                     Strings.IncorrectNumOfDocs
                 )
-                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs) }
+                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs, this.docName) }
             } else
-            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs) }
+            state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs, this.docName) }
         }
     }
     state<FillingProvisionOfServicesState.UploadExtraDocs> {
@@ -207,16 +215,22 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText(ButtonStrings.NotRequired){
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
+            state.override { FillingProvisionOfServicesState.SendDocs(this.docs, this.docName) }
         }
         onDocumentMediaGroup{ message->
-            state.overrideQuietly { copy(docs = docs + message.content.group.map { it.content.media.fileId }) }
+            state.overrideQuietly {
+                copy(docs = docs + message.content.group.map { it.content.media.fileId },
+                    docName = docName + message.content.group.map { it.content.media.fileName.toString() } )
+            }
         }
         onDocument{ message->
-            state.overrideQuietly { copy(docs = docs + message.content.media.fileId) }
+            state.overrideQuietly {
+                copy(docs = docs + message.content.media.fileId,
+                    docName = docName + message.content.media.fileName.toString() )
+            }
         }
         onText(ButtonStrings.UploadadAllDocs){
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs) }
+            state.override { FillingProvisionOfServicesState.SendDocs(this.docs, this.docName) }
         }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
@@ -237,8 +251,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         val emailSender: EmailSender by inject()
         onText(ButtonStrings.Send){message->
             //тут отправка всех документов на почту Тамары
-            //надо пофиксить отправку
-            val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId),"name"+it.fileId.toString(), "описание")}
+            val attachments = state.snapshot.docs.zip(state.snapshot.docName).map { Attachment(downloadFile(it.first), it.second, "описание")}
             emailSender.sendFiles(email.Strings.Email, attachments)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }

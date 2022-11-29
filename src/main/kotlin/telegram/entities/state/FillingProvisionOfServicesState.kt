@@ -27,27 +27,32 @@ object FillingProvisionOfServicesState {
 
     @Serializable
     data class UploadDocOfficialMemo(
-        val docs: List<FileId>
+        val docs: List<FileId>,
+        val docName: List<String>
     ) : DialogState
 
     @Serializable
     data class UploadDocDraftAgreement (
-        val docs: List<FileId>
+        val docs: List<FileId>,
+        val docName: List<String>
     ): DialogState
 
     @Serializable
     data class UploadDocsCommercialOffers (
-        val docs: List<FileId>
+        val docs: List<FileId>,
+        val docName: List<String>
     ) : DialogState
 
     @Serializable
     data class UploadExtraDocs (
-        val docs: List<FileId>
+        val docs: List<FileId>,
+        val docName: List<String>
     ): DialogState
 
     @Serializable
     data class SendDocs (
-        val docs: List<FileId>
+        val docs: List<FileId>,
+        val docName: List<String>
     ): DialogState
 
 }
