@@ -1,9 +1,6 @@
 package telegram.entities.state
 
 import dev.inmo.tgbotapi.requests.abstracts.FileId
-import dev.inmo.tgbotapi.types.files.DocumentFile
-import dev.inmo.tgbotapi.types.message.content.DocumentMediaGroupPartContent
-import dev.inmo.tgbotapi.types.message.content.MediaGroupCollectionContent
 import kotlinx.serialization.Serializable
 
 object FillingProvisionOfServicesState {

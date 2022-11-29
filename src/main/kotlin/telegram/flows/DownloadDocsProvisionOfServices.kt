@@ -10,13 +10,10 @@ import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
-import dev.inmo.tgbotapi.utils.filenameFromUrl
 import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
 import email.Attachment
 import email.EmailSender
-import org.apache.commons.io.FileUtils.getFile
-import org.koin.core.component.getScopeName
 import org.koin.core.component.inject
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
