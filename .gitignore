@@ -16,7 +16,7 @@ out/
 ### Eclipse ###
 .apt_generated
 .classpath
-.factorypath
+.Factorypath
 .project
 .settings
 .springBeans
