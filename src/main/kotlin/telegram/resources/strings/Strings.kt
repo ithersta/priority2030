@@ -22,7 +22,7 @@ object Strings {
     const val SuccessfulSendDocsEmail = "Документы успешно отправлены на электронную почту"
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
-    const val SendDocuments = "Отправить документы на почту"
+    const val SendDocuments = "Отправить документы на почту?"
     fun checkingListOfDocs():String{
         return(
         """|Проверьте список документов:

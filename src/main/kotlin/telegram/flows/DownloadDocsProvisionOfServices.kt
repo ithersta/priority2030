@@ -204,7 +204,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             }
         }
         onDocument { message ->
-            if (message.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+            val fileSize = message.content.media.fileSize
+            if (fileSize != null && fileSize < MAX_SIZE_OF_DOC) {
                 state.overrideQuietly {
                     copy(
                         docs = docs + message.content.media.fileId,
