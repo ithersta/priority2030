@@ -78,11 +78,11 @@ fun CollectorMapBuilder.ipInfoCollector() {
             }
         }
         state<IpCollectorState.HandsWaitingLocation> {
-            onEnter{sendTextMessage(it, CollectorStrings.IP.location)}
-            onText{
+            onEnter { sendTextMessage(it, CollectorStrings.IP.location) }
+            onText {
                 state.override {
                     IpCollectorState.WaitingPhone(
-                        IpInfo(this.inn,this.ogrn,this.fullNameOfHolder, this.dataOgrn, it.content.text)
+                        IpInfo(this.inn, this.ogrn, this.fullNameOfHolder, this.dataOgrn, it.content.text)
                     )
                 }
             }
@@ -92,7 +92,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsPhoneNumberValid(it.content.text)) {
                     state.override {
-                        IpCollectorState.WaitingEmail(mainInfo , it.content.text)
+                        IpCollectorState.WaitingEmail(mainInfo, it.content.text)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)

@@ -11,7 +11,7 @@ data class OrgInfo(
     val post: String,
     val fullNameOfHolder: String,
     val location: String
-)  {
+) {
     val surnameAfterInitials: String
         get() {
             val fAndIO = fullNameOfHolder.split(" ".toRegex(), limit = 2).toTypedArray()
@@ -23,8 +23,8 @@ data class OrgInfo(
             return fAndIO[1].replace("[а-я]+".toRegex(), ".") + " " + fAndIO[0]
         }
     val fullNameOfOrg: String
-        get(){
-            return abbreviatedNameOfOrg.replace("ООО","Общество с ограниченной ответственностью")
+        get() {
+            return abbreviatedNameOfOrg.replace("ООО", "Общество с ограниченной ответственностью")
         }
 //    ФИО ГЕНДИРА В РОДИТЕЛЬНОМ ПАДЕЖЕ
 //    val fullNameOfHolderInGenitiveCase: String

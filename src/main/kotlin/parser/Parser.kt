@@ -10,8 +10,6 @@ import parser.ConstantsForParsing.orderInn
 import parser.ConstantsForParsing.orderKppOoo
 import parser.ConstantsForParsing.orderOgrnIp
 import parser.ConstantsForParsing.orderOgrnOoo
-import parser.ConstantsForParsing.orderOkpoIp
-import parser.ConstantsForParsing.orderOkpoOoo
 import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ConstantsForParsing.time
 import telegram.resources.strings.CollectorStrings
@@ -113,6 +111,7 @@ class Parser {
             "ИП " + mainInfoAboutOrg[orderFullName]
         }
     }
+
     private val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     private val kppOfOrg: String

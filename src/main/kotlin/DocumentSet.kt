@@ -1,8 +1,13 @@
-import domain.datatypes.*
+import domain.datatypes.CompanyInformation
+import domain.datatypes.EntrepreneurInformation
+import domain.datatypes.InformationBank
+import domain.datatypes.OrganizationType
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
+import ru.morpher.ws3.ClientBuilder
 
+val clientMother = ClientBuilder().useToken(System.getenv("MORPHER_TOKEN")).build()
 val documentSet = documentSet {
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
@@ -18,10 +23,12 @@ val documentSet = documentSet {
             bankInfo()
             ppAndPrice()
         }
+
         OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
-            field("CONTRAGENT_FULL_NAME", get<CompanyInformation>().mainInfo.fullNameOfOrg)
+            val fullNameOfHolder = get<CompanyInformation>().mainInfo.fullNameOfHolder
+            clientMother.russian().declension(fullNameOfHolder).run { field("GENERAL_MANAGER_R", genitive) }
+            field("CONTRAGENT_FULL_NAME", fullNameOfHolder)
             field("CONTRAGENT_SHORT_NAME", get<CompanyInformation>().mainInfo.abbreviatedNameOfOrg)
-//          field("GENERAL_MANAGER_R",get<CompanyInfo>().fullNameOfHolderInGenitiveCase)
             field("GENERAL_MANAGER_INIC", get<CompanyInformation>().mainInfo.initialsAfterSurname)
             field("GENERAL_MANAGER", get<CompanyInformation>().mainInfo.fullNameOfHolder)
             field("CONTRAGENT_ADDRESS", get<CompanyInformation>().mainInfo.location)
@@ -37,13 +44,15 @@ val documentSet = documentSet {
         }
     }
 }
-private  fun DocumentBuilder.ppAndPrice(){
+
+private fun DocumentBuilder.ppAndPrice() {
 //  field("PP")
 //  field("PURCHASE_RUB_NUMB")
 //  field("PURCHASE_RUB")
 //  field("SUMM_COP_NUMB")
 }
-private fun DocumentBuilder.bankInfo(){
+
+private fun DocumentBuilder.bankInfo() {
     field("BIK", get<InformationBank>().mainInfo.bik)
     field("CONTRAGENT_COR_WALLET", get<InformationBank>().mainInfo.correspondentAccount)
     field("ENTERPRENEUR_BANK", get<InformationBank>().mainInfo.bankName)
