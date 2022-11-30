@@ -3,6 +3,11 @@ package telegram.entities.state
 import domain.datatypes.BankInfo
 import domain.datatypes.IpInfo
 import domain.datatypes.OrgInfo
+import domain.entities.Fio
+import domain.entities.PhoneNumber
+import domain.entities.SelectionIdentifier
+import domain.entities.SelectionLetter
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 object FullNameCollectorState {
