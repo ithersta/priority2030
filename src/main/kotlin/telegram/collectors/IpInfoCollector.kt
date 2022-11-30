@@ -21,6 +21,8 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     if (mainInfo != null) {
                         state.override { IpCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfHolder) }
                     } else {
+                        //  1  сбис сбой
+                        //  --- 2 null не правильные данные !
                         state.override { IpCollectorState.HandsWaitingOgrn(message.content.text) }
                     }
                 } else {
@@ -29,6 +31,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 }
             }
         }
+        // todo: кнопки!
         state<IpCollectorState.WaitingInspection> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.isRight(state.snapshot.fullNameOfHolder)) }
             onText { message ->

@@ -31,7 +31,7 @@ object CollectorStrings {
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
         fun isRight(string: String): String {
-            return question + '\n' + string + '\n' + Invalid
+            return question + '\n' + string + '\n'
         }
     }
 
@@ -39,7 +39,7 @@ object CollectorStrings {
         const val inn = "Введите ИНН предприятия"
         const val kpp = "Введите КПП предприятия"
         const val ogrn = "Введите ОГРН предприятия"
-        const val okpo = "Введите ОКПО предприятия"
+//        const val okpo = "Введите ОКПО предприятия"
         const val fullNameofOrg = "Введите название предприятия"
         const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
         const val employeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
@@ -51,7 +51,7 @@ object CollectorStrings {
         const val No = "Нет"
         const val Invalid = "Доступные варианты: Да, Нет"
         fun isRight(string: String): String {
-            return question + '\n' + string + '\n' + Invalid
+            return question + '\n' + string + '\n'
         }
     }
 
@@ -63,18 +63,18 @@ object CollectorStrings {
     }
 
     object Recommendations {
-        const val innForIp = "Введит нормальный ИНН из 12 цифр"
-        const val innForOoo = "Введите нормальный ИНН из 10 цифр"
-        const val kpp = "Введите нормальный КПП из 9 цифр"
-        const val ogrnForIp = "Введите нормальный ОГРН из 15 цифр"
-        const val ogrnForOoo = "Введите нормальный ОГРН из 13 цифр"
-        const val okpoForIp = "Введите нормальный ОКПО из 10 цифр"
-        const val okpoForOoo = "Введите нормальный ОКПО из 8 цифр"
-        const val fullName = "Введите нормальное ФИО, например: Иванов Иван или Петров Петр Петрович"
-        const val phone = "Введите нормальный номер телеофна начиная с +7..., например: +79777777777"
-        const val email = "Введите нормальную электронную почту"
-        const val bik = "Введите нормальный БИК из 9 цифр"
-        const val corrAccount = "Введите нормальный корреспондентский счет из 20 цифр"
-        const val paymentAccount = "Введите нормальный расчетный счет из 20 цифр"
+        const val innForIp = "Введите корректный ИНН из 12 цифр"
+        const val innForOoo = "Введите корректный ИНН из 10 цифр"
+        const val kpp = "Введите корректный КПП из 9 цифр"
+        const val ogrnForIp = "Введите корректный ОГРН из 15 цифр"
+        const val ogrnForOoo = "Введите корректный ОГРН из 13 цифр"
+//        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
+//        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
+        const val fullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
+        const val phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"
+        const val email = "Введите корректную электронную почту"
+        const val bik = "Введите корректный БИК из 9 цифр"
+        const val corrAccount = "Введите корректный корреспондентский счет из 20 цифр"
+        const val paymentAccount = "Введите корректный расчетный счет из 20 цифр"
     }
 }

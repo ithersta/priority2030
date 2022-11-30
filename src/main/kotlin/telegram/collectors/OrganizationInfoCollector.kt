@@ -106,6 +106,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 }
             }
         }
+        //todo: кнопки!
         state<CompanyCollectorState.WaitingInspection> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg)) }
             onText { message ->

@@ -20,17 +20,19 @@ class Parser {
     private lateinit var document: Document
     fun parsing(inn: String): IpInfo? {
         val url = "https://sbis.ru/contragents/"
-        val response = Jsoup.connect(url + inn).timeout(time).execute()
         type = OrganizationType.IP
-        return if (response.statusCode() == statusCodeSuccessful) {
-            document = response.parse()
-            IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
-        } else {
-            null
+        runCatching {
+            document = Jsoup.connect(url)
+                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                .referrer("https://www.google.com")
+                .timeout(time) //it's in milliseconds, so this means 5 seconds.
+                .get();
+        }.onSuccess {
+            return IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
         }
+        return null
     }
 
-    // для ООО у которых есть несколкьо организаций внутри себя
     fun parsing(inn: String, kpp: String): OrgInfo? {
         val url = "https://sbis.ru/contragents/"
         val response = Jsoup.connect("$url$inn/$kpp").timeout(time).execute()

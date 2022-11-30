@@ -18,6 +18,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
                 val parser = ParserBik()
+                // todo: проверить какие то образом!
                 if (IsBicValid(it.content.text)) {
                     val mainInfo = parser.parseWebPage(bik = it.content.text)
                     if (mainInfo != null) {

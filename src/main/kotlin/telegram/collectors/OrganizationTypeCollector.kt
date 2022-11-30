@@ -11,6 +11,7 @@ fun CollectorMapBuilder.organizationTypeCollector() {
     collector<OrganizationType>(initialState = OrganizationTypeState) {
         state<OrganizationTypeState> {
             onEnter { sendTextMessage(it, CollectorStrings.OrganizationType.Message) }
+            // todo: кнопки!
             onText { message ->
                 val type = when (message.content.text) {
                     CollectorStrings.OrganizationType.IP -> OrganizationType.IP
