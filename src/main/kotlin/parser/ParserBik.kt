@@ -1,9 +1,9 @@
 package parser
 
 import domain.datatypes.BankInfo
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ConstantsForParsing.time
 
 class ParserBik {
@@ -11,18 +11,30 @@ class ParserBik {
     private val url = "https://bik-info.ru/bik_"
 
     fun parseWebPage(bik: String): BankInfo? {
-        val response = Jsoup.connect("$url$bik.html").timeout(time).execute()
-        return if (response.statusCode() == statusCodeSuccessful) {
-            document = response.parse()
-            if (document.toString()
-                    .contains("Указан неверный номер БИК, либо указанный БИК не найден в текущей базе.")
-            ) {
-                BankInfo("0", "0", "0")
+        val connection = Jsoup
+            .connect("$url$bik.html")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .referrer("https://www.google.com")
+            .timeout(time)
+
+        runCatching {
+            document = connection.execute().parse()
+            val firstStrongElement = document.select("strong").first();
+            if (firstStrongElement != null) {
+                if (firstStrongElement.text() == "Ошибка!") {
+                    return BankInfo("0", "0", "0")
+                }
             }
-            BankInfo(bik, corrAccount, bakName)
-        } else {
-            null
+        }.onSuccess {
+            return BankInfo(bik, corrAccount, bakName)
+        }.onFailure {
+            when (it) {
+                is HttpStatusException -> return BankInfo("0", "0", "0")
+            }
+        }.also {
+            return null
         }
+
     }
 
     private val corrAccount: String

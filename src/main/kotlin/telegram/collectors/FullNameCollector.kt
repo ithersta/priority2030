@@ -12,20 +12,20 @@ import telegram.resources.strings.CollectorStrings
 fun CollectorMapBuilder.fullNameCollector() {
     collector<RussianFullName>(initialState = FullNameCollectorState.WaitingForLastName) {
         state<FullNameCollectorState.WaitingForLastName> {
-            onEnter { sendTextMessage(it, CollectorStrings.FullName.LastName) }
+            onEnter { sendTextMessage(it, CollectorStrings.FullName.lastName) }
             onText { state.override { FullNameCollectorState.WaitingForFirstName(it.content.text) } }
         }
         state<FullNameCollectorState.WaitingForFirstName> {
-            onEnter { sendTextMessage(it, CollectorStrings.FullName.FirstName) }
+            onEnter { sendTextMessage(it, CollectorStrings.FullName.firstName) }
             onText { state.override { FullNameCollectorState.WaitingForPatronymic(lastName, it.content.text) } }
         }
         state<FullNameCollectorState.WaitingForPatronymic> {
             onEnter { chatId ->
                 sendTextMessage(
                     chatId = chatId,
-                    text = CollectorStrings.FullName.Patronymic,
+                    text = CollectorStrings.FullName.patronymic,
                     replyMarkup = flatReplyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                        simpleButton(CollectorStrings.FullName.NoPatronymic)
+                        simpleButton(CollectorStrings.FullName.noPatronymic)
                     }
                 )
             }
@@ -33,7 +33,7 @@ fun CollectorMapBuilder.fullNameCollector() {
                 val name = RussianFullName(
                     lastName = state.snapshot.lastName,
                     firstName = state.snapshot.firstName,
-                    patronymic = message.content.text.takeIf { it != CollectorStrings.FullName.NoPatronymic }
+                    patronymic = message.content.text.takeIf { it != CollectorStrings.FullName.noPatronymic }
                 )
                 this@collector.exit(state, listOf(name))
             }

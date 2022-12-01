@@ -8,33 +8,33 @@ import dev.inmo.tgbotapi.utils.regularln
 
 object CollectorStrings {
     object FullName {
-        const val LastName = "Введите фамилию"
-        const val FirstName = "Введите имя"
-        const val Patronymic = "Введите отчество или нажмите кнопку снизу, если оно отсутствует"
-        const val NoPatronymic = "Отсутствует"
+        const val lastName = "Введите фамилию"
+        const val firstName = "Введите имя"
+        const val patronymic = "Введите отчество или нажмите кнопку снизу, если оно отсутствует"
+        const val noPatronymic = "Отсутствует"
     }
 
     object OrganizationType {
-        const val Message = "Введите тип организации"
-        const val IP = "ИП"
-        const val Ooo = "ООО"
-        const val Invalid = "Доступные варианты: ИП, ООО"
+        const val message = "Введите тип организации"
+        const val ip = "ИП"
+        const val ooo = "ООО"
+        const val invalid = "Доступные варианты: ИП, ООО"
     }
 
     object IP {
         const val inn = "Введите ИНН предпринимателя"
         const val ogrn = "Введите ОГРН предпринимателя"
-
         //        const val okpo = "Введите ОКПО предпринимателя"
         const val fullName = "Введите ФИО предпринимателя предпринимателя"
         const val data = "Введите дату от такого числа ОГРНИП"
-        const val question = "Вы заключаете договор с этим предпринимателем?"
-        const val Yes = "Да"
-        const val No = "Нет"
-        const val Invalid = "Доступные варианты ответа: Да, Нет"
+         private const val question = "Вы заключаете договор с этим предпринимателем?"
+        const val yes = "Да"
+        const val no = "Нет"
+        const val invalid = "Доступные варианты ответа: Да, Нет"
         const val location = "Введите юридический адрес предпринимателя"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
+
         fun isRight(string: String): String {
             return question + '\n' + string + '\n'
         }
@@ -44,18 +44,18 @@ object CollectorStrings {
         const val inn = "Введите ИНН предприятия"
         const val kpp = "Введите КПП предприятия"
         const val ogrn = "Введите ОГРН предприятия"
-
         //        const val okpo = "Введите ОКПО предприятия"
-        const val fullNameofOrg = "Введите название предприятия"
+        const val fullNameOfOrg = "Введите название предприятия"
         const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
         const val employeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
         const val location = "Введите юридический адрес предприятия"
         const val phone = "Введите номер телефона ответственного от предприятия"
         const val email = "Введите адрес электронной почты ответственного от предприятия"
-        const val question = "Вы заключаете договор с этим предприятием?"
-        const val Yes = "Да"
-        const val No = "Нет"
-        const val Invalid = "Доступные варианты: Да, Нет"
+        private const val question = "Вы заключаете договор с этим предприятием?"
+        const val yes = "Да"
+        const val no = "Нет"
+        const val invalid = "Доступные варианты: Да, Нет"
+
         fun isRight(string: String): String {
             return question + '\n' + string + '\n'
         }
@@ -77,8 +77,7 @@ object CollectorStrings {
         const val kpp = "Введите корректный КПП из 9 цифр"
         const val ogrnForIp = "Введите корректный ОГРН из 15 цифр"
         const val ogrnForOoo = "Введите корректный ОГРН из 13 цифр"
-
-        //        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
+//        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
 //        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
         const val fullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
         const val phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"

@@ -46,25 +46,25 @@ fun CollectorMapBuilder.ipInfoCollector() {
                         resizeKeyboard = true, oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(CollectorStrings.IP.Yes)
+                            simpleButton(CollectorStrings.IP.yes)
                         }
                         row {
-                            simpleButton(CollectorStrings.IP.No)
+                            simpleButton(CollectorStrings.IP.no)
                         }
                     })
             }
             onText { message ->
                 when (message.content.text) {
-                    CollectorStrings.IP.Yes -> {
+                    CollectorStrings.IP.yes -> {
                         state.override { IpCollectorState.WaitingPhone(mainInfo) }
                     }
 
-                    CollectorStrings.IP.No -> {
+                    CollectorStrings.IP.no -> {
                         state.override { IpCollectorState.WaitingForInn }
                     }
 
                     else -> {
-                        sendTextMessage(message.chat, CollectorStrings.IP.Invalid)
+                        sendTextMessage(message.chat, CollectorStrings.IP.invalid)
                         return@onText
                     }
                 }

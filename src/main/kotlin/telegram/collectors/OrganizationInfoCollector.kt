@@ -63,7 +63,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             }
         }
         state<CompanyCollectorState.HandsWaitingFullNameOfOrg> {
-            onEnter { sendTextMessage(it, CollectorStrings.Ooo.fullNameofOrg) }
+            onEnter { sendTextMessage(it, CollectorStrings.Ooo.fullNameOfOrg) }
             onText {
                 state.override {
                     CompanyCollectorState.HandsWaitingFullNameOfHolder(this.inn, this.kpp, this.ogrn, it.content.text)
@@ -110,26 +110,25 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 }
             }
         }
-        //todo: кнопки!
         state<CompanyCollectorState.WaitingInspection> {
             onEnter {
-                sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg),
+                sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg.replace("ИП", "")),
                     replyMarkup = replyKeyboard(
                         resizeKeyboard = true,
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(CollectorStrings.Ooo.Yes)
+                            simpleButton(CollectorStrings.Ooo.yes)
                         }
                         row {
-                            simpleButton(CollectorStrings.Ooo.No)
+                            simpleButton(CollectorStrings.Ooo.no)
                         }
                     }
                 )
             }
             onText { message ->
                 when (message.content.text) {
-                    CollectorStrings.Ooo.Yes -> {
+                    CollectorStrings.Ooo.yes -> {
                         state.override {
                             CompanyCollectorState.WaitingPhone(
                                 mainInfo
@@ -137,12 +136,12 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         }
                     }
 
-                    CollectorStrings.Ooo.No -> {
+                    CollectorStrings.Ooo.no -> {
                         state.override { CompanyCollectorState.WaitingForInn }
                     }
 
                     else -> {
-                        sendTextMessage(message.chat, CollectorStrings.Ooo.Invalid)
+                        sendTextMessage(message.chat, CollectorStrings.Ooo.invalid)
                         return@onText
                     }
                 }

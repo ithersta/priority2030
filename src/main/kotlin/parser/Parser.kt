@@ -52,7 +52,7 @@ class Parser {
             document = connection.execute().parse()
         }.onSuccess {
             type = OrganizationType.IP
-            OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
+            return OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
         }.onFailure {
             when (it) {
                 //В сбис нет такого ООО!
