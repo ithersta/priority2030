@@ -1,15 +1,9 @@
-import domain.datatypes.CompanyInformation
-import domain.datatypes.EntrepreneurInformation
-import domain.datatypes.InformationBank
-import domain.datatypes.OrganizationType
 import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
 import ru.morpher.ws3.ClientBuilder
-import extensions.*
 import telegram.resources.strings.CollectorStrings
-import java.math.BigDecimal
 
 private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
     TermOfPayment.Prepaid to CollectorStrings.TermOfPayment.Prepaid,
@@ -72,8 +66,8 @@ private fun DocumentBuilder.CompanyInformation() {
 }
 
 private fun DocumentBuilder.bankInfo() {
-    field("BIK", get<InformationBank>().mainInfo.bik)
-    field("CONTRAGENT_COR_WALLET", get<InformationBank>().mainInfo.correspondentAccount)
+    field("ENT_BIK", get<InformationBank>().mainInfo.bik)
+    field("ENTERPRENEUR_COR_WALLET", get<InformationBank>().mainInfo.correspondentAccount)
     field("ENTERPRENEUR_BANK", get<InformationBank>().mainInfo.bankName)
-    field("CONTRAGENT_WALLET", get<InformationBank>().settlementAccountNumber)
+    field("ENTERPRENEUR_WALLET", get<InformationBank>().settlementAccountNumber)
 }

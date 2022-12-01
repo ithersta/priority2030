@@ -7,7 +7,8 @@ object ConstantsForParsing {
     const val orderInn = 1;
     const val orderKppOoo = 2
     const val orderOgrnOoo = 3;
-//    const val orderOkpoOoo = 4;
+
+    //    const val orderOkpoOoo = 4;
     const val orderOgrnIp = 2;
 //    const val orderOkpoIp = 3
 }

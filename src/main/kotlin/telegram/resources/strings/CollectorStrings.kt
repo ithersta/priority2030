@@ -24,7 +24,8 @@ object CollectorStrings {
     object IP {
         const val inn = "Введите ИНН предпринимателя"
         const val ogrn = "Введите ОГРН предпринимателя"
-//        const val okpo = "Введите ОКПО предпринимателя"
+
+        //        const val okpo = "Введите ОКПО предпринимателя"
         const val fullName = "Введите ФИО предпринимателя предпринимателя"
         const val data = "Введите дату от такого числа ОГРНИП"
         const val question = "Вы заключаете договор с этим предпринимателем?"
@@ -43,7 +44,8 @@ object CollectorStrings {
         const val inn = "Введите ИНН предприятия"
         const val kpp = "Введите КПП предприятия"
         const val ogrn = "Введите ОГРН предприятия"
-//        const val okpo = "Введите ОКПО предприятия"
+
+        //        const val okpo = "Введите ОКПО предприятия"
         const val fullNameofOrg = "Введите название предприятия"
         const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
         const val employeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
@@ -75,7 +77,8 @@ object CollectorStrings {
         const val kpp = "Введите корректный КПП из 9 цифр"
         const val ogrnForIp = "Введите корректный ОГРН из 15 цифр"
         const val ogrnForOoo = "Введите корректный ОГРН из 13 цифр"
-//        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
+
+        //        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
 //        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
         const val fullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
         const val phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"

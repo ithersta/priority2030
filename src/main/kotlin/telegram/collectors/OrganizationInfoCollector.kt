@@ -3,6 +3,9 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
+import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
 import domain.datatypes.OrgInfo
 import parser.Parser
@@ -109,24 +112,39 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         }
         //todo: кнопки!
         state<CompanyCollectorState.WaitingInspection> {
-            onEnter { sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg)) }
+            onEnter {
+                sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg),
+                    replyMarkup = replyKeyboard(
+                        resizeKeyboard = true,
+                        oneTimeKeyboard = true
+                    ) {
+                        row {
+                            simpleButton(CollectorStrings.Ooo.Yes)
+                        }
+                        row {
+                            simpleButton(CollectorStrings.Ooo.No)
+                        }
+                    }
+                )
+            }
             onText { message ->
-                val response = when (message.content.text) {
-                    CollectorStrings.Ooo.Yes -> "Да"
-                    CollectorStrings.Ooo.No -> "Нет"
+                when (message.content.text) {
+                    CollectorStrings.Ooo.Yes -> {
+                        state.override {
+                            CompanyCollectorState.WaitingPhone(
+                                mainInfo
+                            )
+                        }
+                    }
+
+                    CollectorStrings.Ooo.No -> {
+                        state.override { CompanyCollectorState.WaitingForInn }
+                    }
+
                     else -> {
                         sendTextMessage(message.chat, CollectorStrings.Ooo.Invalid)
                         return@onText
                     }
-                }
-                if (response == "Да") {
-                    state.override {
-                        CompanyCollectorState.WaitingPhone(
-                            mainInfo
-                        )
-                    }
-                } else {
-                    state.override { CompanyCollectorState.WaitingForInn }
                 }
             }
         }

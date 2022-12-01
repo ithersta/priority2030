@@ -1,9 +1,6 @@
 package parser
 
 import domain.datatypes.BankInfo
-import domain.datatypes.IpInfo
-import domain.datatypes.OrganizationType
-import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import parser.ConstantsForParsing.statusCodeSuccessful
@@ -17,7 +14,9 @@ class ParserBik {
         val response = Jsoup.connect("$url$bik.html").timeout(time).execute()
         return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
-            if (document.toString().contains("Ошибка!")) {
+            if (document.toString()
+                    .contains("Указан неверный номер БИК, либо указанный БИК не найден в текущей базе.")
+            ) {
                 BankInfo("0", "0", "0")
             }
             BankInfo(bik, corrAccount, bakName)

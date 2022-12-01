@@ -128,6 +128,7 @@ class Parser {
             "ИП " + mainInfoAboutOrg[orderFullName]
         }
     }
+
     private val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     private val kppOfOrg: String

@@ -3,12 +3,16 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
+import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.EntrepreneurInformation
 import domain.datatypes.IpInfo
 import parser.Parser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
 import validation.*
+
 
 fun CollectorMapBuilder.ipInfoCollector() {
     collector<EntrepreneurInformation>(initialState = IpCollectorState.WaitingForInn) {
@@ -21,6 +25,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     if (mainInfo != null) {
                         if (mainInfo.inn == "0") {
                             sendTextMessage(message.chat, CollectorStrings.Recommendations.isWrongIp)
+                            sendTextMessage(message.chat, CollectorStrings.Recommendations.innForIp)
                             return@onText
                         }
                         state.override { IpCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfHolder) }
@@ -33,22 +38,35 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 }
             }
         }
-        // todo: кнопки!
         state<IpCollectorState.WaitingInspection> {
-            onEnter { sendTextMessage(it, CollectorStrings.IP.isRight(state.snapshot.fullNameOfHolder)) }
+            onEnter {
+                sendTextMessage(it,
+                    CollectorStrings.IP.isRight(state.snapshot.fullNameOfHolder),
+                    replyMarkup = replyKeyboard(
+                        resizeKeyboard = true, oneTimeKeyboard = true
+                    ) {
+                        row {
+                            simpleButton(CollectorStrings.IP.Yes)
+                        }
+                        row {
+                            simpleButton(CollectorStrings.IP.No)
+                        }
+                    })
+            }
             onText { message ->
-                val response = when (message.content.text) {
-                    CollectorStrings.IP.Yes -> "Да"
-                    CollectorStrings.IP.No -> "Нет"
+                when (message.content.text) {
+                    CollectorStrings.IP.Yes -> {
+                        state.override { IpCollectorState.WaitingPhone(mainInfo) }
+                    }
+
+                    CollectorStrings.IP.No -> {
+                        state.override { IpCollectorState.WaitingForInn }
+                    }
+
                     else -> {
                         sendTextMessage(message.chat, CollectorStrings.IP.Invalid)
                         return@onText
                     }
-                }
-                if (response == "Да") {
-                    state.override { IpCollectorState.WaitingPhone(mainInfo) }
-                } else {
-                    state.override { IpCollectorState.WaitingForInn }
                 }
             }
         }
