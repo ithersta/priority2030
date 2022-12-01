@@ -1,6 +1,7 @@
 package parser
 
 import domain.datatypes.BankInfo
+import domain.datatypes.IpInfo
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -9,6 +10,7 @@ import parser.ConstantsForParsing.time
 class ParserBik {
     private lateinit var document: Document
     private val url = "https://bik-info.ru/bik_"
+    private var case = 0
 
     fun parseWebPage(bik: String): BankInfo? {
         val connection = Jsoup
@@ -22,19 +24,22 @@ class ParserBik {
             val firstStrongElement = document.select("strong").first();
             if (firstStrongElement != null) {
                 if (firstStrongElement.text() == "Ошибка!") {
-                    return BankInfo("0", "0", "0")
                 }
             }
         }.onSuccess {
-            return BankInfo(bik, corrAccount, bakName)
+            case = 1
         }.onFailure {
             when (it) {
-                is HttpStatusException -> return BankInfo("0", "0", "0")
+                is HttpStatusException -> case = 2
             }
-        }.also {
-            return null
         }
-
+        return (when (case) {
+            1 -> BankInfo(bik, corrAccount, bakName)
+            2 -> BankInfo("0", "0", "0")
+            else -> {
+                null
+            }
+        })
     }
 
     private val corrAccount: String

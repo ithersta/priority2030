@@ -18,7 +18,7 @@ class Parser {
     private val url = "https://sbis.ru/contragents/"
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private var type: OrganizationType = OrganizationType.Ooo
-    private var case = 0;
+    private var case = 0
 
     private lateinit var document: Document
 
@@ -39,17 +39,20 @@ class Parser {
                 is HttpStatusException -> case = 2
             }
         }
-        when (case) {
-            1 -> return IpInfo(
+        return when (case) {
+            1 -> IpInfo(
                 innOfOrg,
                 ogrnOfOrg,
                 fullNameOfHolder,
                 ParserRusprofile().parseWebPage(ogrnOfOrg),
                 location
             )
-            2 -> return IpInfo("0", "0", "0", "0", "0")
+
+            2 -> IpInfo("0", "0", "0", "0", "0")
+            else -> {
+                null
+            }
         }
-        return null
     }
 
     fun parsing(inn: String, kpp: String): OrgInfo? {
@@ -71,11 +74,13 @@ class Parser {
                 }
             }
         }
-        when (case) {
-            1 -> return OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
-            2 -> return OrgInfo("0", "0", "0", "0", "0", "0", "0")
+        return when (case) {
+            1 -> OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
+            2 -> OrgInfo("0", "0", "0", "0", "0", "0", "0")
+            else -> {
+                null
+            }
         }
-        return null
 
     }
 
