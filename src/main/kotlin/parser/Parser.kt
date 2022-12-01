@@ -18,6 +18,7 @@ class Parser {
     private val url = "https://sbis.ru/contragents/"
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private var type: OrganizationType = OrganizationType.Ooo
+    private var case = 0;
 
     private lateinit var document: Document
 
@@ -31,15 +32,24 @@ class Parser {
             document = connection.execute().parse()
         }.onSuccess {
             type = OrganizationType.IP
-            return IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
+            case = 1
         }.onFailure {
             when (it) {
                 //В сбис нет такого ИП!
-                is HttpStatusException -> return IpInfo("0", "0", "0", "0", "0")
+                is HttpStatusException -> case = 2
             }
-        }.also {
-            return null
         }
+        when (case) {
+            1 -> return IpInfo(
+                innOfOrg,
+                ogrnOfOrg,
+                fullNameOfHolder,
+                ParserRusprofile().parseWebPage(ogrnOfOrg),
+                location
+            )
+            2 -> return IpInfo("0", "0", "0", "0", "0")
+        }
+        return null
     }
 
     fun parsing(inn: String, kpp: String): OrgInfo? {
@@ -52,15 +62,21 @@ class Parser {
             document = connection.execute().parse()
         }.onSuccess {
             type = OrganizationType.IP
-            return OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
+            case = 1
         }.onFailure {
             when (it) {
                 //В сбис нет такого ООО!
-                is HttpStatusException -> return OrgInfo("0", "0", "0", "0", "0", "0", "0")
+                is HttpStatusException -> {
+                    case = 2
+                }
             }
-        }.also {
-            return null
         }
+        when (case) {
+            1 -> return OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
+            2 -> return OrgInfo("0", "0", "0", "0", "0", "0", "0")
+        }
+        return null
+
     }
 
     private val post: String

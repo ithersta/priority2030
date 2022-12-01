@@ -20,7 +20,7 @@ val documentSet = documentSet {
         }
 
         OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
-            CompanyInformation()
+            companyInformation()
             bankInfo()
             ppAndPrice()
         }
@@ -46,7 +46,7 @@ private fun DocumentBuilder.ipInfo() {
     field("ENTERPRENEUR_PHONE", get<EntrepreneurInformation>().phone)
 }
 
-private fun DocumentBuilder.CompanyInformation() {
+private fun DocumentBuilder.companyInformation() {
     val clientMorpher = ClientBuilder().useToken(System.getenv("MORPHER_TOKEN")).build()
     val fullNameOfHolder = get<CompanyInformation>().mainInfo.fullNameOfHolder
     print(clientMorpher.queriesLeftForToday())
