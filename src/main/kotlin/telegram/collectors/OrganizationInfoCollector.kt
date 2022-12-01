@@ -30,11 +30,12 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (IsKppValid(it.content.text)) {
                     val mainInfo = parser.parsing(state.snapshot.inn, it.content.text)
                     if (mainInfo != null) {
+                        if (mainInfo.inn == "0") {
+                            sendTextMessage(it.chat, CollectorStrings.Recommendations.isWrongOrg)
+                            state.override { CompanyCollectorState.WaitingForInn }
+                        }
                         state.override {
-                            CompanyCollectorState.WaitingInspection(
-                                mainInfo,
-                                mainInfo.abbreviatedNameOfOrg
-                            )
+                            CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
                         }
                     } else {
                         state.override { CompanyCollectorState.HandsWaitingOgrn(this.inn, it.content.text) }

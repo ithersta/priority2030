@@ -3,6 +3,7 @@ package parser
 import domain.datatypes.IpInfo
 import domain.datatypes.OrgInfo
 import domain.datatypes.OrganizationType
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import parser.ConstantsForParsing.orderFullName
@@ -10,52 +11,67 @@ import parser.ConstantsForParsing.orderInn
 import parser.ConstantsForParsing.orderKppOoo
 import parser.ConstantsForParsing.orderOgrnIp
 import parser.ConstantsForParsing.orderOgrnOoo
-import parser.ConstantsForParsing.statusCodeSuccessful
 import parser.ConstantsForParsing.time
 import telegram.resources.strings.CollectorStrings
 
 class Parser {
-    private var type: OrganizationType = OrganizationType.Ooo
+    private val url = "https://sbis.ru/contragents/"
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
+    private var type: OrganizationType = OrganizationType.Ooo
+
     private lateinit var document: Document
+
     fun parsing(inn: String): IpInfo? {
-        val url = "https://sbis.ru/contragents/"
-        type = OrganizationType.IP
+        val connection = Jsoup
+            .connect("$url$inn")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .referrer("https://www.google.com")
+            .timeout(time)
         runCatching {
-            document = Jsoup.connect(url)
-                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                .referrer("https://www.google.com")
-                .timeout(time) //it's in milliseconds, so this means 5 seconds.
-                .get();
+            document = connection.execute().parse()
         }.onSuccess {
+            type = OrganizationType.IP
             return IpInfo(innOfOrg, ogrnOfOrg, fullNameOfHolder, ParserRusprofile().parseWebPage(ogrnOfOrg), location)
+        }.onFailure {
+            when (it) {
+                //В сбис нет такого ИП!
+                is HttpStatusException -> return IpInfo("0", "0", "0", "0", "0")
+            }
+        }.also {
+            return null
         }
-        return null
     }
 
     fun parsing(inn: String, kpp: String): OrgInfo? {
-        val url = "https://sbis.ru/contragents/"
-        val response = Jsoup.connect("$url$inn/$kpp").timeout(time).execute()
-        type = OrganizationType.Ooo
-        return if (response.statusCode() == statusCodeSuccessful) {
-            document = response.parse()
+        val connection = Jsoup
+            .connect("$url$inn/$kpp")
+            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+            .referrer("https://www.google.com")
+            .timeout(time)
+        runCatching {
+            document = connection.execute().parse()
+        }.onSuccess {
+            type = OrganizationType.IP
             OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
-        } else {
-            null
+        }.onFailure {
+            when (it) {
+                //В сбис нет такого ООО!
+                is HttpStatusException -> return OrgInfo("0", "0", "0", "0", "0", "0", "0")
+            }
+        }.also {
+            return null
         }
     }
 
     private val post: String
         get() {
-            val post =
-                document.select(
-                    "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >" +
-                            " div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
-                            " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column > div.cCard__MainReq-Left >" +
-                            " div.cCard__Director.ws-flexbox.ws-flex-column.ws-flex-wrap.ws-justify-content-start.ws-" +
-                            "align-items-start > div > div > div.cCard__Director-Position"
-                ).html()
-            return post
+            return document.select(
+                "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >" +
+                        " div:nth-child(1) > div.cCard__MainReq > div.ws-flexbox.ws-justify-content-between >" +
+                        " div.cCard__MainReq-LeftSide.ws-flexbox.ws-flex-column > div.cCard__MainReq-Left >" +
+                        " div.cCard__Director.ws-flexbox.ws-flex-column.ws-flex-wrap.ws-justify-content-start.ws-" +
+                        "align-items-start > div > div > div.cCard__Director-Position"
+            ).html()
         }
 
     private val location: String
@@ -105,15 +121,13 @@ class Parser {
                 .toTypedArray()
         }
 
-
     private fun fullNameOfOrg(): String {
-        return if (type.equals(OrganizationType.Ooo)) {
+        return if (type == OrganizationType.Ooo) {
             mainInfoAboutOrg[orderFullName]
         } else {
             "ИП " + mainInfoAboutOrg[orderFullName]
         }
     }
-
     private val innOfOrg: String
         get() = mainInfoAboutOrg[orderInn].replace("ИНН ".toRegex(), "")
     private val kppOfOrg: String

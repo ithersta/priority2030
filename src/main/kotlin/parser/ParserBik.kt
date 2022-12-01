@@ -1,6 +1,9 @@
 package parser
 
 import domain.datatypes.BankInfo
+import domain.datatypes.IpInfo
+import domain.datatypes.OrganizationType
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import parser.ConstantsForParsing.statusCodeSuccessful
@@ -8,14 +11,18 @@ import parser.ConstantsForParsing.time
 
 class ParserBik {
     private lateinit var document: Document
+    private val url = "https://bik-info.ru/bik_"
+
     fun parseWebPage(bik: String): BankInfo? {
-        val url = "https://bik-info.ru/bik_"
         val response = Jsoup.connect("$url$bik.html").timeout(time).execute()
-        if (response.statusCode() == statusCodeSuccessful) {
+        return if (response.statusCode() == statusCodeSuccessful) {
             document = response.parse()
-            return BankInfo(bik, corrAccount, bakName)
+            if (document.toString().contains("Ошибка!")) {
+                BankInfo("0", "0", "0")
+            }
+            BankInfo(bik, corrAccount, bakName)
         } else {
-            return null
+            null
         }
     }
 

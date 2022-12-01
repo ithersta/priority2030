@@ -24,7 +24,7 @@ object CollectorStrings {
     object IP {
         const val inn = "Введите ИНН предпринимателя"
         const val ogrn = "Введите ОГРН предпринимателя"
-        const val okpo = "Введите ОКПО предпринимателя"
+//        const val okpo = "Введите ОКПО предпринимателя"
         const val fullName = "Введите ФИО предпринимателя предпринимателя"
         const val data = "Введите дату от такого числа ОГРНИП"
         const val question = "Вы заключаете договор с этим предпринимателем?"
@@ -67,6 +67,9 @@ object CollectorStrings {
     }
 
     object Recommendations {
+        const val isWrongIp = "В базе не найден такой предприниматель"
+        const val isWrongOrg = "В базе не найдена такая организация"
+        const val isWrongBank = "В базе не найдена такой банк"
         const val innForIp = "Введите корректный ИНН из 12 цифр"
         const val innForOoo = "Введите корректный ИНН из 10 цифр"
         const val kpp = "Введите корректный КПП из 9 цифр"

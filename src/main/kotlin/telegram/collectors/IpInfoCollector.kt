@@ -19,10 +19,12 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 if (IsInnValidForIp(message.content.text)) {
                     val mainInfo = parser.parsing(message.content.text)
                     if (mainInfo != null) {
+                        if (mainInfo.inn == "0") {
+                            sendTextMessage(message.chat, CollectorStrings.Recommendations.isWrongIp)
+                            return@onText
+                        }
                         state.override { IpCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfHolder) }
                     } else {
-                        //  1  сбис сбой
-                        //  --- 2 null не правильные данные !
                         state.override { IpCollectorState.HandsWaitingOgrn(message.content.text) }
                     }
                 } else {
