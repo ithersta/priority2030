@@ -34,7 +34,7 @@ data class InformationCost(
     private val digitTrillions = arrayOf("триллион", "триллиона", "триллионов", "1")
 
 
-    private val WordsRUB = arrayOf(
+    private val wordsRUB = arrayOf(
         arrayOf("копейка", "копейки", "копеек", "0"),
         arrayOf("рубль", "рубля", "рублей", "1"),
         digitThousands,
@@ -42,51 +42,55 @@ data class InformationCost(
         digitBillions,
         digitTrillions
     )
+    private val stringLen = 255
+    private val zeroDigit = 0L
+    private val oneDigit = 1
+    private val twoDigit = 2
+    private val threeDigit = 3
+    private val thousandDigit = 1000
+    private val hundredDigit = 100
+    private val tenDigit = 10
 
     private fun num2words(num: Long, level: Int, currency: Array<Array<String>>): String {
-        val words = StringBuilder(255)
-        if (num == 0L) words.append("ноль ")
-        val i = currency[level][3].indexOf("1") + 1
-        val h = (num % 1000).toInt()
-        var d = h / 100
-        if (d > 0) words.append(digHundreds[d - 1]).append(" ")
-        var n = h % 100
-        d = n / 10
-        n %= 10
+        val words = StringBuilder(stringLen)
+        if (num == zeroDigit) words.append("ноль ")
+        val i = currency[level][threeDigit].indexOf("1").inc()
+        val h = (num % thousandDigit).toInt()
+        var d = h / hundredDigit
+        if (d > zeroDigit) words.append(digHundreds[d.dec()]).append(" ")
+        var n = h % hundredDigit
+        d = n / tenDigit
+        n %= threeDigit
         when (d) {
             0 -> {}
             1 -> words.append(digDozens[n]).append(" ")
-            else -> words.append(digTwenties[d - 2]).append(" ")
+            else -> words.append(digTwenties[d.dec().dec()]).append(" ")
         }
-        if (d == 1) n = 0
+        if (d == oneDigit) n = zeroDigit.toInt()
         when (n) {
             0 -> {}
-            1, 2 -> words.append(digUnits[i][n - 1]).append(" ")
-            else -> words.append(digUnits[0][n - 1]).append(" ")
+            1, 2 -> words.append(digUnits[i][n.dec()]).append(" ")
+            else -> words.append(digUnits[zeroDigit.toInt()][n.dec()]).append(" ")
         }
         when (n) {
-            1 -> words.append(currency[level][0])
-            2, 3, 4 -> words.append(currency[level][1])
-            else -> if ((h != 0) || ((h == 0) && (level == 1))) words.append(currency[level][2])
+            1 -> words.append(currency[level][zeroDigit.toInt()])
+            2, 3, 4 -> words.append(currency[level][oneDigit])
+            else -> if ((h != 0) || ((h == zeroDigit.toInt()) && (level == oneDigit))) {
+                words.append(currency[level][twoDigit])
+            }
         }
-        val nextNum = num / 1000
-        return if (nextNum > 0) {
-            (num2words(nextNum, level + 1, currency) + " " + words.toString()).trim { it <= ' ' }
+        val nextNum = num / thousandDigit
+        return if (nextNum > zeroDigit) {
+            (num2words(nextNum, level.inc(), currency) + " " + words.toString()).trim { it <= ' ' }
         } else {
             words.toString().trim { it <= ' ' }
         }
     }
-
     fun inWords(): String {
         if (price < 0.0) return "error: отрицательное значение"
-        val sm = String.format("%.2f", price)
-        val skop = sm.substring(sm.length - 2, sm.length)
-        val iw: Int = when (skop.substring(1)) {
-            "1" -> 0
-            "2", "3", "4" -> 1
-            else -> 2
-        }
+        val sm = price.toString().format("%.2f")
+        val kopecks = sm.substring(sm.length.dec().dec(), sm.length)
         val num = floor(price).toLong()
-        return num2words(num, 1, WordsRUB) + " " + num2words(skop.toLong(), 0, WordsRUB)
+        return num2words(num, 1, wordsRUB) + " " + num2words(kopecks.toLong(), 0, wordsRUB)
     }
 }
