@@ -124,7 +124,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument { message ->
-            if (message.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+            val fileSize = message.content.media.fileSize
+            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                 state.override {
                     FillingProvisionOfServicesState.UploadDocOfficialMemo(
                         docs = listOf(message.content.media.fileId),
@@ -144,7 +145,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument { message ->
-            if (message.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+            val fileSize = message.content.media.fileSize
+            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                 state.override {
                     FillingProvisionOfServicesState.UploadDocDraftAgreement(
                         this.docs + message.content.media.fileId,
@@ -164,7 +166,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onDocument { message ->
-            if (message.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+            val fileSize = message.content.media.fileSize
+            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                 state.override {
                     FillingProvisionOfServicesState.UploadDocsCommercialOffers(
                         this.docs + message.content.media.fileId,
@@ -193,7 +196,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocumentMediaGroup { message ->
             message.content.group.map { it ->
-                if(it.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+                val fileSize = it.content.media.fileSize
+                if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                     state.overrideQuietly {
                         copy(docs = docs + message.content.group.map { it.content.media.fileId },
                             docName = docName + message.content.group.map { it.content.media.fileName.toString() })
@@ -205,7 +209,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocument { message ->
             val fileSize = message.content.media.fileSize
-            if (fileSize != null && fileSize < MAX_SIZE_OF_DOC) {
+            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                 state.overrideQuietly {
                     copy(
                         docs = docs + message.content.media.fileId,
@@ -250,7 +254,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onDocumentMediaGroup { message ->
             message.content.group.map { it ->
-                if(it.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+                val fileSize = it.content.media.fileSize
+                if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                     state.overrideQuietly {
                         copy(docs = docs + message.content.group.map { it.content.media.fileId },
                             docName = docName + message.content.group.map { it.content.media.fileName.toString() })
@@ -261,7 +266,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             }
         }
         onDocument { message ->
-            if (message.content.media.fileSize!! < MAX_SIZE_OF_DOC) {
+            val fileSize = message.content.media.fileSize
+            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
                 state.overrideQuietly {
                     copy(
                         docs = docs + message.content.media.fileId,
