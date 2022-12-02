@@ -9,7 +9,7 @@ data class MainProperties(
 
 fun readMainProperties(): MainProperties {
     val properties = Properties()
-    properties.load(FileInputStream(System.getenv()["PROPERTIES_FILE"]))
+    properties.load(FileInputStream(System.getenv("PROPERTIES_FILE")))
     return MainProperties(
         token = properties.getProperty("TOKEN"),
         emailSecrets = EmailSecrets(
