@@ -13,23 +13,19 @@ import telegram.collectors
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
+import telegram.entities.state.FillingProvisionOfServicesState
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.documentBuildingLoop() {
     state<CollectingDataState> {
         val collectors = collectors()
-        onEnter { chatId ->
+        onEnter {
             when (val result = documentSet.build(state.snapshot.fieldsData.associateBy { it::class })) {
                 is DocumentSet.Result.MissingData -> {
                     state.push(collectors.getValue(result.kClass))
                 }
 
                 is DocumentSet.Result.OK -> {
-                    result.documents.map {
-                        withUploadDocumentAction(chatId) {
-                            sendDocument(chatId, Docx.load(it).asMultipartFile(it.templatePath.substringAfterLast('/')))
-                        }
-                    }
-                    state.override { EmptyState }
+                    state.override { FillingProvisionOfServicesState.DownloadDocs(result.documents) }
                 }
             }
         }

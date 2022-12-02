@@ -6,15 +6,18 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onDocumentMediaGroup
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.files.downloadFile
+import dev.inmo.tgbotapi.extensions.api.send.media.sendDocument
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
+import dev.inmo.tgbotapi.requests.abstracts.asMultipartFile
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
 import email.Attachment
 import email.EmailSender
 import org.koin.core.component.inject
+import telegram.Docx
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
@@ -25,8 +28,7 @@ import telegram.resources.strings.Strings
 const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
 const val NUM_OF_PREVIOUS_DOCS = 3
 const val MAX_SIZE_OF_DOC = 20971520
-//(для Глеба) тут нужно состояние, которое будет хранить заполненные документы
-//из последнего состояния заполнения переход сюда
+
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
     state<FillingProvisionOfServicesState.DownloadDocs> {
         onEnter { chatId ->
@@ -46,15 +48,16 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        onText(ButtonStrings.CheckingDoc) {
-            //отправка доков в чат
+        onText(ButtonStrings.CheckingDoc) { message ->
+            state.snapshot.documents.forEach {
+                sendDocument(message.chat, Docx.load(it).asMultipartFile(it.templatePath.substringAfterLast('/')))
+            }
             state.override { FillingProvisionOfServicesState.UploadDocs }
         }
         onText(ButtonStrings.GetByEmail) {
-            state.override { FillingProvisionOfServicesState.UploadDocsEmail }
+            state.override { FillingProvisionOfServicesState.UploadDocsEmail(documents) }
         }
     }
-    //тут тоже в состоянии должны храниться документы
     state<FillingProvisionOfServicesState.UploadDocsEmail> {
         onEnter { chatId ->
             sendTextMessage(
@@ -65,6 +68,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText { message ->
             val email = Email.of(message.content.text)
             if (email != null) {
+                TODO("Email documents")
                 sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
                 state.override { FillingProvisionOfServicesState.UploadDocs }
             } else {
