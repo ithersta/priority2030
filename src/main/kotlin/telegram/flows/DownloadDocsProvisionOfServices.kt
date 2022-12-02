@@ -301,7 +301,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText(ButtonStrings.Send) { message ->
             val attachments = state.snapshot.docs.zip(state.snapshot.docName)
                 .map { Attachment(downloadFile(it.first), it.second, "описание") }
-            emailSender.sendFiles(email.Strings.Email, attachments)
+            emailSender.sendFiles(TODO(), attachments)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
