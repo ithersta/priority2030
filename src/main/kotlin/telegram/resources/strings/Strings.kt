@@ -37,7 +37,7 @@ object Strings {
                 )
     }
 
-    fun comemrcialOfferPrompt() =
+    fun commercialOfferPrompt() =
         buildEntities{
             regularln("Для подачи заявки на размещение необходимо подготовить 3 коммерческих предложения (КП). Одно КП от потенциального котрагента. Два КП от других компаний.")
             regularln(" ")

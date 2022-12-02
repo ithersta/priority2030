@@ -25,7 +25,7 @@ val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
         state.override { EmptyState }
     }
     button(ButtonStrings.ChoiceFillingDoc.ViewingExample) { message ->
-        sendTextMessage(message.chat, Strings.comemrcialOfferPrompt(), replyMarkup = ReplyKeyboardRemove())
+        sendTextMessage(message.chat, Strings.commercialOfferPrompt(), replyMarkup = ReplyKeyboardRemove())
         val prompt1 = object {}::class.java.
         getResourceAsStream("/prompt/ArticMedia_Коммерческое_предложение_ФГАОУ_ВО_СПбПУ_Внедрение_Битрикс24.pdf")?:
         run {
