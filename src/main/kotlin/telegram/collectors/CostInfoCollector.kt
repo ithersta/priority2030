@@ -13,12 +13,13 @@ fun CollectorMapBuilder.costInfoCollector() {
     collector<InformationCost>(initialState = CostCollectorState.WaitingPrice) {
         state<CostCollectorState.WaitingPrice> {
             onEnter { sendTextMessage(it, CollectorStrings.Cost.price) }
-            onText {
-                val price = it.content.text
+            onText { message ->
+                val price = message.content.text
                 if (IsMoney(price)) {
                     val info = InformationCost(price.toDouble())
                     this@collector.exit(state, listOf(info))
                 } else {
+                    sendTextMessage(message.chat, CollectorStrings.Cost.isWrongPrice)
                     return@onText
                 }
             }

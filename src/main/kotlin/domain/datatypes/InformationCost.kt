@@ -87,6 +87,6 @@ data class InformationCost(
             else -> 2
         }
         val num = floor(price).toLong()
-        return num2words(num, 1, WordsRUB) + " " + skop + " " + WordsRUB[0][iw]
+        return num2words(num, 1, WordsRUB) + " " + num2words(skop.toLong(), 0, WordsRUB)
     }
 }

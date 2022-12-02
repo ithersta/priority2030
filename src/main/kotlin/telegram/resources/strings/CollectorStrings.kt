@@ -70,6 +70,7 @@ object CollectorStrings {
 
     object Cost{
         const val price = "Введите сумму по договору"
+        const val  isWrongPrice = price + ". Например: 150.12"
     }
 
     object Recommendations {
