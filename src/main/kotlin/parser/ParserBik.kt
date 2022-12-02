@@ -24,6 +24,7 @@ class ParserBik {
             val firstStrongElement = document.select("strong").first();
             if (firstStrongElement != null) {
                 if (firstStrongElement.text() == "Ошибка!") {
+                    return BankInfo("0", "0", "0")
                 }
             }
         }.onSuccess {

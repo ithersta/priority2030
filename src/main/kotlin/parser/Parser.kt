@@ -47,7 +47,6 @@ class Parser {
                 ParserRusprofile().parseWebPage(ogrnOfOrg),
                 location
             )
-
             2 -> IpInfo("0", "0", "0", "0", "0")
             else -> {
                 null

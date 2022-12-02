@@ -36,9 +36,10 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         if (mainInfo.inn == "0") {
                             sendTextMessage(it.chat, CollectorStrings.Recommendations.isWrongOrg)
                             state.override { CompanyCollectorState.WaitingForInn }
-                        }
-                        state.override {
-                            CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
+                        } else {
+                            state.override {
+                                CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
+                            }
                         }
                     } else {
                         state.override { CompanyCollectorState.HandsWaitingOgrn(this.inn, it.content.text) }
@@ -88,7 +89,6 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingPost> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.employeeRank) }
             onText {
-//              Не возможно проверить !
                 state.override {
                     CompanyCollectorState.HandsWaitingLocation(
                         this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, it.content.text
@@ -99,7 +99,6 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingLocation> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.location) }
             onText {
-//              Не возможно проверить !
                 state.override {
                     CompanyCollectorState.WaitingPhone(
                         OrgInfo(
