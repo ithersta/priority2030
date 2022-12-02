@@ -76,7 +76,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
-                ButtonStrings.UploadPackageDoc,
+                Strings.UploadPackageDocs,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
