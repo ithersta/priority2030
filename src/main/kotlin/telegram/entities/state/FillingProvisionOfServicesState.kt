@@ -4,6 +4,8 @@ import dev.inmo.tgbotapi.requests.abstracts.FileId
 import domain.documents.Document
 import kotlinx.serialization.Serializable
 
+const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
+
 object FillingProvisionOfServicesState {
     @Serializable
     object BeginFillDoc : DialogState
@@ -25,36 +27,30 @@ object FillingProvisionOfServicesState {
     object CheckAndUploadDocs : DialogState
 
     @Serializable
-    object UploadDocApplicationForPlacement : DialogState
+    data class WaitingForDocs(
+        val docs: List<UploadedDocument> = emptyList(),
+        val typeIndex: Int = 0
+    ) : DialogState {
+        val type = Type.values().getOrNull(typeIndex)
 
-    @Serializable
-    data class UploadDocOfficialMemo(
-        val docs: List<FileId>,
-        val docName: List<String>
-    ) : DialogState
+        enum class Type(val min: Int, val max: Int) {
+            ApplicationForPlacement(1, 1),
+            OfficialMemo(1, 1),
+            DraftAgreement(1, 1),
+            CommercialOffer(MIN_NUM_OF_COMMERCIAL_OFFERS, Int.MAX_VALUE),
+            Extra(0, Int.MAX_VALUE)
+        }
 
-    @Serializable
-    data class UploadDocDraftAgreement(
-        val docs: List<FileId>,
-        val docName: List<String>
-    ) : DialogState
-
-    @Serializable
-    data class UploadDocsCommercialOffers(
-        val docs: List<FileId>,
-        val docName: List<String>
-    ) : DialogState
-
-    @Serializable
-    data class UploadExtraDocs(
-        val docs: List<FileId>,
-        val docName: List<String>
-    ) : DialogState
+        @Serializable
+        class UploadedDocument(
+            val fileId: FileId,
+            val filename: String,
+            val type: Type
+        )
+    }
 
     @Serializable
     data class SendDocs(
-        val docs: List<FileId>,
-        val docName: List<String>
+        val docs: List<WaitingForDocs.UploadedDocument>
     ) : DialogState
-
 }

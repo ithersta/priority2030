@@ -5,7 +5,8 @@ object ButtonStrings {
     object ChoiceFillingDoc{
         const val ProvisionOfServices = "Оформление договора на оказание услуг (ООО/ИП)"
         const val DeliveryOfGoods = "Оформление договора на поставку товара (ООО/ИП)"
-        const val ConclusionGphCOntract = "Заключение договора ГПХ"
+        const val GphContract = "Заключение договора ГПХ"
+        const val SendDocs = "Отправить документы"
         const val ViewingExample = "Примеры правильных коммерческих предложений"
     }
     const val CheckingDoc = "Скачать пакет документов"
@@ -16,7 +17,7 @@ object ButtonStrings {
 
     // тут бы немного другое название у кнопки, чтобы
     // пользователь не подумал, что при нажатии он перейдет сразу к отправке
-    const val UploadadAllDocs = "Документы загружены"
+    const val UploadedAllDocs = "Документы загружены"
     const val Send = "Отправить"
     const val NotRequired = "Не загружать дополнительные документы"
     const val Back = "⬅️Назад"

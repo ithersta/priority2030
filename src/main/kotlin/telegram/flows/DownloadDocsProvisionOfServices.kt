@@ -1,5 +1,6 @@
 package telegram.flows
 
+import com.ithersta.tgbotapi.fsm.StatefulContext
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.triggers.onDocument
 import com.ithersta.tgbotapi.fsm.entities.triggers.onDocumentMediaGroup
@@ -12,6 +13,9 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.requests.abstracts.asMultipartFile
 import dev.inmo.tgbotapi.types.UserId
+import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardRemove
+import dev.inmo.tgbotapi.types.chat.Chat
+import dev.inmo.tgbotapi.types.files.DocumentFile
 import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
 import email.Attachment
@@ -21,12 +25,13 @@ import telegram.Docx
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.entities.state.FillingProvisionOfServicesState
+import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs
+import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs.Type
+import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs.UploadedDocument
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.Strings
 
-const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
-const val NUM_OF_PREVIOUS_DOCS = 3
 const val MAX_SIZE_OF_DOC = 20971520
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
@@ -117,173 +122,67 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         onText(ButtonStrings.UploadDocuments) {
-            state.override { FillingProvisionOfServicesState.UploadDocApplicationForPlacement }
+            state.override { WaitingForDocs() }
         }
     }
-    state<FillingProvisionOfServicesState.UploadDocApplicationForPlacement> {
+    state<WaitingForDocs> {
         onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.ApplicationForPlacement
-            )
-        }
-        onDocument { message ->
-            val fileSize = message.content.media.fileSize
-            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                state.override {
-                    FillingProvisionOfServicesState.UploadDocOfficialMemo(
-                        docs = listOf(message.content.media.fileId),
-                        docName = listOf(message.content.media.fileName.toString())
-                    )
-                }
-            } else {
-                sendTextMessage(message.chat, Strings.TooBigFileSize)
+            val type = state.snapshot.type ?: run {
+                state.override { FillingProvisionOfServicesState.SendDocs(docs) }
+                return@onEnter
             }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadDocOfficialMemo> {
-        onEnter { chatId ->
             sendTextMessage(
-                chatId,
-                Strings.UploadDocs.OfficialMemo
-            )
-        }
-        onDocument { message ->
-            val fileSize = message.content.media.fileSize
-            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                state.override {
-                    FillingProvisionOfServicesState.UploadDocDraftAgreement(
-                        this.docs + message.content.media.fileId,
-                        this.docName + message.content.media.fileName.toString()
-                    )
-                }
-            } else {
-                sendTextMessage(message.chat, Strings.TooBigFileSize)
-            }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadDocDraftAgreement> {
-        onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.DraftAgreement
-            )
-        }
-        onDocument { message ->
-            val fileSize = message.content.media.fileSize
-            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                state.override {
-                    FillingProvisionOfServicesState.UploadDocsCommercialOffers(
-                        this.docs + message.content.media.fileId,
-                        this.docName + message.content.media.fileName.toString()
-                    )
-                }
-            } else {
-                sendTextMessage(message.chat, Strings.TooBigFileSize)
-            }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadDocsCommercialOffers> {
-        onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.CommercialOffers,
-                replyMarkup = replyKeyboard(
-                    resizeKeyboard = true,
-                    oneTimeKeyboard = true
-                ) {
+                chatId, when (type) {
+                    Type.ApplicationForPlacement -> Strings.UploadDocs.ApplicationForPlacement
+                    Type.OfficialMemo -> Strings.UploadDocs.OfficialMemo
+                    Type.DraftAgreement -> Strings.UploadDocs.DraftAgreement
+                    Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
+                    Type.Extra -> Strings.UploadDocs.ExtraDocs
+                }, replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true) {
                     row {
-                        simpleButton(ButtonStrings.UploadadAllDocs)
+                        simpleButton(ButtonStrings.UploadedAllDocs)
+                    }
+                } else ReplyKeyboardRemove()
+            )
+        }
+        suspend fun StatefulContext<DialogState, *, WaitingForDocs, *>.handleDocuments(
+            chat: Chat,
+            group: List<DocumentFile>
+        ) {
+            val type = state.snapshot.type ?: return
+            val oldCount = state.snapshot.docs.count { it.type == type }
+            val newDocs = state.snapshot.docs + group
+                .take(type.max - oldCount)
+                .filter { document ->
+                    val fileSize = document.fileSize
+                    (fileSize != null && fileSize < MAX_SIZE_OF_DOC).also {
+                        if (!it) {
+                            sendTextMessage(chat, Strings.tooBigFileSize(document.fileName.orEmpty()))
+                        }
                     }
                 }
-            )
+                .map { UploadedDocument(it.fileId, it.fileName.orEmpty(), type) }
+            val count = newDocs.count { it.type == type }
+            when {
+                count == type.max -> state.override { copy(docs = newDocs, typeIndex = typeIndex + 1) }
+                count > type.max -> error("File count is bigger than the max value")
+                else -> state.overrideQuietly { copy(docs = newDocs) }
+            }
+        }
+        onDocument { message ->
+            handleDocuments(message.chat, listOf(message.content.media))
         }
         onDocumentMediaGroup { message ->
-            message.content.group.map { it ->
-                val fileSize = it.content.media.fileSize
-                if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                    state.overrideQuietly {
-                        copy(docs = docs + message.content.group.map { it.content.media.fileId },
-                            docName = docName + message.content.group.map { it.content.media.fileName.toString() })
-                    }
-                } else {
-                    sendTextMessage(message.chat, Strings.TooBigFileSize)
-                }
-            }
+            handleDocuments(message.chat, message.content.group.map { it.content.media })
         }
-        onDocument { message ->
-            val fileSize = message.content.media.fileSize
-            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                state.overrideQuietly {
-                    copy(
-                        docs = docs + message.content.media.fileId,
-                        docName = docName + message.content.media.fileName.toString()
-                    )
-                }
+        onText(ButtonStrings.UploadedAllDocs) { message ->
+            val type = state.snapshot.type ?: return@onText
+            val count = state.snapshot.docs.count { type == it.type }
+            if (count in type.min..type.max) {
+                state.override { copy(typeIndex = typeIndex + 1) }
             } else {
-                sendTextMessage(message.chat, Strings.TooBigFileSize)
+                sendTextMessage(message.chat, Strings.incorrectNumOfDocs(count, type.min))
             }
-        }
-        onText(ButtonStrings.UploadadAllDocs) {
-            if ((state.snapshot.docs.size - NUM_OF_PREVIOUS_DOCS) < MIN_NUM_OF_COMMERCIAL_OFFERS) {
-                sendTextMessage(
-                    it.chat.id,
-                    Strings.IncorrectNumOfDocs
-                )
-                state.override { FillingProvisionOfServicesState.UploadDocsCommercialOffers(this.docs, this.docName) }
-            } else
-                state.override { FillingProvisionOfServicesState.UploadExtraDocs(this.docs, this.docName) }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadExtraDocs> {
-        onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.UploadDocs.ExtraDocs,
-                replyMarkup = replyKeyboard(
-                    resizeKeyboard = true,
-                    oneTimeKeyboard = true
-                ) {
-                    row {
-                        simpleButton(ButtonStrings.NotRequired)
-                    }
-                    row {
-                        simpleButton(ButtonStrings.UploadadAllDocs)
-                    }
-                }
-            )
-        }
-        onText(ButtonStrings.NotRequired) {
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs, this.docName) }
-        }
-        onDocumentMediaGroup { message ->
-            message.content.group.map { it ->
-                val fileSize = it.content.media.fileSize
-                if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                    state.overrideQuietly {
-                        copy(docs = docs + message.content.group.map { it.content.media.fileId },
-                            docName = docName + message.content.group.map { it.content.media.fileName.toString() })
-                    }
-                } else {
-                    sendTextMessage(message.chat, Strings.TooBigFileSize)
-                }
-            }
-        }
-        onDocument { message ->
-            val fileSize = message.content.media.fileSize
-            if ((fileSize != null) && (fileSize < MAX_SIZE_OF_DOC)) {
-                state.overrideQuietly {
-                    copy(
-                        docs = docs + message.content.media.fileId,
-                        docName = docName + message.content.media.fileName.toString()
-                    )
-                }
-            } else {
-                sendTextMessage(message.chat, Strings.TooBigFileSize)
-            }
-        }
-        onText(ButtonStrings.UploadadAllDocs) {
-            state.override { FillingProvisionOfServicesState.SendDocs(this.docs, this.docName) }
         }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
@@ -303,8 +202,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         val emailSender: EmailSender by inject()
         onText(ButtonStrings.Send) { message ->
-            val attachments = state.snapshot.docs.zip(state.snapshot.docName)
-                .map { Attachment(downloadFile(it.first), it.second, "описание") }
+            val attachments = state.snapshot.docs
+                .map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
             emailSender.sendFiles(TODO(), attachments)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }

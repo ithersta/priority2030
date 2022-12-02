@@ -23,10 +23,11 @@ val mainMenu = menu<DialogState, Unit, _>(Strings.Menu.Message, EmptyState) {
         sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
         state.override { EmptyState }
     }
-    button(ButtonStrings.ChoiceFillingDoc.ConclusionGphCOntract) { message ->
+    button(ButtonStrings.ChoiceFillingDoc.GphContract) { message ->
         sendTextMessage(message.chat, Strings.InProcess, replyMarkup = ReplyKeyboardRemove())
         state.override { EmptyState }
     }
+    button(ButtonStrings.ChoiceFillingDoc.SendDocs, FillingProvisionOfServicesState.WaitingForDocs())
 
     val fileCache = ConcurrentHashMap<String, FileId>()
     button(ButtonStrings.ChoiceFillingDoc.ViewingExample) { message ->
