@@ -68,6 +68,10 @@ object CollectorStrings {
         const val account = "Введите номер расчетного счета"
     }
 
+    object Cost{
+        const val price = "Введите сумму по договору"
+    }
+
     object Recommendations {
         const val isWrongIp = "В базе не найден такой предприниматель"
         const val isWrongOrg = "В базе не найдена такая организация"

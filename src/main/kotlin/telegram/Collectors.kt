@@ -23,4 +23,5 @@ fun StateFilterBuilder<DialogState, Unit, CollectingDataState, Unit, UserId>.col
     purchaseDeadlineAndDeliveryAddressCollector()
     materialObjectNumberCollector()
     termOfPaymentCollector()
+    costInfoCollector()
 }

@@ -10,6 +10,11 @@ import domain.entities.SelectionLetter
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
+object CostCollectorState{
+    @Serializable
+    object WaitingPrice : DialogState
+}
+
 object FullNameCollectorState {
     @Serializable
     object WaitingForLastName : DialogState
