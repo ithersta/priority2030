@@ -1,7 +1,6 @@
 package parser
 
 import domain.datatypes.BankInfo
-import domain.datatypes.IpInfo
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
