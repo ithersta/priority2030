@@ -1,6 +1,7 @@
 package domain.datatypes
 
 import kotlinx.serialization.Serializable
+import java.util.*
 import kotlin.math.floor
 
 @Serializable
@@ -93,8 +94,7 @@ data class InformationCost(
 
     fun inWords(): String {
         if (price < 0.0) return "error: отрицательное значение"
-        // что то другое за место String
-        val sm = String.format("%.2f", price)
+        val sm = String.format(Locale.US, "%.2f", price)
         val kopecks = sm.substring(sm.length - twoDigit, sm.length)
         val num = floor(price).toLong()
         return num2words(num, oneDigit, wordsRUB) + " " + num2words(kopecks.toLong(), zeroDigit.toInt(), wordsRUB)
