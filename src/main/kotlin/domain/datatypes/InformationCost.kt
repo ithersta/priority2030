@@ -54,43 +54,49 @@ data class InformationCost(
     private fun num2words(num: Long, level: Int, currency: Array<Array<String>>): String {
         val words = StringBuilder(stringLen)
         if (num == zeroDigit) words.append("ноль ")
-        val i = currency[level][threeDigit].indexOf("1").inc()
+        val i = currency[level][threeDigit].indexOf("1") + oneDigit
         val h = (num % thousandDigit).toInt()
         var d = h / hundredDigit
-        if (d > zeroDigit) words.append(digHundreds[d.dec()]).append(" ")
+        if (d > zeroDigit) {
+            words.append(digHundreds[d-oneDigit]).append(" ")
+        }
         var n = h % hundredDigit
         d = n / tenDigit
-        n %= threeDigit
+        n %= tenDigit
         when (d) {
             0 -> {}
             1 -> words.append(digDozens[n]).append(" ")
-            else -> words.append(digTwenties[d.dec().dec()]).append(" ")
+            else -> words.append(digTwenties[d - twoDigit]).append(" ")
         }
-        if (d == oneDigit) n = zeroDigit.toInt()
+        if (d == oneDigit) {
+            n = zeroDigit.toInt()
+        }
         when (n) {
             0 -> {}
-            1, 2 -> words.append(digUnits[i][n.dec()]).append(" ")
-            else -> words.append(digUnits[zeroDigit.toInt()][n.dec()]).append(" ")
+            1, 2 -> words.append(digUnits[i][n - oneDigit]).append(" ")
+            else -> words.append(digUnits[zeroDigit.toInt()][n - oneDigit]).append(" ")
         }
         when (n) {
             1 -> words.append(currency[level][zeroDigit.toInt()])
             2, 3, 4 -> words.append(currency[level][oneDigit])
-            else -> if ((h != 0) || ((h == zeroDigit.toInt()) && (level == oneDigit))) {
+            else -> if ((h != zeroDigit.toInt()) || ((h == zeroDigit.toInt()) && (level == oneDigit))) {
                 words.append(currency[level][twoDigit])
             }
         }
         val nextNum = num / thousandDigit
         return if (nextNum > zeroDigit) {
-            (num2words(nextNum, level.inc(), currency) + " " + words.toString()).trim { it <= ' ' }
+            (num2words(nextNum, level + oneDigit, currency) + " " + words.toString()).trim { it <= ' ' }
         } else {
             words.toString().trim { it <= ' ' }
         }
     }
+
     fun inWords(): String {
         if (price < 0.0) return "error: отрицательное значение"
-        val sm = price.toString().format("%.2f")
-        val kopecks = sm.substring(sm.length.dec().dec(), sm.length)
+        // что то другое за место String
+        val sm = String.format("%.2f", price)
+        val kopecks = sm.substring(sm.length - twoDigit, sm.length)
         val num = floor(price).toLong()
-        return num2words(num, 1, wordsRUB) + " " + num2words(kopecks.toLong(), 0, wordsRUB)
+        return num2words(num, oneDigit, wordsRUB) + " " + num2words(kopecks.toLong(), zeroDigit.toInt(), wordsRUB)
     }
 }
