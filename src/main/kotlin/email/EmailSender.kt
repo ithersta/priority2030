@@ -1,5 +1,6 @@
 package email
 
+import domain.entities.Email
 import org.apache.commons.mail.DefaultAuthenticator
 import org.apache.commons.mail.MultiPartEmail
 import org.koin.core.annotation.Single
@@ -9,7 +10,7 @@ private const val DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocumen
 
 @Single
 class EmailSender(private val emailSecrets: EmailSecrets) {
-    fun sendFiles(to: String, files: List<Attachment>) {
+    fun sendFiles(to: Email, files: List<Attachment>) {
         val mail: MultiPartEmail = MultiPartEmail().apply {
             hostName = emailSecrets.hostname
             sslSmtpPort = emailSecrets.port
@@ -18,7 +19,7 @@ class EmailSender(private val emailSecrets: EmailSecrets) {
             setFrom(emailSecrets.from)
             subject = Strings.SendFilesSubject
             setMsg(Strings.SendFilesMessage)
-            addTo(to)
+            addTo(to.email)
 
             files.forEach {
                 attach(

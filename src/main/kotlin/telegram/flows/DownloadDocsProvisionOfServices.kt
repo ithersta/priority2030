@@ -1,5 +1,6 @@
 package telegram.flows
 
+import MainProperties
 import com.ithersta.tgbotapi.fsm.StatefulContext
 import com.ithersta.tgbotapi.fsm.builders.RoleFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.triggers.onDocument
@@ -201,10 +202,10 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             )
         }
         val emailSender: EmailSender by inject()
+        val mainProperties: MainProperties by inject()
         onText(ButtonStrings.Send) { message ->
-            val attachments = state.snapshot.docs
-                .map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
-            emailSender.sendFiles(TODO(), attachments)
+            val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
+            emailSender.sendFiles(mainProperties.emailTo, attachments)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
