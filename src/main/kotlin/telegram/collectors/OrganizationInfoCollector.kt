@@ -13,6 +13,8 @@ import services.Morpher
 import services.Parser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
+import telegram.resources.strings.InvalidInputStrings.InvalidEmail
+import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 
 fun CollectorMapBuilder.organizationInfoCollector() {
     collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
@@ -142,7 +144,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 if (phoneNumber != null) {
                     state.override { CompanyCollectorState.WaitingEmail(mainInfo, phoneNumber) }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
+                    sendTextMessage(it.chat, InvalidPhoneNumber)
                     return@onText
                 }
             }
@@ -160,7 +162,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                     val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
                     this@collector.exit(state, listOf(info))
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.email)
+                    sendTextMessage(it.chat, InvalidEmail)
                     return@onText
                 }
             }

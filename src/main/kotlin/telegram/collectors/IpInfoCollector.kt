@@ -13,6 +13,8 @@ import services.Morpher
 import services.Parser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
+import telegram.resources.strings.InvalidInputStrings.InvalidEmail
+import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 import validation.IsFullNameValid
 
 
@@ -60,7 +62,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     }
 
                     else -> {
-                        sendTextMessage(message.chat, CollectorStrings.IP.invalid)
+                        sendTextMessage(message.chat, InvalidPhoneNumber)
                         return@onText
                     }
                 }
@@ -116,7 +118,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                         IpCollectorState.WaitingEmail(mainInfo, phoneNumber)
                     }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
+                    sendTextMessage(it.chat, InvalidPhoneNumber)
                     return@onText
                 }
             }
@@ -134,7 +136,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                     val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
                     this@collector.exit(state, listOf(info))
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.email)
+                    sendTextMessage(it.chat, InvalidEmail)
                     return@onText
                 }
             }

@@ -7,13 +7,6 @@ import dev.inmo.tgbotapi.utils.link
 import dev.inmo.tgbotapi.utils.regularln
 
 object CollectorStrings {
-    object FullName {
-        const val lastName = "Введите фамилию"
-        const val firstName = "Введите имя"
-        const val patronymic = "Введите отчество или нажмите кнопку снизу, если оно отсутствует"
-        const val noPatronymic = "Отсутствует"
-    }
-
     object OrganizationType {
         const val message = "Введите тип организации"
         const val ip = "ИП"
@@ -25,13 +18,11 @@ object CollectorStrings {
         const val inn = "Введите ИНН предпринимателя"
         const val ogrn = "Введите ОГРН предпринимателя"
 
-        //        const val okpo = "Введите ОКПО предпринимателя"
         const val fullName = "Введите ФИО предпринимателя предпринимателя"
         const val data = "Введите дату от такого числа ОГРНИП"
         private const val question = "Вы заключаете договор с этим предпринимателем?"
         const val yes = "Да"
         const val no = "Нет"
-        const val invalid = "Доступные варианты ответа: Да, Нет"
         const val location = "Введите юридический адрес предпринимателя"
         const val phone = "Введите номер телефона предпринимателя"
         const val email = "Введите адрес электронной почты предпринимателя"
@@ -46,10 +37,9 @@ object CollectorStrings {
         const val kpp = "Введите КПП предприятия"
         const val ogrn = "Введите ОГРН предприятия"
 
-        //        const val okpo = "Введите ОКПО предприятия"
         const val fullNameOfOrg = "Введите название предприятия"
         const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
-        const val employeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
+        const val employeeRank = "Введите должность ответственного сотрудника от предприятия"
         const val location = "Введите юридический адрес предприятия"
         const val phone = "Введите номер телефона ответственного от предприятия"
         const val email = "Введите адрес электронной почты ответственного от предприятия"
@@ -70,27 +60,16 @@ object CollectorStrings {
         const val account = "Введите номер расчетного счета"
     }
 
-    object Cost {
-        const val price = "Введите сумму по договору"
-        const val isWrongPrice = price + ". Например: 150.12"
-    }
-
     object Recommendations {
         const val MorpherUnavailable = "Недоступен сервис склонения ФИО"
-        const val isWrongIp = "В базе не найден такой предприниматель"
-        const val isWrongOrg = "В базе не найдена такая организация"
-        const val isWrongBank = "В базе не найдена такой банк"
         const val innForIp = "Введите корректный ИНН из 12 цифр"
         const val innForOoo = "Введите корректный ИНН из 10 цифр"
         const val kpp = "Введите корректный КПП из 9 цифр"
         const val ogrnForIp = "Введите корректный ОГРН из 15 цифр"
         const val ogrnForOoo = "Введите корректный ОГРН из 13 цифр"
 
-        //        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
-//        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
+
         const val fullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
-        const val phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"
-        const val email = "Введите корректную электронную почту"
         const val bik = "Введите корректный БИК из 9 цифр"
         const val corrAccount = "Введите корректный корреспондентский счет из 20 цифр"
         const val paymentAccount = "Введите корректный расчетный счет из 20 цифр"

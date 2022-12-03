@@ -13,19 +13,6 @@ private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
 )
 
 val documentSet = documentSet {
-    when (get<OrganizationType>()) {
-        OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
-            ipInfo()
-            bankInfo()
-            ppAndPrice()
-        }
-
-        OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
-            companyInformation()
-            bankInfo()
-            ppAndPrice()
-        }
-    }
     document("/documents/Служебная записка.docx") {
         purchaseObject()
         field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
@@ -59,6 +46,19 @@ val documentSet = documentSet {
         financiallyResponsiblePerson()
         materialObjectNumber()
         responsibleForDocumentsPerson()
+    }
+    when (get<OrganizationType>()) {
+        OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
+            ipInfo()
+            bankInfo()
+            ppAndPrice()
+        }
+
+        OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
+            companyInformation()
+            bankInfo()
+            ppAndPrice()
+        }
     }
 }
 
