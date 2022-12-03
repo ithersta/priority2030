@@ -3,33 +3,30 @@ package telegram.collectors
 import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
-import domain.datatypes.BankInfo
+import domain.datatypes.Bank
 import domain.datatypes.InformationBank
-import parser.ParserBik
+import domain.entities.Bic
+import domain.entities.CorrespondentAccount
+import domain.entities.SettlementAccount
+import services.ParserBik
 import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
-import validation.IsBicValid
-import validation.IsCorrAccountValid
-import validation.IsPaymentAccountValid
 
 fun CollectorMapBuilder.bankInfoCollector() {
     collector<InformationBank>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
+            val parser = ParserBik()
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
-                val parser = ParserBik()
-                if (IsBicValid(it.content.text)) {
-                    val mainInfo = parser.parseWebPage(bik = it.content.text)
-                    if (mainInfo != null) {
-                        if (mainInfo.bik == "0") {
-                            sendTextMessage(it.chat, CollectorStrings.Recommendations.isWrongBank)
-                            return@onText
-                        }
+                val bic = Bic.of(it.content.text)
+                if (bic != null) {
+                    val bank = parser.parseWebPage(bic)
+                    if (bank != null) {
                         state.override {
-                            BankCollectorState.WaitingForPaymentAccount(mainInfo)
+                            BankCollectorState.WaitingForSettlementAccount(bank)
                         }
                     } else {
-                        state.override { BankCollectorState.HandsWaitingForCorrAccount(it.content.text) }
+                        state.override { BankCollectorState.HandsWaitingForCorrAccount(bic) }
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.bik)
@@ -40,8 +37,9 @@ fun CollectorMapBuilder.bankInfoCollector() {
         state<BankCollectorState.HandsWaitingForCorrAccount> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.corrAccount) }
             onText {
-                if (IsCorrAccountValid(it.content.text)) {
-                    state.override { BankCollectorState.HandsWaitingForBankName(state.snapshot.bik, it.content.text) }
+                val correspondentAccount = CorrespondentAccount.of(it.content.text)
+                if (correspondentAccount != null) {
+                    state.override { BankCollectorState.HandsWaitingForBankName(bic, correspondentAccount) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.corrAccount)
                     return@onText
@@ -52,19 +50,20 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bankName) }
             onText {
                 state.override {
-                    BankCollectorState.WaitingForPaymentAccount(
-                        BankInfo(this.bik, this.correspondentAccount, it.content.text)
+                    BankCollectorState.WaitingForSettlementAccount(
+                        Bank(this.bic, this.correspondentAccount, it.content.text)
                     )
                 }
             }
         }
-        state<BankCollectorState.WaitingForPaymentAccount> {
+        state<BankCollectorState.WaitingForSettlementAccount> {
             onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
             onText { message ->
-                if (IsPaymentAccountValid(message.content.text)) {
+                val settlementAccount = SettlementAccount.of(message.content.text)
+                if (settlementAccount != null) {
                     val info = InformationBank(
-                        mainInfo = state.snapshot.mainInfo,
-                        settlementAccountNumber = message.content.text
+                        bank = state.snapshot.mainInfo,
+                        settlementAccount = settlementAccount
                     )
                     this@collector.exit(state, listOf(info))
                 } else {

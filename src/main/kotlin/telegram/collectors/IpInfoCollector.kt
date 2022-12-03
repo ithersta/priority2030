@@ -8,10 +8,14 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.EntrepreneurInformation
 import domain.datatypes.IpInfo
-import parser.Parser
+import domain.entities.Email
+import domain.entities.IpInn
+import services.Parser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
-import validation.*
+import validation.IsFullNameValid
+import validation.IsOgrnipValidForIp
+import validation.IsPhoneNumberValid
 
 
 fun CollectorMapBuilder.ipInfoCollector() {
@@ -20,17 +24,13 @@ fun CollectorMapBuilder.ipInfoCollector() {
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText { message ->
-                if (IsInnValidForIp(message.content.text)) {
-                    val mainInfo = parser.parsing(message.content.text)
+                val inn = IpInn.of(message.content.text)
+                if (inn != null) {
+                    val mainInfo = parser.getIpInfo(inn)
                     if (mainInfo != null) {
-                        if (mainInfo.inn == "0") {
-                            sendTextMessage(message.chat, CollectorStrings.Recommendations.isWrongIp)
-                            sendTextMessage(message.chat, CollectorStrings.Recommendations.innForIp)
-                            return@onText
-                        }
                         state.override { IpCollectorState.WaitingInspection(mainInfo, mainInfo.fullNameOfHolder) }
                     } else {
-                        state.override { IpCollectorState.HandsWaitingOgrn(message.content.text) }
+                        state.override { IpCollectorState.HandsWaitingOgrn(inn) }
                     }
                 } else {
                     sendTextMessage(message.chat, CollectorStrings.Recommendations.innForIp)
@@ -105,7 +105,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 state.override {
                     IpCollectorState.WaitingPhone(
-                        IpInfo(this.inn, this.ogrn, this.fullNameOfHolder, this.dataOgrn, it.content.text)
+                        IpInfo(inn, ogrn, fullNameOfHolder, dataOgrn, it.content.text)
                     )
                 }
             }
@@ -126,7 +126,8 @@ fun CollectorMapBuilder.ipInfoCollector() {
         state<IpCollectorState.WaitingEmail> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.email) }
             onText {
-                if (IsEmailValid(it.content.text)) {
+                val email = Email.of(it.content.text)
+                if (email != null) {
                     val info = EntrepreneurInformation(
                         state.snapshot.mainInfo, state.snapshot.phone, it.content.text
                     )

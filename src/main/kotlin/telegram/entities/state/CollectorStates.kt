@@ -1,54 +1,30 @@
 package telegram.entities.state
 
-import domain.datatypes.BankInfo
+import domain.datatypes.Bank
 import domain.datatypes.IpInfo
 import domain.datatypes.OrgInfo
-import domain.entities.Fio
-import domain.entities.PhoneNumber
-import domain.entities.SelectionIdentifier
-import domain.entities.SelectionLetter
+import domain.entities.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
-
-object CostCollectorState {
-    @Serializable
-    object WaitingPrice : DialogState
-}
-
-object FullNameCollectorState {
-    @Serializable
-    object WaitingForLastName : DialogState
-
-    @Serializable
-    data class WaitingForFirstName(
-        val lastName: String
-    ) : DialogState
-
-    @Serializable
-    data class WaitingForPatronymic(
-        val lastName: String,
-        val firstName: String
-    ) : DialogState
-}
 
 object BankCollectorState {
     @Serializable
     object WaitingForBik : DialogState
 
     @Serializable
-    data class WaitingForPaymentAccount(
-        val mainInfo: BankInfo,
+    data class WaitingForSettlementAccount(
+        val mainInfo: Bank,
     ) : DialogState
 
     @Serializable
     data class HandsWaitingForCorrAccount(
-        val bik: String
+        val bic: Bic
     ) : DialogState
 
     @Serializable
     data class HandsWaitingForBankName(
-        val bik: String,
-        val correspondentAccount: String
+        val bic: Bic,
+        val correspondentAccount: CorrespondentAccount
     ) : DialogState
 }
 
@@ -61,7 +37,7 @@ object CompanyCollectorState {
 
     @Serializable
     data class WaitingForKpp(
-        val inn: String
+        val inn: OooInn
     ) : DialogState
 
     @Serializable
@@ -72,42 +48,41 @@ object CompanyCollectorState {
 
     @Serializable
     data class HandsWaitingOgrn(
-        val inn: String,
-        val kpp: String
+        val inn: OooInn,
+        val kpp: Kpp
     ) : DialogState
-
 
     @Serializable
     data class HandsWaitingFullNameOfOrg(
-        val inn: String,
-        val kpp: String,
+        val inn: OooInn,
+        val kpp: Kpp,
         val ogrn: String,
     ) : DialogState
 
     @Serializable
     data class HandsWaitingFullNameOfHolder(
-        val inn: String,
-        val kpp: String,
+        val inn: OooInn,
+        val kpp: Kpp,
         val ogrn: String,
         val fullNameOfOrg: String
     ) : DialogState
 
     @Serializable
     data class HandsWaitingPost(
-        val inn: String,
-        val kpp: String,
+        val inn: OooInn,
+        val kpp: Kpp,
         val ogrn: String,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: String
+        val fullNameOfHolder: MorphedFullName
     ) : DialogState
 
     @Serializable
     data class HandsWaitingLocation(
-        val inn: String,
-        val kpp: String,
+        val inn: OooInn,
+        val kpp: Kpp,
         val ogrn: String,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: String,
+        val fullNameOfHolder: MorphedFullName,
         val post: String
     ) : DialogState
 
@@ -119,7 +94,7 @@ object CompanyCollectorState {
     @Serializable
     data class WaitingEmail(
         val mainInfo: OrgInfo,
-        val phone: String
+        val phone: PhoneNumber
     ) : DialogState
 }
 
@@ -135,25 +110,25 @@ object IpCollectorState {
 
     @Serializable
     data class HandsWaitingOgrn(
-        val inn: String
+        val inn: IpInn
     ) : DialogState
 
     @Serializable
     data class HandsWaitingDataOfOgrn(
-        val inn: String,
+        val inn: IpInn,
         val ogrn: String,
     ) : DialogState
 
     @Serializable
     data class HandsWaitingfullNameOfHolder(
-        val inn: String,
+        val inn: IpInn,
         val ogrn: String,
         val dataOgrn: String
     ) : DialogState
 
     @Serializable
     data class HandsWaitingLocation(
-        val inn: String,
+        val inn: IpInn,
         val ogrn: String,
         val dataOgrn: String,
         val fullNameOfHolder: String

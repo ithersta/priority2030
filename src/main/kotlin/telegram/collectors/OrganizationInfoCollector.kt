@@ -8,10 +8,15 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
 import domain.datatypes.OrgInfo
-import parser.Parser
+import domain.entities.Email
+import domain.entities.Kpp
+import domain.entities.OooInn
+import domain.entities.PhoneNumber
+import services.Morpher
+import services.Parser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
-import validation.*
+import validation.IsOgrnipValidForOoo
 
 fun CollectorMapBuilder.organizationInfoCollector() {
     collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
@@ -19,8 +24,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
             onText {
-                if (IsInnValidForOoo(it.content.text)) {
-                    state.override { CompanyCollectorState.WaitingForKpp(it.content.text) }
+                val inn = OooInn.of(it.content.text)
+                if (inn != null) {
+                    state.override { CompanyCollectorState.WaitingForKpp(inn) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.innForOoo)
                     return@onText
@@ -30,19 +36,15 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingForKpp> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.kpp) }
             onText {
-                if (IsKppValid(it.content.text)) {
-                    val mainInfo = parser.parsing(state.snapshot.inn, it.content.text)
+                val kpp = Kpp.of(it.content.text)
+                if (kpp != null) {
+                    val mainInfo = parser.getOrgInfo(state.snapshot.inn, kpp)
                     if (mainInfo != null) {
-                        if (mainInfo.inn == "0") {
-                            sendTextMessage(it.chat, CollectorStrings.Recommendations.isWrongOrg)
-                            state.override { CompanyCollectorState.WaitingForInn }
-                        } else {
-                            state.override {
-                                CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
-                            }
+                        state.override {
+                            CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
                         }
                     } else {
-                        state.override { CompanyCollectorState.HandsWaitingOgrn(this.inn, it.content.text) }
+                        state.override { CompanyCollectorState.HandsWaitingOgrn(inn, kpp) }
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.kpp)
@@ -74,15 +76,12 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingFullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.employee) }
             onText {
-                if (IsFullNameValid(it.content.text)) {
-                    state.override {
-                        CompanyCollectorState.HandsWaitingPost(
-                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, it.content.text
-                        )
-                    }
-                } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.fullName)
+                val morphedFullName = Morpher().morphFullName(it.content.text) ?: run {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
                     return@onText
+                }
+                state.override {
+                    CompanyCollectorState.HandsWaitingPost(inn, kpp, ogrn, fullNameOfOrg, morphedFullName)
                 }
             }
         }
@@ -91,7 +90,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onText {
                 state.override {
                     CompanyCollectorState.HandsWaitingLocation(
-                        this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.fullNameOfHolder, it.content.text
+                        inn, kpp, ogrn, fullNameOfOrg, fullNameOfHolder, it.content.text
                     )
                 }
             }
@@ -102,7 +101,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 state.override {
                     CompanyCollectorState.WaitingPhone(
                         OrgInfo(
-                            this.inn, this.kpp, this.ogrn, this.fullNameOfOrg, this.post, this.fullNameOfHolder,
+                            inn, kpp, ogrn, fullNameOfOrg, post, fullNameOfHolder,
                             it.content.text
                         )
                     )
@@ -117,10 +116,8 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(CollectorStrings.Ooo.yes)
-                        }
-                        row {
                             simpleButton(CollectorStrings.Ooo.no)
+                            simpleButton(CollectorStrings.Ooo.yes)
                         }
                     }
                 )
@@ -149,8 +146,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.phone) }
             onText {
-                if (IsPhoneNumberValid(it.content.text)) {
-                    state.override { CompanyCollectorState.WaitingEmail(mainInfo, it.content.text) }
+                val phoneNumber = PhoneNumber.of(it.content.text)
+                if (phoneNumber != null) {
+                    state.override { CompanyCollectorState.WaitingEmail(mainInfo, phoneNumber) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.phone)
                     return@onText
@@ -160,8 +158,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.WaitingEmail> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.email) }
             onText {
-                if (IsEmailValid(it.content.text)) {
-                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, it.content.text)
+                val email = Email.of(it.content.text)
+                if (email != null) {
+                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.email)

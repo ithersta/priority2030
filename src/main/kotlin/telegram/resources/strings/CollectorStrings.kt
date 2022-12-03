@@ -76,6 +76,7 @@ object CollectorStrings {
     }
 
     object Recommendations {
+        const val MorpherUnavailable = "Недоступен сервис склонения ФИО"
         const val isWrongIp = "В базе не найден такой предприниматель"
         const val isWrongOrg = "В базе не найдена такая организация"
         const val isWrongBank = "В базе не найдена такой банк"

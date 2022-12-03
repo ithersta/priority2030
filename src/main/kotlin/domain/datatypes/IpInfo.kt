@@ -1,10 +1,11 @@
 package domain.datatypes
 
+import domain.entities.IpInn
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class IpInfo(
-    val inn: String,
+    val inn: IpInn,
     val ogrn: String,
     val fullNameOfHolder: String,
     val orgrnData: String,
