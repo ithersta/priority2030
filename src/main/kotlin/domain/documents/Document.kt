@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 class Document(
     val templatePath: String,
     val replacements: List<Pair<String, String>>
-)
+) {
+    val filename = templatePath.substringAfterLast("/")
+}

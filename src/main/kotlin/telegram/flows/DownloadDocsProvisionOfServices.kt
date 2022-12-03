@@ -30,12 +30,14 @@ import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs
 import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs.Type
 import telegram.entities.state.FillingProvisionOfServicesState.WaitingForDocs.UploadedDocument
 import telegram.resources.strings.ButtonStrings
+import telegram.resources.strings.EmailStrings
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.Strings
 
 const val MAX_SIZE_OF_DOC = 20971520
 
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
+    val emailSender: EmailSender by inject()
     state<FillingProvisionOfServicesState.DownloadDocs> {
         onEnter { chatId ->
             sendTextMessage(
@@ -56,7 +58,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         }
         onText(ButtonStrings.CheckingDoc) { message ->
             state.snapshot.documents.forEach {
-                sendDocument(message.chat, Docx.load(it).asMultipartFile(it.templatePath.substringAfterLast('/')))
+                sendDocument(message.chat, Docx.load(it).asMultipartFile(it.filename))
             }
             state.override { FillingProvisionOfServicesState.UploadDocs }
         }
@@ -74,7 +76,8 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
         onText { message ->
             val email = Email.of(message.content.text)
             if (email != null) {
-                TODO("Email documents")
+                val attachments = state.snapshot.documents.map { Attachment(Docx.load(it), it.filename, it.filename) }
+                emailSender.sendFiles(email, attachments, EmailStrings.ToBotUser.Subject, EmailStrings.ToBotUser.Message)
                 sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
                 state.override { FillingProvisionOfServicesState.UploadDocs }
             } else {
@@ -201,11 +204,10 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                 }
             )
         }
-        val emailSender: EmailSender by inject()
         val mainProperties: MainProperties by inject()
         onText(ButtonStrings.Send) { message ->
             val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
-            emailSender.sendFiles(mainProperties.emailTo, attachments)
+            emailSender.sendFiles(mainProperties.emailTo, attachments, EmailStrings.ToAdmin.Subject, EmailStrings.ToAdmin.Message)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
