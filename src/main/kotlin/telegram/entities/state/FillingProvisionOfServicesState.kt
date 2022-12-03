@@ -16,10 +16,10 @@ object FillingProvisionOfServicesState {
     ) : DialogState
 
     @Serializable
-    object UploadDocs : DialogState
+    object AfterDownload : DialogState
 
     @Serializable
-    class UploadDocsEmail(
+    class DownloadDocsByEmail(
         val documents: List<Document>
     ) : DialogState
 

@@ -18,7 +18,7 @@ import telegram.entities.state.FillingProvisionOfServicesState
 fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.documentBuildingLoop() {
     state<CollectingDataState> {
         val collectors = collectors()
-        onEnter {
+        onEnter { _ ->
             when (val result = documentSet.build(state.snapshot.fieldsData.associateBy { it::class })) {
                 is DocumentSet.Result.MissingData -> {
                     state.push(collectors.getValue(result.kClass))

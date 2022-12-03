@@ -21,6 +21,7 @@ import dev.inmo.tgbotapi.utils.row
 import domain.entities.Email
 import email.Attachment
 import email.EmailSender
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import telegram.Docx
 import telegram.entities.state.DialogState
@@ -36,56 +37,14 @@ import telegram.resources.strings.Strings
 
 const val MAX_SIZE_OF_DOC = 20971520
 
-fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfServices() {
-    val emailSender: EmailSender by inject()
-    state<FillingProvisionOfServicesState.DownloadDocs> {
-        onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.PackageDocsReady,
-                replyMarkup = replyKeyboard(
-                    resizeKeyboard = true,
-                    oneTimeKeyboard = true
-                ) {
-                    row {
-                        simpleButton(ButtonStrings.CheckingDoc)
-                    }
-                    row {
-                        simpleButton(ButtonStrings.GetByEmail)
-                    }
-                }
-            )
-        }
-        onText(ButtonStrings.CheckingDoc) { message ->
-            state.snapshot.documents.forEach {
-                sendDocument(message.chat, Docx.load(it).asMultipartFile(it.filename))
-            }
-            state.override { FillingProvisionOfServicesState.UploadDocs }
-        }
-        onText(ButtonStrings.GetByEmail) {
-            state.override { FillingProvisionOfServicesState.UploadDocsEmail(documents) }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadDocsEmail> {
-        onEnter { chatId ->
-            sendTextMessage(
-                chatId,
-                Strings.Email
-            )
-        }
-        onText { message ->
-            val email = Email.of(message.content.text)
-            if (email != null) {
-                val attachments = state.snapshot.documents.map { Attachment(Docx.load(it), it.filename, it.filename) }
-                emailSender.sendFiles(email, attachments, EmailStrings.ToBotUser.Subject, EmailStrings.ToBotUser.Message)
-                sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
-                state.override { FillingProvisionOfServicesState.UploadDocs }
-            } else {
-                sendTextMessage(message.chat, InvalidInputStrings.InvalidEmail)
-            }
-        }
-    }
-    state<FillingProvisionOfServicesState.UploadDocs> {
+fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.afterDocsGenerationFlow() {
+    downloadDocsFlow()
+    afterDownloadState()
+    uploadDocsFlow()
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.afterDownloadState() {
+    state<FillingProvisionOfServicesState.AfterDownload> {
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
@@ -110,25 +69,82 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             state.override { EmptyState }
         }
     }
-    state<FillingProvisionOfServicesState.CheckAndUploadDocs> {
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsFlow() {
+    val emailSender: EmailSender by inject()
+    state<FillingProvisionOfServicesState.DownloadDocs> {
         onEnter { chatId ->
             sendTextMessage(
                 chatId,
-                Strings.checkingListOfDocs(),
+                Strings.PackageDocsReady,
                 replyMarkup = replyKeyboard(
                     resizeKeyboard = true,
                     oneTimeKeyboard = true
                 ) {
                     row {
-                        simpleButton(ButtonStrings.UploadDocuments)
+                        simpleButton(ButtonStrings.CheckingDoc)
+                    }
+                    row {
+                        simpleButton(ButtonStrings.GetByEmail)
                     }
                 }
             )
         }
-        onText(ButtonStrings.UploadDocuments) {
-            state.override { WaitingForDocs() }
+        onText(ButtonStrings.CheckingDoc) { message ->
+            state.snapshot.documents.forEach {
+                sendDocument(message.chat, Docx.load(it).asMultipartFile(it.filename))
+            }
+            state.override { FillingProvisionOfServicesState.AfterDownload }
+        }
+        onText(ButtonStrings.GetByEmail) {
+            state.override { FillingProvisionOfServicesState.DownloadDocsByEmail(documents) }
         }
     }
+    state<FillingProvisionOfServicesState.DownloadDocsByEmail> {
+        onEnter { chatId ->
+            sendTextMessage(chatId, Strings.Email)
+        }
+        onText { message ->
+            val email = Email.of(message.content.text)
+            if (email != null) {
+                val attachments = state.snapshot.documents.map { Attachment(Docx.load(it), it.filename, it.filename) }
+                emailSender.sendFiles(
+                    email,
+                    attachments,
+                    EmailStrings.ToBotUser.Subject,
+                    EmailStrings.ToBotUser.Message
+                )
+                sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
+                state.override { FillingProvisionOfServicesState.AfterDownload }
+            } else {
+                sendTextMessage(message.chat, InvalidInputStrings.InvalidEmail)
+            }
+        }
+    }
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.uploadDocsFlow() {
+    checkAndUploadDocsState()
+    waitingForDocsState()
+    sendDocsState()
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.checkAndUploadDocsState() {
+    state<FillingProvisionOfServicesState.CheckAndUploadDocs> {
+        onEnter { chatId ->
+            sendTextMessage(
+                chatId, Strings.CheckListOfDocs,
+                replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.UploadDocuments) }
+                }
+            )
+        }
+        onText(ButtonStrings.UploadDocuments) { state.override { WaitingForDocs() } }
+    }
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsState() {
     state<WaitingForDocs> {
         onEnter { chatId ->
             val type = state.snapshot.type ?: run {
@@ -143,41 +159,13 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
                     Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
                     Type.Extra -> Strings.UploadDocs.ExtraDocs
                 }, replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true) {
-                    row {
-                        simpleButton(ButtonStrings.UploadedAllDocs)
-                    }
+                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
                 } else ReplyKeyboardRemove()
             )
         }
-        suspend fun StatefulContext<DialogState, *, WaitingForDocs, *>.handleDocuments(
-            chat: Chat,
-            group: List<DocumentFile>
-        ) {
-            val type = state.snapshot.type ?: return
-            val oldCount = state.snapshot.docs.count { it.type == type }
-            val newDocs = state.snapshot.docs + group
-                .take(type.max - oldCount)
-                .filter { document ->
-                    val fileSize = document.fileSize
-                    (fileSize != null && fileSize < MAX_SIZE_OF_DOC).also {
-                        if (!it) {
-                            sendTextMessage(chat, Strings.tooBigFileSize(document.fileName.orEmpty()))
-                        }
-                    }
-                }
-                .map { UploadedDocument(it.fileId, it.fileName.orEmpty(), type) }
-            val count = newDocs.count { it.type == type }
-            when {
-                count == type.max -> state.override { copy(docs = newDocs, typeIndex = typeIndex + 1) }
-                count > type.max -> error("File count is bigger than the max value")
-                else -> state.overrideQuietly { copy(docs = newDocs) }
-            }
-        }
-        onDocument { message ->
-            handleDocuments(message.chat, listOf(message.content.media))
-        }
+        onDocument { handleUploadedDocuments(it.chat, listOf(it.content.media)) }
         onDocumentMediaGroup { message ->
-            handleDocuments(message.chat, message.content.group.map { it.content.media })
+            handleUploadedDocuments(message.chat, message.content.group.map { it.content.media })
         }
         onText(ButtonStrings.UploadedAllDocs) { message ->
             val type = state.snapshot.type ?: return@onText
@@ -189,27 +177,50 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsProvisionOfSe
             }
         }
     }
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
             sendTextMessage(
-                chatId,
-                Strings.SendDocuments,
-                replyMarkup = replyKeyboard(
-                    resizeKeyboard = true,
-                    oneTimeKeyboard = true
-                ) {
-                    row {
-                        simpleButton(ButtonStrings.Send)
-                    }
+                chatId, Strings.SendDocuments,
+                replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.Send) }
                 }
             )
         }
-        val mainProperties: MainProperties by inject()
+        val emailSender: EmailSender by inject()
+        val emailTo = get<MainProperties>().emailTo
         onText(ButtonStrings.Send) { message ->
             val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
-            emailSender.sendFiles(mainProperties.emailTo, attachments, EmailStrings.ToAdmin.Subject, EmailStrings.ToAdmin.Message)
+            emailSender.sendFiles(emailTo, attachments, EmailStrings.ToAdmin.Subject, EmailStrings.ToAdmin.Message)
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
+    }
+}
+
+private suspend fun StatefulContext<DialogState, *, WaitingForDocs, *>.handleUploadedDocuments(
+    chat: Chat,
+    group: List<DocumentFile>
+) {
+    val type = state.snapshot.type ?: return
+    val oldCount = state.snapshot.docs.count { it.type == type }
+    val newDocs = state.snapshot.docs + group
+        .take(type.max - oldCount)
+        .filter { document ->
+            val fileSize = document.fileSize
+            (fileSize != null && fileSize < MAX_SIZE_OF_DOC).also {
+                if (!it) {
+                    sendTextMessage(chat, Strings.tooBigFileSize(document.fileName.orEmpty()))
+                }
+            }
+        }
+        .map { UploadedDocument(it.fileId, it.fileName.orEmpty(), type) }
+    val count = newDocs.count { it.type == type }
+    when {
+        count == type.max -> state.override { copy(docs = newDocs, typeIndex = typeIndex + 1) }
+        count > type.max -> error("File count is bigger than the max value")
+        else -> state.overrideQuietly { copy(docs = newDocs) }
     }
 }

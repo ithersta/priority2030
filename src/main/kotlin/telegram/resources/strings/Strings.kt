@@ -26,9 +26,7 @@ object Strings {
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
     const val SendDocuments = "Отправить документы на почту?"
-    fun checkingListOfDocs(): String {
-        return (
-                """|Проверьте список документов:
+    val CheckListOfDocs = """|Проверьте список документов:
             |
             |1. Заявка на размещение
             |2. Служебная записка
@@ -36,8 +34,6 @@ object Strings {
             |4. Три коммерческих предложения
             |5. Дополнительные документы — при необходимости. (Например, при закупке услуг по созданию ПО, необходимо подготовить служебную записку)
             """.trimMargin()
-                )
-    }
 
     fun commercialOfferPrompt() =
         buildEntities {
