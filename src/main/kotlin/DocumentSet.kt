@@ -2,10 +2,7 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
-import extensions.copecksUnit
-import extensions.rublesUnit
-import extensions.spelloutCopecks
-import extensions.spelloutRubles
+import extensions.*
 import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
 
@@ -29,6 +26,40 @@ val documentSet = documentSet {
             ppAndPrice()
         }
     }
+    document("/documents/Служебная записка.docx") {
+        purchaseObject()
+        field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
+        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
+        field("NUMBER", get<PurchaseDescription>().selectionIdentifier.indicator)
+        field("REASON", get<PurchaseDescription>().fullJustification)
+        field("PP", get<PurchasePoint>().number.point)
+        iniciatorfio()
+        purchaseCost()
+    }
+    document("/documents/Заявка на размещение.docx") {
+        purchaseObject()
+        field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
+        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
+        purchaseCost()
+
+        financiallyResponsiblePerson()
+        materialObjectNumber()
+
+        responsibleForDocumentsPerson()
+        field("EMAIL", get<ResponsibleForDocumentsPerson>().email.email)
+        field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
+        field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
+        iniciatorfio()
+
+    }
+    document("/documents/Заявка на оплату.docx") {
+        payment()
+        iniciatorfio()
+
+        financiallyResponsiblePerson()
+        materialObjectNumber()
+        responsibleForDocumentsPerson()
+    }
 }
 
 private fun DocumentBuilder.ppAndPrice() {
@@ -38,8 +69,8 @@ private fun DocumentBuilder.ppAndPrice() {
 
 private fun DocumentBuilder.ipInfo() {
     field("ENPREPRENEURFIO", get<EntrepreneurInformation>().mainInfo.fullNameOfHolder)
-    field("INICENPREPRENEUR", get<EntrepreneurInformation>().mainInfo.initialsAfterSurname)
-    field("ENPREPRENEURINIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials)
+    field("INICENPREPRENEUR", get<EntrepreneurInformation>().morphedFullName.initialsSurname)
+    field("ENPREPRENEURINIC", get<EntrepreneurInformation>().morphedFullName.surnameInitials)
     field("OGRNIPNUMB", get<EntrepreneurInformation>().mainInfo.ogrn.value)
     field("OGRNIPDATE", get<EntrepreneurInformation>().mainInfo.orgrnData)
     field("ENTERPRENEURADDRESS", get<EntrepreneurInformation>().mainInfo.location)
@@ -49,16 +80,15 @@ private fun DocumentBuilder.ipInfo() {
 }
 
 private fun DocumentBuilder.companyInformation() {
-    val fullNameOfHolder = get<CompanyInformation>().mainInfo.fullNameOfHolder
-    field("GENERALMANAGERR", fullNameOfHolder.genitive)
-    field("CONTRAGENTFULLNAME", fullNameOfHolder.original)
+    field("GENERALMANAGERR", get<CompanyInformation>().morphedFullName.genitive)
+    field("CONTRAGENTFULLNAME", get<CompanyInformation>().morphedFullName.original)
     field("CONTRAGENTSHORTNAME", get<CompanyInformation>().mainInfo.abbreviatedNameOfOrg)
-    field("GENERALMANAGERINIC", fullNameOfHolder.initialsSurname)
+    field("GENERALMANAGERINIC", get<CompanyInformation>().morphedFullName.initialsSurname)
     field("CONTRAGENTADDRESS", get<CompanyInformation>().mainInfo.location)
     field("INN", get<CompanyInformation>().mainInfo.inn.value)
     field("KPP", get<CompanyInformation>().mainInfo.kpp.value)
     field("OGRN", get<CompanyInformation>().mainInfo.ogrn.value)
-    field("CONTRAGENTFIO", fullNameOfHolder.original)
+    field("CONTRAGENTFIO", get<CompanyInformation>().morphedFullName.original)
     field("CONTRAGENTEMAIL", get<CompanyInformation>().email.email)
     field("CONTRAGENTPHONE", get<CompanyInformation>().phone.number)
 }

@@ -1,8 +1,8 @@
 package telegram.entities.state
 
 import domain.datatypes.Bank
-import domain.datatypes.IpInfo
-import domain.datatypes.OrgInfo
+import domain.entities.IpInfo
+import domain.entities.OrgInfo
 import domain.entities.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -73,7 +73,7 @@ object CompanyCollectorState {
         val kpp: Kpp,
         val ogrn: OooOgrn,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: MorphedFullName
+        val fullNameOfHolder: String
     ) : DialogState
 
     @Serializable
@@ -82,7 +82,7 @@ object CompanyCollectorState {
         val kpp: Kpp,
         val ogrn: OooOgrn,
         val fullNameOfOrg: String,
-        val fullNameOfHolder: MorphedFullName,
+        val fullNameOfHolder: String,
         val post: String
     ) : DialogState
 

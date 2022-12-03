@@ -7,11 +7,9 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.EntrepreneurInformation
-import domain.datatypes.IpInfo
-import domain.entities.Email
-import domain.entities.IpInn
-import domain.entities.IpOgrn
-import domain.entities.PhoneNumber
+import domain.entities.*
+import org.koin.core.component.inject
+import services.Morpher
 import services.Parser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
@@ -124,11 +122,16 @@ fun CollectorMapBuilder.ipInfoCollector() {
             }
         }
         state<IpCollectorState.WaitingEmail> {
+            val morpher: Morpher by inject()
             onEnter { sendTextMessage(it, CollectorStrings.IP.email) }
             onText {
                 val email = Email.of(it.content.text)
+                val morphedFullName = morpher.morphFullName(state.snapshot.mainInfo.fullNameOfHolder) ?: run {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
+                    return@onText
+                }
                 if (email != null) {
-                    val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
+                    val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.email)

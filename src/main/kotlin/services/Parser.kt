@@ -1,7 +1,7 @@
 package services
 
-import domain.datatypes.IpInfo
-import domain.datatypes.OrgInfo
+import domain.entities.IpInfo
+import domain.entities.OrgInfo
 import domain.entities.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -48,7 +48,7 @@ class Parser {
             ogrnOfOrg,
             fullNameOfOrg,
             post(document),
-            Morpher().morphFullName(fullNameOfHolder(document))!!,
+            fullNameOfHolder(document),
             location(document)
         )
     }.getOrNull()
@@ -93,8 +93,8 @@ class Parser {
         val infoAboutOrg = document.select(
             SELECT + " div.cCard__CompanyDescription >" +
                     " p:nth-child(5)"
-        ).html().replace("<!-- -->,".toRegex(), "")
-        return infoAboutOrg.replace("присвоен".toRegex(), "").split("&nbsp;<!-- -->".toRegex())
+        ).html().replace("<!-- -->,", "")
+        return infoAboutOrg.replace("присвоен", "").split("&nbsp;<!-- -->")
             .dropLastWhile { it.isEmpty() }
             .toTypedArray()
     }

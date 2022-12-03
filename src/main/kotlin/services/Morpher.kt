@@ -3,9 +3,8 @@ package services
 import domain.entities.MorphedFullName
 import ru.morpher.ws3.ClientBuilder
 
-// TODO: DI
-class Morpher {
-    private val client = ClientBuilder().useToken(System.getenv("MORPHER_TOKEN")).build()
+class Morpher(token: String) {
+    private val client = ClientBuilder().useToken(token).build()
 
     fun morphFullName(fullName: String): MorphedFullName? = runCatching {
         val declension = client.russian().declension(fullName)

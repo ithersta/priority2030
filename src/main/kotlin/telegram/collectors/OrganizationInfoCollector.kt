@@ -7,8 +7,8 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
 import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
-import domain.datatypes.OrgInfo
 import domain.entities.*
+import org.koin.core.component.inject
 import services.Morpher
 import services.Parser
 import telegram.entities.state.CompanyCollectorState
@@ -73,12 +73,8 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingFullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.employee) }
             onText {
-                val morphedFullName = Morpher().morphFullName(it.content.text) ?: run {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
-                    return@onText
-                }
                 state.override {
-                    CompanyCollectorState.HandsWaitingPost(inn, kpp, ogrn, fullNameOfOrg, morphedFullName)
+                    CompanyCollectorState.HandsWaitingPost(inn, kpp, ogrn, fullNameOfOrg, it.content.text)
                 }
             }
         }
@@ -152,11 +148,16 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             }
         }
         state<CompanyCollectorState.WaitingEmail> {
+            val morpher: Morpher by inject()
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.email) }
             onText {
+                val morphedFullName = morpher.morphFullName(it.content.text) ?: run {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
+                    return@onText
+                }
                 val email = Email.of(it.content.text)
                 if (email != null) {
-                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
+                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.email)

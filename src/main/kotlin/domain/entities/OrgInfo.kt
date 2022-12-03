@@ -1,4 +1,4 @@
-package domain.datatypes
+package domain.entities
 
 import domain.entities.Kpp
 import domain.entities.MorphedFullName
@@ -13,6 +13,6 @@ data class OrgInfo(
     val ogrn: OooOgrn,
     val abbreviatedNameOfOrg: String,
     val post: String,
-    val fullNameOfHolder: MorphedFullName,
+    val fullNameOfHolder: String,
     val location: String
 )
