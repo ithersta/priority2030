@@ -1,15 +1,17 @@
+import domain.entities.Email
 import email.EmailSecrets
 import java.io.FileInputStream
 import java.util.*
 
 data class MainProperties(
     val token: String,
-    val emailSecrets: EmailSecrets
+    val emailSecrets: EmailSecrets,
+    val emailTo: Email
 )
 
 fun readMainProperties(): MainProperties {
     val properties = Properties()
-    properties.load(FileInputStream(System.getenv("PROPERTIES_FILE")))
+    properties.load(FileInputStream(System.getenv("CONFIG_FILE")))
     return MainProperties(
         token = properties.getProperty("TOKEN"),
         emailSecrets = EmailSecrets(
@@ -18,6 +20,7 @@ fun readMainProperties(): MainProperties {
             properties.getProperty("EMAIL_USERNAME"),
             properties.getProperty("EMAIL_PASSWORD"),
             properties.getProperty("EMAIL_FROM")
-        )
+        ),
+        emailTo = Email.of(properties.getProperty("EMAIL_TO")) ?: error("Malformed EMAIL_TO")
     )
 }
