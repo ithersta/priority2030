@@ -36,7 +36,7 @@ fun CollectorMapBuilder.purchaseDeadlineAndDeliveryAddressCollector() {
                         state.snapshot.deadline,
                         purchaseDeliveryAddress
                     )
-                this@collector.exit(state, listOf(purchaseDeadlineAndDeliveryAddress))
+                this@collector.exit(state, purchaseDeadlineAndDeliveryAddress)
             }
         }
     }

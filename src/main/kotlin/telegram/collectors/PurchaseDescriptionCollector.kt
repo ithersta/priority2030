@@ -131,7 +131,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         fullJustification = state.snapshot.fullJustification,
                         materialValuesAreNeeded = areNeeded
                     )
-                    this@collector.exit(state, listOf(purchaseDescription))
+                    this@collector.exit(state, purchaseDescription)
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidAnswer)
                 }

@@ -42,7 +42,7 @@ fun CollectorMapBuilder.termOfPaymentCollector() {
                         return@onText
                     }
                 }
-                this@collector.exit(state, listOf(type))
+                this@collector.exit(state, type)
             }
         }
     }

@@ -24,7 +24,7 @@ fun CollectorMapBuilder.purchaseCostCollector() {
                 val totalCostInCopecks = totalCost.replaceFirst(".", "").toLongOrNull()
                 if (IsPurchaseCostValid(totalCost) && totalCostInCopecks != null) {
                     val purchaseCost = PurchaseCost(totalCostInCopecks)
-                    this@collector.exit(state, listOf(purchaseCost))
+                    this@collector.exit(state, purchaseCost)
                 } else {
                     sendTextMessage(it.chat, InvalidPurchaseCost)
                 }

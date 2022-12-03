@@ -16,7 +16,7 @@ fun CollectorMapBuilder.materialObjectNumberCollector() {
                 val materialObjectNumber = it.content.text.toIntOrNull()
                 if (materialObjectNumber != null) {
                     val materialObj = MaterialObjectNumber(materialObjectNumber)
-                    this@collector.exit(state, listOf(materialObj))
+                    this@collector.exit(state, materialObj)
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidNumber)
                 }

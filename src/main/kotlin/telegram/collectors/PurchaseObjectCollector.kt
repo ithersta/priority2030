@@ -13,7 +13,7 @@ fun CollectorMapBuilder.purchaseObjectCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortName) }
             onText {
                 val purchaseObj = PurchaseObject(it.content.text)
-                this@collector.exit(state, listOf(purchaseObj))
+                this@collector.exit(state, purchaseObj)
             }
         }
     }

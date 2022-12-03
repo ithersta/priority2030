@@ -7,8 +7,6 @@ import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 
 fun StateFilterBuilder<DialogState, Unit, CollectingDataState, Unit, UserId>.collectors() = buildCollectorMap {
-    fullNameCollector()
-    organizationTypeCollector()
     purchaseDescriptionCollector()
     purchasePointCollector()
     purchaseIniciatorCollector()

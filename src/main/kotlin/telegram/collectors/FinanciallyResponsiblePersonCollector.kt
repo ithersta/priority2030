@@ -32,7 +32,7 @@ fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
                         state.snapshot.fio,
                         contactPhoneNumber
                     )
-                    this@collector.exit(state, listOf(financiallyResponsiblePerson))
+                    this@collector.exit(state, financiallyResponsiblePerson)
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidPhoneNumber)
                 }
