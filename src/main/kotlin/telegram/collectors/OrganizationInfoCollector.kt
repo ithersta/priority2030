@@ -8,8 +8,6 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
 import domain.entities.*
-import org.koin.core.component.inject
-import services.CachedMorpher
 import services.SbisParser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
@@ -39,7 +37,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                     val mainInfo = parser.getOrgInfo(state.snapshot.inn, kpp)
                     if (mainInfo != null) {
                         state.override {
-                            CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.abbreviatedNameOfOrg)
+                            CompanyCollectorState.WaitingInspection(mainInfo, mainInfo.fullName)
                         }
                     } else {
                         state.override { CompanyCollectorState.HandsWaitingOgrn(inn, kpp) }

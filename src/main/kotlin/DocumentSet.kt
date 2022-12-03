@@ -87,8 +87,8 @@ private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run
     val morpher: CachedMorpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
     field("GENERALMANAGERR", morphedFullName?.genitive.orEmpty())
-    field("CONTRAGENTFULLNAME", morphedFullName?.original.orEmpty())
-    field("CONTRAGENTSHORTNAME", mainInfo.abbreviatedNameOfOrg)
+    field("CONTRAGENTFULLNAME", mainInfo.fullName)
+    field("CONTRAGENTSHORTNAME", mainInfo.shortName)
     field("GENERALMANAGERINIC", morphedFullName?.initialsSurname.orEmpty())
     field("CONTRAGENTADDRESS", mainInfo.location)
     field("INN", mainInfo.inn.value)

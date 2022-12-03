@@ -40,7 +40,7 @@ class SbisParser {
             .timeout(Timeout)
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
-        val fullNameOfOrg = mainInfoAboutOrg[orderFullName]
+        val fullNameOfOrg = mainInfoAboutOrg[orderFullName].trim()
         val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[orderOgrnOoo].replace("ОГРН ", ""))!!
         OrgInfo(
             inn,
