@@ -1,7 +1,6 @@
 package domain.documents
 
 import domain.datatypes.FieldData
-import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 
 class DocumentSet(
