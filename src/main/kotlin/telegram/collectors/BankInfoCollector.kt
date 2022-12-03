@@ -15,14 +15,14 @@ import validation.IsPaymentAccountValid
 fun CollectorMapBuilder.bankInfoCollector() {
     collector<InformationBank>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.Bik) }
             onText {
                 val parser = ParserBik()
                 if (IsBicValid(it.content.text)) {
                     val mainInfo = parser.parseWebPage(bik = it.content.text)
                     if (mainInfo != null) {
                         if (mainInfo.bik == "0") {
-                            sendTextMessage(it.chat, CollectorStrings.Recommendations.isWrongBank)
+                            sendTextMessage(it.chat, CollectorStrings.Recommendations.IsWrongBank)
                             return@onText
                         }
                         state.override {
@@ -32,24 +32,24 @@ fun CollectorMapBuilder.bankInfoCollector() {
                         state.override { BankCollectorState.HandsWaitingForCorrAccount(it.content.text) }
                     }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.bik)
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.Bik)
                     return@onText
                 }
             }
         }
         state<BankCollectorState.HandsWaitingForCorrAccount> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.corrAccount) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.CorrAccount) }
             onText {
                 if (IsCorrAccountValid(it.content.text)) {
                     state.override { BankCollectorState.HandsWaitingForBankName(state.snapshot.bik, it.content.text) }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.corrAccount)
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.CorrAccount)
                     return@onText
                 }
             }
         }
         state<BankCollectorState.HandsWaitingForBankName> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.bankName) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.BankName) }
             onText {
                 state.override {
                     BankCollectorState.WaitingForPaymentAccount(
@@ -59,7 +59,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             }
         }
         state<BankCollectorState.WaitingForPaymentAccount> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.Account) }
             onText { message ->
                 if (IsPaymentAccountValid(message.content.text)) {
                     val info = InformationBank(
@@ -68,7 +68,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
                     )
                     this@collector.exit(state, listOf(info))
                 } else {
-                    sendTextMessage(message.chat, CollectorStrings.Recommendations.paymentAccount)
+                    sendTextMessage(message.chat, CollectorStrings.Recommendations.PaymentAccount)
                     return@onText
                 }
             }

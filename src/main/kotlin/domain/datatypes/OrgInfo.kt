@@ -26,9 +26,4 @@ data class OrgInfo(
         get() {
             return abbreviatedNameOfOrg.replace("ООО", "Общество с ограниченной ответственностью")
         }
-//    ФИО ГЕНДИРА В РОДИТЕЛЬНОМ ПАДЕЖЕ
-//    val fullNameOfHolderInGenitiveCase: String
-//        get(){
-//
-//        }
 }

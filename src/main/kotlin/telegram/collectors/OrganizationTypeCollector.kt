@@ -14,26 +14,26 @@ fun CollectorMapBuilder.organizationTypeCollector() {
     collector<OrganizationType>(initialState = OrganizationTypeState) {
         state<OrganizationTypeState> {
             onEnter {
-                sendTextMessage(it, CollectorStrings.OrganizationType.message,
+                sendTextMessage(it, CollectorStrings.OrganizationType.Message,
                     replyMarkup = replyKeyboard(
                         resizeKeyboard = true,
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(CollectorStrings.OrganizationType.ip)
+                            simpleButton(CollectorStrings.OrganizationType.Ip)
                         }
                         row {
-                            simpleButton(CollectorStrings.OrganizationType.ooo)
+                            simpleButton(CollectorStrings.OrganizationType.Ooo)
                         }
                     }
                 )
             }
             onText { message ->
                 val type = when (message.content.text) {
-                    CollectorStrings.OrganizationType.ip -> OrganizationType.IP
-                    CollectorStrings.OrganizationType.ooo -> OrganizationType.Ooo
+                    CollectorStrings.OrganizationType.Ip -> OrganizationType.IP
+                    CollectorStrings.OrganizationType.Ooo -> OrganizationType.Ooo
                     else -> {
-                        sendTextMessage(message.chat, CollectorStrings.OrganizationType.invalid)
+                        sendTextMessage(message.chat, CollectorStrings.OrganizationType.Invalid)
                         return@onText
                     }
                 }

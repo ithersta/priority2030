@@ -13,7 +13,7 @@ import telegram.resources.strings.InvalidInputStrings
 fun CollectorMapBuilder.financiallyResponsiblePersonCollector() {
     collector<FinanciallyResponsiblePerson>(initialState = FinanciallyResponsiblePersonState.WaitingForFio) {
         state<FinanciallyResponsiblePersonState.WaitingForFio> {
-            onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.fio) }
+            onEnter { sendTextMessage(it, CollectorStrings.FinanciallyResponsiblePerson.Fio) }
             onText {
                 val fio = Fio.of(it.content.text)
                 if (fio != null) {

@@ -14,7 +14,7 @@ import telegram.resources.strings.InvalidInputStrings
 fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
     collector<ResponsibleForDocumentsPerson>(initialState = ResponsibleForDocumentsPersonState.WaitingForFio) {
         state<ResponsibleForDocumentsPersonState.WaitingForFio> {
-            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.fio) }
+            onEnter { sendTextMessage(it, CollectorStrings.ResponsibleForDocumentsPerson.Fio) }
             onText {
                 val fio = Fio.of(it.content.text)
                 if (fio != null) {

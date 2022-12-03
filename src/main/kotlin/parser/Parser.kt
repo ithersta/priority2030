@@ -13,12 +13,13 @@ import parser.ConstantsForParsing.orderOgrnIp
 import parser.ConstantsForParsing.orderOgrnOoo
 import parser.ConstantsForParsing.time
 import telegram.resources.strings.CollectorStrings
+import java.util.concurrent.atomic.AtomicInteger
 
 class Parser {
     private val url = "https://sbis.ru/contragents/"
     private val select = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
     private var type: OrganizationType = OrganizationType.Ooo
-    private var case = 0
+    private var case: AtomicInteger = AtomicInteger()
 
     private lateinit var document: Document
 
@@ -32,14 +33,14 @@ class Parser {
             document = connection.execute().parse()
         }.onSuccess {
             type = OrganizationType.IP
-            case = 1
+            case = AtomicInteger(1)
         }.onFailure {
             when (it) {
                 //В сбис нет такого ИП!
-                is HttpStatusException -> case = 2
+                is HttpStatusException -> case = AtomicInteger(2)
             }
         }
-        return when (case) {
+        return when (case.toInt()) {
             1 -> IpInfo(
                 innOfOrg,
                 ogrnOfOrg,
@@ -47,7 +48,6 @@ class Parser {
                 ParserRusprofile().parseWebPage(ogrnOfOrg),
                 location
             )
-
             2 -> IpInfo("0", "0", "0", "0", "0")
             else -> {
                 null
@@ -65,23 +65,22 @@ class Parser {
             document = connection.execute().parse()
         }.onSuccess {
             type = OrganizationType.IP
-            case = 1
+            case = AtomicInteger(1)
         }.onFailure {
             when (it) {
                 //В сбис нет такого ООО!
                 is HttpStatusException -> {
-                    case = 2
+                    case = AtomicInteger(2)
                 }
             }
         }
-        return when (case) {
+        return when (case.toInt()) {
             1 -> OrgInfo(innOfOrg, kppOfOrg, ogrnOfOrg, fullNameOfOrg(), post, fullNameOfHolder, location)
             2 -> OrgInfo("0", "0", "0", "0", "0", "0", "0")
             else -> {
                 null
             }
         }
-
     }
 
     private val post: String

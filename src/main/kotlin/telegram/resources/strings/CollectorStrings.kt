@@ -8,91 +8,88 @@ import dev.inmo.tgbotapi.utils.regularln
 
 object CollectorStrings {
     object FullName {
-        const val lastName = "Введите фамилию"
-        const val firstName = "Введите имя"
-        const val patronymic = "Введите отчество или нажмите кнопку снизу, если оно отсутствует"
-        const val noPatronymic = "Отсутствует"
+        const val LastName = "Введите фамилию"
+        const val FirstName = "Введите имя"
+        const val Patronymic = "Введите отчество или нажмите кнопку снизу, если оно отсутствует"
+        const val NoPatronymic = "Отсутствует"
     }
 
     object OrganizationType {
-        const val message = "Введите тип организации"
-        const val ip = "ИП"
-        const val ooo = "ООО"
-        const val invalid = "Доступные варианты: ИП, ООО"
+        const val Message = "Введите тип организации"
+        const val Ip = "ИП"
+        const val Ooo = "ООО"
+        const val Invalid = "Доступные варианты: ИП, ООО"
     }
 
     object IP {
-        const val inn = "Введите ИНН предпринимателя"
-        const val ogrn = "Введите ОГРН предпринимателя"
+        const val Inn = "Введите ИНН предпринимателя"
+        const val Ogrn = "Введите ОГРН предпринимателя"
 
         //        const val okpo = "Введите ОКПО предпринимателя"
-        const val fullName = "Введите ФИО предпринимателя предпринимателя"
-        const val data = "Введите дату от такого числа ОГРНИП"
-        private const val question = "Вы заключаете договор с этим предпринимателем?"
-        const val yes = "Да"
-        const val no = "Нет"
-        const val invalid = "Доступные варианты ответа: Да, Нет"
-        const val location = "Введите юридический адрес предпринимателя"
-        const val phone = "Введите номер телефона предпринимателя"
-        const val email = "Введите адрес электронной почты предпринимателя"
-
+        const val FullName = "Введите ФИО предпринимателя предпринимателя"
+        const val Data = "Введите дату от такого числа ОГРНИП"
+        private const val Question = "Вы заключаете договор с этим предпринимателем?"
+        const val Yes = "Да"
+        const val No = "Нет"
+        const val Invalid = "Доступные варианты ответа: Да, Нет"
+        const val Location = "Введите юридический адрес предпринимателя"
+        const val Phone = "Введите номер телефона предпринимателя"
+        const val Email = "Введите адрес электронной почты предпринимателя"
         fun isRight(string: String): String {
-            return question + '\n' + string + '\n'
+            return Question + '\n' + string + '\n'
         }
     }
 
     object Ooo {
-        const val inn = "Введите ИНН предприятия"
-        const val kpp = "Введите КПП предприятия"
-        const val ogrn = "Введите ОГРН предприятия"
+        const val Inn = "Введите ИНН предприятия"
+        const val Kpp = "Введите КПП предприятия"
+        const val Ogrn = "Введите ОГРН предприятия"
 
         //        const val okpo = "Введите ОКПО предприятия"
-        const val fullNameOfOrg = "Введите название предприятия"
-        const val employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
-        const val employeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
-        const val location = "Введите юридический адрес предприятия"
-        const val phone = "Введите номер телефона ответственного от предприятия"
-        const val email = "Введите адрес электронной почты ответственного от предприятия"
-        private const val question = "Вы заключаете договор с этим предприятием?"
-        const val yes = "Да"
-        const val no = "Нет"
+        const val FullNameOfOrg = "Введите название предприятия"
+        const val Employee = "Введите ФИО ответсвтенного сотрудника от предприятия"
+        const val EmployeeRank = "Введите должность ответсвтенного сотрудника от предприятия"
+        const val Location = "Введите юридический адрес предприятия"
+        const val Phone = "Введите номер телефона ответственного от предприятия"
+        const val Email = "Введите адрес электронной почты ответственного от предприятия"
+        private const val Question = "Вы заключаете договор с этим предприятием?"
+        const val Yes = "Да"
+        const val No = "Нет"
         const val invalid = "Доступные варианты: Да, Нет"
-
         fun isRight(string: String): String {
-            return question + '\n' + string + '\n'
+            return Question + '\n' + string + '\n'
         }
     }
 
     object Bank {
-        const val bik = "Введите БИК банка"
-        const val corrAccount = "Введите номер корреспондентский счет"
-        const val bankName = "Введите Наименование банк"
-        const val account = "Введите номер расчетного счета"
+        const val Bik = "Введите БИК банка"
+        const val CorrAccount = "Введите номер корреспондентский счет"
+        const val BankName = "Введите Наименование банк"
+        const val Account = "Введите номер расчетного счета"
     }
 
     object Cost {
-        const val price = "Введите сумму по договору"
-        const val isWrongPrice = price + ". Например: 150.12"
+        const val Price = "Введите сумму по договору"
+        const val IsWrongPrice = Price + ". Например: 150.12"
     }
 
     object Recommendations {
-        const val isWrongIp = "В базе не найден такой предприниматель"
-        const val isWrongOrg = "В базе не найдена такая организация"
-        const val isWrongBank = "В базе не найдена такой банк"
-        const val innForIp = "Введите корректный ИНН из 12 цифр"
-        const val innForOoo = "Введите корректный ИНН из 10 цифр"
-        const val kpp = "Введите корректный КПП из 9 цифр"
-        const val ogrnForIp = "Введите корректный ОГРН из 15 цифр"
-        const val ogrnForOoo = "Введите корректный ОГРН из 13 цифр"
-
+        const val IsWrongIp = "В базе не найден такой предприниматель"
+        const val IsWrongOrg = "В базе не найдена такая организация"
+        const val IsWrongBank = "В базе не найдена такой банк"
+        const val InnForIp = "Введите корректный ИНН из 12 цифр"
+        const val InnForOoo = "Введите корректный ИНН из 10 цифр"
+        const val Kpp = "Введите корректный КПП из 9 цифр"
+        const val OgrnForIp = "Введите корректный ОГРН из 15 цифр"
+        const val OgrnForOoo = "Введите корректный ОГРН из 13 цифр"
         //        const val okpoForIp = "Введите корректный ОКПО из 10 цифр"
-//        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
-        const val fullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
-        const val phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"
-        const val email = "Введите корректную электронную почту"
-        const val bik = "Введите корректный БИК из 9 цифр"
-        const val corrAccount = "Введите корректный корреспондентский счет из 20 цифр"
-        const val paymentAccount = "Введите корректный расчетный счет из 20 цифр"
+        //        const val okpoForOoo = "Введите корректный ОКПО из 8 цифр"
+        const val FullName = "Введите корректное ФИО, например: Иванов Иван или Петров Петр Петрович"
+        const val Phone = "Введите корректный номер телефона начиная с +7..., например: +79777777777"
+        const val Email = "Введите корректную электронную почту"
+        const val Bik = "Введите корректный БИК из 9 цифр"
+        const val CorrAccount = "Введите корректный корреспондентский счет из 20 цифр"
+        const val PaymentAccount = "Введите корректный расчетный счет из 20 цифр"
     }
 
     object PurchaseDescription {
@@ -146,7 +143,7 @@ object CollectorStrings {
     }
 
     object FinanciallyResponsiblePerson {
-        const val fio = "Введите инициалы и фамилию материально-ответственного лица\n" +
+        const val Fio = "Введите инициалы и фамилию материально-ответственного лица\n" +
                 "\n" +
                 "(Пример: Т.М. Дударенко)"
         const val ContactPhoneNumber =
@@ -154,7 +151,7 @@ object CollectorStrings {
     }
 
     object ResponsibleForDocumentsPerson {
-        const val fio = "Введите инициалы и фамилию ответственного за предоставление отчетных документов\n" +
+        const val Fio = "Введите инициалы и фамилию ответственного за предоставление отчетных документов\n" +
                 "\n" +
                 "(Пример: Т.М. Дударенко)"
         const val ContactPhoneNumber =

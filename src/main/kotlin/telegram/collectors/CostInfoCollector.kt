@@ -11,18 +11,17 @@ import validation.IsMoney
 fun CollectorMapBuilder.costInfoCollector() {
     collector<InformationCost>(initialState = CostCollectorState.WaitingPrice) {
         state<CostCollectorState.WaitingPrice> {
-            onEnter { sendTextMessage(it, CollectorStrings.Cost.price) }
+            onEnter { sendTextMessage(it, CollectorStrings.Cost.Price) }
             onText { message ->
                 val price = message.content.text
                 if (IsMoney(price)) {
                     val info = InformationCost(price.toDouble())
                     this@collector.exit(state, listOf(info))
                 } else {
-                    sendTextMessage(message.chat, CollectorStrings.Cost.isWrongPrice)
+                    sendTextMessage(message.chat, CollectorStrings.Cost.IsWrongPrice)
                     return@onText
                 }
             }
-
         }
     }
 }
