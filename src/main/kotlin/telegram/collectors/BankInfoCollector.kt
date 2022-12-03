@@ -4,7 +4,7 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
 import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.Bank
-import domain.datatypes.InformationBank
+import domain.datatypes.PaymentInformation
 import domain.entities.Bic
 import domain.entities.CorrespondentAccount
 import domain.entities.SettlementAccount
@@ -13,7 +13,7 @@ import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
 
 fun CollectorMapBuilder.bankInfoCollector() {
-    collector<InformationBank>(initialState = BankCollectorState.WaitingForBik) {
+    collector<PaymentInformation>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
             val parser = ParserBik()
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
@@ -61,7 +61,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText { message ->
                 val settlementAccount = SettlementAccount.of(message.content.text)
                 if (settlementAccount != null) {
-                    val info = InformationBank(
+                    val info = PaymentInformation(
                         bank = state.snapshot.mainInfo,
                         settlementAccount = settlementAccount
                     )

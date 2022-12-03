@@ -21,8 +21,6 @@ fun CollectorMapBuilder.organizationTypeCollector() {
                     ) {
                         row {
                             simpleButton(CollectorStrings.OrganizationType.ip)
-                        }
-                        row {
                             simpleButton(CollectorStrings.OrganizationType.ooo)
                         }
                     }

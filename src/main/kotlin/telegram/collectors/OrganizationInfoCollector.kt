@@ -8,15 +8,11 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
 import domain.datatypes.OrgInfo
-import domain.entities.Email
-import domain.entities.Kpp
-import domain.entities.OooInn
-import domain.entities.PhoneNumber
+import domain.entities.*
 import services.Morpher
 import services.Parser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
-import validation.IsOgrnipValidForOoo
 
 fun CollectorMapBuilder.organizationInfoCollector() {
     collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
@@ -55,9 +51,10 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         state<CompanyCollectorState.HandsWaitingOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.ogrn) }
             onText {
-                if (IsOgrnipValidForOoo(it.content.text)) {
+                val oooOgrn = OooOgrn.of(it.content.text)
+                if (oooOgrn != null) {
                     state.override {
-                        CompanyCollectorState.HandsWaitingFullNameOfOrg(this.inn, this.kpp, it.content.text)
+                        CompanyCollectorState.HandsWaitingFullNameOfOrg(inn, kpp, oooOgrn)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.ogrnForOoo)
@@ -69,7 +66,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.fullNameOfOrg) }
             onText {
                 state.override {
-                    CompanyCollectorState.HandsWaitingFullNameOfHolder(this.inn, this.kpp, this.ogrn, it.content.text)
+                    CompanyCollectorState.HandsWaitingFullNameOfHolder(inn, kpp, ogrn, it.content.text)
                 }
             }
         }
@@ -101,8 +98,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 state.override {
                     CompanyCollectorState.WaitingPhone(
                         OrgInfo(
-                            inn, kpp, ogrn, fullNameOfOrg, post, fullNameOfHolder,
-                            it.content.text
+                            inn, kpp, ogrn, fullNameOfOrg, post, fullNameOfHolder, it.content.text
                         )
                     )
                 }

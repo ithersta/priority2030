@@ -2,15 +2,13 @@ package services
 
 import domain.datatypes.IpInfo
 import domain.datatypes.OrgInfo
-import domain.entities.IpInn
-import domain.entities.Kpp
-import domain.entities.OooInn
+import domain.entities.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import services.ConstantsForParsing.Timeout
 import services.ConstantsForParsing.orderFullName
 import services.ConstantsForParsing.orderOgrnIp
 import services.ConstantsForParsing.orderOgrnOoo
-import services.ConstantsForParsing.Timeout
 
 private const val URL = "https://sbis.ru/contragents/"
 private const val SELECT = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
@@ -24,12 +22,12 @@ class Parser {
             .timeout(Timeout)
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
-        val ogrnOfOrg = mainInfoAboutOrg[orderOgrnIp].replace("ОГРН ", "")
+        val ipOgrn = IpOgrn.of(mainInfoAboutOrg[orderOgrnIp].replace("ОГРН ", ""))!!
         IpInfo(
             inn,
-            ogrnOfOrg,
+            ipOgrn,
             fullNameOfHolder(document),
-            ParserRusprofile().parseWebPage(ogrnOfOrg)!!,
+            ParserRusprofile().parseWebPage(ipOgrn)!!,
             location(document)
         )
     }.getOrNull()
@@ -43,7 +41,7 @@ class Parser {
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
         val fullNameOfOrg = mainInfoAboutOrg[orderFullName]
-        val ogrnOfOrg = mainInfoAboutOrg[orderOgrnOoo]
+        val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[orderOgrnOoo].replace("ОГРН ", ""))!!
         OrgInfo(
             inn,
             kpp,
