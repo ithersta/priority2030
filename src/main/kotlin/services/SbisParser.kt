@@ -13,7 +13,7 @@ import services.ConstantsForParsing.orderOgrnOoo
 private const val URL = "https://sbis.ru/contragents/"
 private const val SELECT = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
 
-class Parser {
+class SbisParser {
     fun getIpInfo(inn: IpInn): IpInfo? = runCatching {
         val connection = Jsoup
             .connect("$URL${inn.value}")

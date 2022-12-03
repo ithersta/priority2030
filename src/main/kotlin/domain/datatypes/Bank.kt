@@ -1,12 +1,12 @@
 package domain.datatypes
 
-import domain.entities.Bic
+import domain.entities.Bik
 import domain.entities.CorrespondentAccount
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Bank(
-    val bic: Bic,
+    val bik: Bik,
     val correspondentAccount: CorrespondentAccount,
     val name: String
 )

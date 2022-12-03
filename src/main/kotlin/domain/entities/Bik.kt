@@ -1,13 +1,13 @@
 package domain.entities
 
 import kotlinx.serialization.Serializable
-import validation.IsBicValid
+import validation.IsBikValid
 
 @Serializable
-class Bic private constructor(
+class Bik private constructor(
     val value: String
 ) {
     companion object {
-        fun of(value: String) = if (IsBicValid(value)) Bic(value) else null
+        fun of(value: String) = if (IsBikValid(value)) Bik(value) else null
     }
 }

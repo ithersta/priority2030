@@ -5,28 +5,28 @@ import com.ithersta.tgbotapi.fsm.entities.triggers.onText
 import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
 import domain.datatypes.Bank
 import domain.datatypes.PaymentInformation
-import domain.entities.Bic
+import domain.entities.Bik
 import domain.entities.CorrespondentAccount
 import domain.entities.SettlementAccount
-import services.ParserBik
+import services.BikParser
 import telegram.entities.state.BankCollectorState
 import telegram.resources.strings.CollectorStrings
 
 fun CollectorMapBuilder.bankInfoCollector() {
     collector<PaymentInformation>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
-            val parser = ParserBik()
+            val parser = BikParser()
             onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
             onText {
-                val bic = Bic.of(it.content.text)
-                if (bic != null) {
-                    val bank = parser.parseWebPage(bic)
+                val bik = Bik.of(it.content.text)
+                if (bik != null) {
+                    val bank = parser.parseWebPage(bik)
                     if (bank != null) {
                         state.override {
                             BankCollectorState.WaitingForSettlementAccount(bank)
                         }
                     } else {
-                        state.override { BankCollectorState.HandsWaitingForCorrAccount(bic) }
+                        state.override { BankCollectorState.HandsWaitingForCorrAccount(bik) }
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.bik)
@@ -39,7 +39,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText {
                 val correspondentAccount = CorrespondentAccount.of(it.content.text)
                 if (correspondentAccount != null) {
-                    state.override { BankCollectorState.HandsWaitingForBankName(bic, correspondentAccount) }
+                    state.override { BankCollectorState.HandsWaitingForBankName(bik, correspondentAccount) }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.corrAccount)
                     return@onText
@@ -51,7 +51,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             onText {
                 state.override {
                     BankCollectorState.WaitingForSettlementAccount(
-                        Bank(this.bic, this.correspondentAccount, it.content.text)
+                        Bank(this.bik, this.correspondentAccount, it.content.text)
                     )
                 }
             }

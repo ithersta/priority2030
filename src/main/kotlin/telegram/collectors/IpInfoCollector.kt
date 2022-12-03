@@ -8,9 +8,7 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.EntrepreneurInformation
 import domain.entities.*
-import org.koin.core.component.inject
-import services.Morpher
-import services.Parser
+import services.SbisParser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
@@ -20,7 +18,7 @@ import validation.IsFullNameValid
 
 fun CollectorMapBuilder.ipInfoCollector() {
     collector<EntrepreneurInformation>(initialState = IpCollectorState.WaitingForInn) {
-        val parser = Parser()
+        val parser = SbisParser()
         state<IpCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.inn) }
             onText { message ->
@@ -124,16 +122,11 @@ fun CollectorMapBuilder.ipInfoCollector() {
             }
         }
         state<IpCollectorState.WaitingEmail> {
-            val morpher: Morpher by inject()
             onEnter { sendTextMessage(it, CollectorStrings.IP.email) }
             onText {
                 val email = Email.of(it.content.text)
-                val morphedFullName = morpher.morphFullName(state.snapshot.mainInfo.fullNameOfHolder) ?: run {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
-                    return@onText
-                }
                 if (email != null) {
-                    val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
+                    val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, InvalidEmail)

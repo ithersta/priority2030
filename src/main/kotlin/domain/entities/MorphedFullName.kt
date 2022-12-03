@@ -1,8 +1,5 @@
 package domain.entities
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 class MorphedFullName(
     val original: String,
     val name: String,

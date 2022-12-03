@@ -9,8 +9,8 @@ import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.CompanyInformation
 import domain.entities.*
 import org.koin.core.component.inject
-import services.Morpher
-import services.Parser
+import services.CachedMorpher
+import services.SbisParser
 import telegram.entities.state.CompanyCollectorState
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
@@ -18,7 +18,7 @@ import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 
 fun CollectorMapBuilder.organizationInfoCollector() {
     collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
-        val parser = Parser()
+        val parser = SbisParser()
         state<CompanyCollectorState.WaitingForInn> {
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.inn) }
             onText {
@@ -150,16 +150,11 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             }
         }
         state<CompanyCollectorState.WaitingEmail> {
-            val morpher: Morpher by inject()
             onEnter { sendTextMessage(it, CollectorStrings.Ooo.email) }
             onText {
-                val morphedFullName = morpher.morphFullName(it.content.text) ?: run {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.MorpherUnavailable)
-                    return@onText
-                }
                 val email = Email.of(it.content.text)
                 if (email != null) {
-                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email, morphedFullName)
+                    val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
                     this@collector.exit(state, listOf(info))
                 } else {
                     sendTextMessage(it.chat, InvalidEmail)

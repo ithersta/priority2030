@@ -18,12 +18,12 @@ object BankCollectorState {
 
     @Serializable
     data class HandsWaitingForCorrAccount(
-        val bic: Bic
+        val bik: Bik
     ) : DialogState
 
     @Serializable
     data class HandsWaitingForBankName(
-        val bic: Bic,
+        val bik: Bik,
         val correspondentAccount: CorrespondentAccount
     ) : DialogState
 }

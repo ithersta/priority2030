@@ -2,7 +2,6 @@ package domain.datatypes
 
 import domain.entities.Email
 import domain.entities.IpInfo
-import domain.entities.MorphedFullName
 import domain.entities.PhoneNumber
 import kotlinx.serialization.Serializable
 
@@ -10,6 +9,5 @@ import kotlinx.serialization.Serializable
 data class EntrepreneurInformation(
     val mainInfo: IpInfo,
     val phone: PhoneNumber,
-    val email: Email,
-    val morphedFullName: MorphedFullName
+    val email: Email
 ) : FieldData

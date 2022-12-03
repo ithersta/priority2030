@@ -2,11 +2,15 @@ package services
 
 import domain.entities.MorphedFullName
 import ru.morpher.ws3.ClientBuilder
+import java.util.concurrent.ConcurrentHashMap
 
-class Morpher(token: String) {
+class CachedMorpher(token: String) {
     private val client = ClientBuilder().useToken(token).build()
+    private val cache = ConcurrentHashMap<String, MorphedFullName>()
 
     fun morphFullName(fullName: String): MorphedFullName? = runCatching {
+        cache[fullName]?.let { return@runCatching it }
+        println(client.queriesLeftForToday())
         val declension = client.russian().declension(fullName)
         MorphedFullName(
             original = fullName,
@@ -15,5 +19,5 @@ class Morpher(token: String) {
             patronymic = declension.fullName.patronymic,
             genitive = declension.genitive
         )
-    }.getOrNull()
+    }.onSuccess { cache[fullName] = it }.getOrNull()
 }

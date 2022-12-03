@@ -10,6 +10,5 @@ import kotlinx.serialization.Serializable
 data class CompanyInformation(
     val mainInfo: OrgInfo,
     val phone: PhoneNumber,
-    val email: Email,
-    val morphedFullName: MorphedFullName
+    val email: Email
 ) : FieldData

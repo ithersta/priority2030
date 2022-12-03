@@ -8,7 +8,7 @@ import dev.inmo.tgbotapi.utils.regularln
 
 object CollectorStrings {
     object OrganizationType {
-        const val message = "Введите тип организации"
+        const val message = "Выберите организации"
         const val ip = "ИП"
         const val ooo = "ООО"
         const val invalid = "Доступные варианты: ИП, ООО"

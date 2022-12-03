@@ -1,7 +1,9 @@
 package domain.documents
 
+import org.koin.core.component.KoinComponent
+
 @DocumentDsl
-class DocumentSetContext(override val fieldDataMap: FieldDataMap) : FieldDataContext {
+class DocumentSetContext(override val fieldDataMap: FieldDataMap) : FieldDataContext, KoinComponent {
     private val documents = mutableListOf<Document>()
 
     fun document(templatePath: String, block: DocumentBuilder.() -> Unit = {}) {
