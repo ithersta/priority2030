@@ -2,7 +2,10 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
-import extensions.*
+import extensions.copecksUnit
+import extensions.rublesUnit
+import extensions.spelloutCopecks
+import extensions.spelloutRubles
 import ru.morpher.ws3.ClientBuilder
 import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
@@ -14,49 +17,14 @@ private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
 )
 
 val documentSet = documentSet {
-    document("/documents/Служебная записка.docx") {
-        purchaseObject()
-        field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
-        field("NUMBER", get<PurchaseDescription>().selectionIdentifier.indicator)
-        field("REASON", get<PurchaseDescription>().fullJustification)
-        field("PP", get<PurchasePoint>().number.point)
-        iniciatorfio()
-        purchaseCost()
-    }
-    document("/documents/Заявка на размещение.docx") {
-        purchaseObject()
-        field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
-        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
-        purchaseCost()
-
-        financiallyResponsiblePerson()
-        materialObjectNumber()
-
-        responsibleForDocumentsPerson()
-        field("EMAIL", get<ResponsibleForDocumentsPerson>().email.email)
-        field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
-        field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
-        iniciatorfio()
-
-    }
-    document("/documents/Заявка на оплату.docx") {
-        payment()
-        iniciatorfio()
-
-        financiallyResponsiblePerson()
-        materialObjectNumber()
-        responsibleForDocumentsPerson()
-    }
-
     when (get<OrganizationType>()) {
-        OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
+        OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
             ipInfo()
             bankInfo()
             ppAndPrice()
         }
 
-        OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
+        OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
             companyInformation()
             bankInfo()
             ppAndPrice()
@@ -66,50 +34,49 @@ val documentSet = documentSet {
 
 private fun DocumentBuilder.ppAndPrice() {
     field("PP", get<PurchasePoint>().number.point)
-    field("PRICE_NUM", get<InformationCost>().price.toString())
-    field("PRICE_WORD", get<InformationCost>().inWords())
+    purchaseCost()
 }
 
 private fun DocumentBuilder.ipInfo() {
-    field("ENPREPRENEUR_FIO", get<EntrepreneurInformation>().mainInfo.fullNameOfHolder)
-    field("ENPREPRENEUR_INIC_F", get<EntrepreneurInformation>().mainInfo.initialsAfterSurname)
-    field("ENPREPRENEUR_INIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials)
-    field("OGRNIP_NUMB", get<EntrepreneurInformation>().mainInfo.ogrn)
-    field("OGRNIP_DATE", get<EntrepreneurInformation>().mainInfo.orgrnData)
-    field("CONTRAGENT_ADDRESS", get<EntrepreneurInformation>().mainInfo.location)
-    field("ENTERPRENEUR_INN", get<EntrepreneurInformation>().mainInfo.inn)
-    field("ENTERPRENEUR_EMAIL", get<EntrepreneurInformation>().email)
-    field("ENTERPRENEUR_PHONE", get<EntrepreneurInformation>().phone)
+    field("ENPREPRENEURFIO", get<EntrepreneurInformation>().mainInfo.fullNameOfHolder)
+    field("INICENPREPRENEUR", get<EntrepreneurInformation>().mainInfo.initialsAfterSurname)
+    field("ENPREPRENEURINIC", get<EntrepreneurInformation>().mainInfo.surnameAfterInitials)
+    field("OGRNIPNUMB", get<EntrepreneurInformation>().mainInfo.ogrn)
+    field("OGRNIPDATE", get<EntrepreneurInformation>().mainInfo.orgrnData)
+    field("ENTERPRENEURADDRESS", get<EntrepreneurInformation>().mainInfo.location)
+    field("ENTERPRENEURINN", get<EntrepreneurInformation>().mainInfo.inn)
+    field("ENTERPRENEUREMAIL", get<EntrepreneurInformation>().email)
+    field("ENTERPRENEURPHONE", get<EntrepreneurInformation>().phone)
 }
 
 private fun DocumentBuilder.companyInformation() {
+    // TODO: Move morpher
     val clientMorpher = ClientBuilder().useToken(System.getenv("MORPHER_TOKEN")).build()
     val fullNameOfHolder = get<CompanyInformation>().mainInfo.fullNameOfHolder
     println(clientMorpher.queriesLeftForToday())
     if (clientMorpher.queriesLeftForToday() != 0) {
-        field("GENERAL_MANAGER_R",  clientMorpher.russian().declension(fullNameOfHolder).genitive)
+        field("GENERALMANAGERR",  clientMorpher.russian().declension(fullNameOfHolder).genitive)
         println(clientMorpher.queriesLeftForToday())
     } else {
         //  todo: !
     }
-    field("CONTRAGENT_FULL_NAME", fullNameOfHolder)
-    field("CONTRAGENT_SHORT_NAME", get<CompanyInformation>().mainInfo.abbreviatedNameOfOrg)
-    field("GENERAL_MANAGER_INIC", get<CompanyInformation>().mainInfo.initialsAfterSurname)
-    field("GENERAL_MANAGER", get<CompanyInformation>().mainInfo.fullNameOfHolder)
-    field("CONTRAGENT_ADDRESS", get<CompanyInformation>().mainInfo.location)
+    field("CONTRAGENTFULLNAME", fullNameOfHolder)
+    field("CONTRAGENTSHORTNAME", get<CompanyInformation>().mainInfo.abbreviatedNameOfOrg)
+    field("GENERALMANAGERINIC", get<CompanyInformation>().mainInfo.initialsAfterSurname)
+    field("CONTRAGENTADDRESS", get<CompanyInformation>().mainInfo.location)
     field("INN", get<CompanyInformation>().mainInfo.inn)
     field("KPP", get<CompanyInformation>().mainInfo.kpp)
     field("OGRN", get<CompanyInformation>().mainInfo.ogrn)
-    field("CONTRAGENT_FIO", get<CompanyInformation>().mainInfo.fullNameOfHolder)
-    field("CONTRAGENT_EMAIL", get<CompanyInformation>().email)
-    field("CONTRAGENT_PHONE", get<CompanyInformation>().phone)
+    field("CONTRAGENTFIO", get<CompanyInformation>().mainInfo.fullNameOfHolder)
+    field("CONTRAGENTEMAIL", get<CompanyInformation>().email)
+    field("CONTRAGENTPHONE", get<CompanyInformation>().phone)
 }
 
 private fun DocumentBuilder.bankInfo() {
     field("BIK", get<InformationBank>().mainInfo.bik)
-    field("COR_WALLET", get<InformationBank>().mainInfo.correspondentAccount)
+    field("CORRESPONDENTACCOUNT", get<InformationBank>().mainInfo.correspondentAccount)
     field("BANK", get<InformationBank>().mainInfo.bankName)
-    field("WALLET", get<InformationBank>().settlementAccountNumber)
+    field("SETTLEMENTACCOUNT", get<InformationBank>().settlementAccountNumber)
 }
 
 private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
