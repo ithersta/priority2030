@@ -12,13 +12,13 @@ import ru.morpher.ws3.ClientBuilder
 
 val documentSet = documentSet {
     when (get<OrganizationType>()) {
-        OrganizationType.IP -> document("/Шаблон договора дл ИП С МЕТКАМИ.docx") {
+        OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
             ipInfo()
             bankInfo()
             ppAndPrice()
         }
 
-        OrganizationType.Ooo -> document("/Шаблон договора для ООО С МЕТКАМИ.docx") {
+        OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
             companyInformation()
             bankInfo()
             ppAndPrice()
