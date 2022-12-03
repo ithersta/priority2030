@@ -8,7 +8,6 @@ import telegram.entities.state.DialogState
 
 fun StateFilterBuilder<DialogState, Unit, CollectingDataState, Unit, UserId>.collectors() = buildCollectorMap {
     bankInfoCollector()
-    fullNameCollector()
     organizationInfoCollector()
     ipInfoCollector()
     organizationTypeCollector()
@@ -23,5 +22,4 @@ fun StateFilterBuilder<DialogState, Unit, CollectingDataState, Unit, UserId>.col
     purchaseDeadlineAndDeliveryAddressCollector()
     materialObjectNumberCollector()
     termOfPaymentCollector()
-    costInfoCollector()
 }
