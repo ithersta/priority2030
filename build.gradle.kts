@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.21"
     id("com.google.devtools.ksp") version "1.7.21-1.0.8"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    application
 }
 
 group = "ru.spbstu"
@@ -54,4 +55,8 @@ tasks.withType<KotlinCompile> {
 
 detekt {
     buildUponDefaultConfig = true
+}
+
+application {
+    mainClass.set("MainKt")
 }
