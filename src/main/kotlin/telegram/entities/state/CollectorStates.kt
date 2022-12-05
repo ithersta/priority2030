@@ -1,25 +1,150 @@
 package telegram.entities.state
 
-import domain.entities.Fio
-import domain.entities.PhoneNumber
-import domain.entities.SelectionIdentifier
-import domain.entities.SelectionLetter
+import domain.datatypes.Bank
+import domain.entities.IpInfo
+import domain.entities.OrgInfo
+import domain.entities.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
-object FullNameCollectorState {
+object BankCollectorState {
     @Serializable
-    object WaitingForLastName : DialogState
+    object WaitingForBik : DialogState
 
     @Serializable
-    data class WaitingForFirstName(val lastName: String) : DialogState
+    data class WaitingForSettlementAccount(
+        val mainInfo: Bank,
+    ) : DialogState
 
     @Serializable
-    data class WaitingForPatronymic(val lastName: String, val firstName: String) : DialogState
+    data class HandsWaitingForCorrAccount(
+        val bik: Bik
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingForBankName(
+        val bik: Bik,
+        val correspondentAccount: CorrespondentAccount
+    ) : DialogState
 }
 
 @Serializable
 object OrganizationTypeState : DialogState
+
+object CompanyCollectorState {
+    @Serializable
+    object WaitingForInn : DialogState
+
+    @Serializable
+    data class WaitingForKpp(
+        val inn: OooInn
+    ) : DialogState
+
+    @Serializable
+    data class WaitingInspection(
+        val mainInfo: OrgInfo,
+        val fullNameOfOrg: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingOgrn(
+        val inn: OooInn,
+        val kpp: Kpp
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingFullNameOfOrg(
+        val inn: OooInn,
+        val kpp: Kpp,
+        val ogrn: OooOgrn,
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingFullNameOfHolder(
+        val inn: OooInn,
+        val kpp: Kpp,
+        val ogrn: OooOgrn,
+        val fullNameOfOrg: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingPost(
+        val inn: OooInn,
+        val kpp: Kpp,
+        val ogrn: OooOgrn,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingLocation(
+        val inn: OooInn,
+        val kpp: Kpp,
+        val ogrn: OooOgrn,
+        val fullNameOfOrg: String,
+        val fullNameOfHolder: String,
+        val post: String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingPhone(
+        val mainInfo: OrgInfo
+    ) : DialogState
+
+    @Serializable
+    data class WaitingEmail(
+        val mainInfo: OrgInfo,
+        val phone: PhoneNumber
+    ) : DialogState
+}
+
+object IpCollectorState {
+    @Serializable
+    object WaitingForInn : DialogState
+
+    @Serializable
+    data class WaitingInspection(
+        val mainInfo: IpInfo,
+        val fullNameOfHolder: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingOgrn(
+        val inn: IpInn
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingDataOfOgrn(
+        val inn: IpInn,
+        val ogrn: IpOgrn,
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingfullNameOfHolder(
+        val inn: IpInn,
+        val ogrn: IpOgrn,
+        val dataOgrn: String
+    ) : DialogState
+
+    @Serializable
+    data class HandsWaitingLocation(
+        val inn: IpInn,
+        val ogrn: IpOgrn,
+        val dataOgrn: String,
+        val fullNameOfHolder: String
+    ) : DialogState
+
+    @Serializable
+    data class WaitingPhone(
+        val mainInfo: IpInfo
+    ) : DialogState
+
+    @Serializable
+    data class WaitingEmail(
+        val mainInfo: IpInfo,
+        val phone: PhoneNumber
+    ) : DialogState
+}
 
 object PurchaseDescriptionState {
     @Serializable

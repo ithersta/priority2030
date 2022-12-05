@@ -50,7 +50,13 @@ object FillingProvisionOfServicesState {
     }
 
     @Serializable
+    data class WaitingForFullNameOfInitiator(
+        val docs: List<WaitingForDocs.UploadedDocument>
+    ) : DialogState
+
+    @Serializable
     data class SendDocs(
+        val initiatorFullName: String,
         val docs: List<WaitingForDocs.UploadedDocument>
     ) : DialogState
 }

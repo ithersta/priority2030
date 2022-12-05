@@ -10,7 +10,7 @@ private const val DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocumen
 
 @Single
 class EmailSender(private val emailSecrets: EmailSecrets) {
-    fun sendFiles(to: Email, files: List<Attachment>, subject: String, message: String) {
+    fun sendFiles(to: Email, attachments: List<Attachment>, subject: String, message: String) {
         val mail: MultiPartEmail = MultiPartEmail().apply {
             hostName = emailSecrets.hostname
             sslSmtpPort = emailSecrets.port
@@ -21,7 +21,7 @@ class EmailSender(private val emailSecrets: EmailSecrets) {
             setMsg(message)
             addTo(to.email)
 
-            files.forEach {
+            attachments.forEach {
                 attach(
                     ByteArrayDataSource(it.file, DOCX_MIME_TYPE),
                     it.name,

@@ -1,17 +1,17 @@
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
-import validation.IsPaymentAccountValid
+import validation.IsSettlementAccountValid
 
 internal class IsPaymentAccountValidTest {
 
     @org.junit.jupiter.api.Test
     operator fun invoke() {
-        assertTrue(IsPaymentAccountValid("12345678901234567890"))
-        assertFalse(IsPaymentAccountValid("1234567890123456789"))
-        assertFalse(IsPaymentAccountValid("1234567890123456789k"))
-        assertFalse(IsPaymentAccountValid("sgshj"))
-        assertFalse(IsPaymentAccountValid("12345678sjksj123456789"))
-        assertFalse(IsPaymentAccountValid("тест"))
-        assertFalse(IsPaymentAccountValid(""))
+        assertTrue(IsSettlementAccountValid("12345678901234567890"))
+        assertFalse(IsSettlementAccountValid("1234567890123456789"))
+        assertFalse(IsSettlementAccountValid("1234567890123456789k"))
+        assertFalse(IsSettlementAccountValid("sgshj"))
+        assertFalse(IsSettlementAccountValid("12345678sjksj123456789"))
+        assertFalse(IsSettlementAccountValid("тест"))
+        assertFalse(IsSettlementAccountValid(""))
     }
 }

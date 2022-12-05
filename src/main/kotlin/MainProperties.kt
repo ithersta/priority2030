@@ -5,6 +5,7 @@ import java.util.*
 
 data class MainProperties(
     val token: String,
+    val morpherToken: String,
     val emailSecrets: EmailSecrets,
     val emailTo: Email
 )
@@ -14,6 +15,7 @@ fun readMainProperties(): MainProperties {
     properties.load(FileInputStream(System.getenv("CONFIG_FILE")))
     return MainProperties(
         token = properties.getProperty("TOKEN"),
+        morpherToken = properties.getProperty("MORPHER_TOKEN"),
         emailSecrets = EmailSecrets(
             properties.getProperty("EMAIL_HOSTNAME"),
             properties.getProperty("EMAIL_PORT"),

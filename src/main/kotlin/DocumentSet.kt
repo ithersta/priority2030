@@ -3,6 +3,8 @@ import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
 import extensions.*
+import org.koin.core.component.inject
+import services.CachedMorpher
 import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
 
@@ -40,13 +42,65 @@ val documentSet = documentSet {
 
     }
     document("/documents/Заявка на оплату.docx") {
-        payment()
+        paymentSum()
         iniciatorfio()
 
         financiallyResponsiblePerson()
         materialObjectNumber()
         responsibleForDocumentsPerson()
     }
+    when (get<OrganizationType>()) {
+        OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
+            ipInformation()
+            paymentDetails()
+            purchaseCost()
+            field("PP", get<PurchasePoint>().number.point)
+        }
+
+        OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
+            companyInformation()
+            paymentDetails()
+            purchaseCost()
+            field("PP", get<PurchasePoint>().number.point)
+        }
+    }
+}
+
+private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
+    val morpher: CachedMorpher by inject()
+    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
+    field("ENPREPRENEURFIO", mainInfo.fullNameOfHolder)
+    field("INICENPREPRENEUR", morphedFullName?.initialsSurname.orEmpty())
+    field("ENPREPRENEURINIC", morphedFullName?.surnameInitials.orEmpty())
+    field("OGRNIPNUMB", mainInfo.ogrn.value)
+    field("OGRNIPDATE", mainInfo.orgrnData)
+    field("ENTERPRENEURADDRESS", mainInfo.location)
+    field("ENTERPRENEURINN", mainInfo.inn.value)
+    field("ENTERPRENEUREMAIL", email.email)
+    field("ENTERPRENEURPHONE", phone.number)
+}
+
+private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run {
+    val morpher: CachedMorpher by inject()
+    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
+    field("GENERALMANAGERR", morphedFullName?.genitive.orEmpty())
+    field("CONTRAGENTFULLNAME", mainInfo.fullName)
+    field("CONTRAGENTSHORTNAME", mainInfo.shortName)
+    field("GENERALMANAGERINIC", morphedFullName?.initialsSurname.orEmpty())
+    field("CONTRAGENTADDRESS", mainInfo.location)
+    field("INN", mainInfo.inn.value)
+    field("KPP", mainInfo.kpp.value)
+    field("OGRN", mainInfo.ogrn.value)
+    field("CONTRAGENTFIO", morphedFullName?.original.orEmpty())
+    field("CONTRAGENTEMAIL", email.email)
+    field("CONTRAGENTPHONE", phone.number)
+}
+
+private fun DocumentBuilder.paymentDetails() {
+    field("BIK", get<PaymentDetails>().bank.bik.value)
+    field("CORRESPONDENTACCOUNT", get<PaymentDetails>().bank.correspondentAccount.value)
+    field("BANK", get<PaymentDetails>().bank.name)
+    field("SETTLEMENTACCOUNT", get<PaymentDetails>().settlementAccount.value)
 }
 
 private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
@@ -58,7 +112,7 @@ private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
     field("COPS", copecksUnit())
 }
 
-private fun DocumentBuilder.payment() {
+private fun DocumentBuilder.paymentSum() {
     val payment = when (get<TermOfPayment>()) {
         TermOfPayment.Prepaid -> get<PurchaseCost>() * BigDecimal("0.3")
         TermOfPayment.Fact -> get()
@@ -69,6 +123,7 @@ private fun DocumentBuilder.payment() {
     field("RUBLES", payment?.spelloutRubles().orEmpty())
     field("COPEEKS", payment?.spelloutCopecks().orEmpty())
 }
+
 
 private fun DocumentBuilder.financiallyResponsiblePerson() {
     val person = if (get<PurchaseDescription>().materialValuesAreNeeded) {
@@ -101,4 +156,3 @@ private fun DocumentBuilder.purchaseObject() {
 private fun DocumentBuilder.iniciatorfio() {
     field("INICIATORFIO", get<PurchaseIniciator>().fio.fio)
 }
-
