@@ -112,8 +112,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsFlow(
                 emailSender.sendFiles(
                     email,
                     attachments,
-                    EmailStrings.ToBotUser.Subject,
-                    EmailStrings.ToBotUser.Message
+                    EmailStrings.ToBotUser.Subject
                 )
                 sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
                 state.override { FillingProvisionOfServicesState.AfterDownload }
@@ -203,8 +202,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
             emailSender.sendFiles(
                 to = emailTo,
                 attachments = attachments,
-                subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName),
-                message = EmailStrings.ToAdmin.Message
+                subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName)
             )
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
