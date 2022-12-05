@@ -22,7 +22,7 @@ class BikParser {
         val name = document.select("body > div.container > ul:nth-child(7) > li:nth-child(3) > b").html()
         val correspondentAccount = CorrespondentAccount.of(
             document.select("body > div.container > ul:nth-child(7) > li:nth-child(2) > b").html()
-        )!!
+        ) ?: error("Correspondent account is invalid")
         Bank(bik, correspondentAccount, name)
     }.getOrNull()
 }

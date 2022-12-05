@@ -14,6 +14,7 @@ import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 
+@Suppress("LongMethod")
 fun CollectorMapBuilder.organizationInfoCollector() {
     collector<CompanyInformation>(initialState = CompanyCollectorState.WaitingForInn) {
         val parser = SbisParser()

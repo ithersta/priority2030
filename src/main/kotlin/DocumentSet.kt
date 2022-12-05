@@ -42,7 +42,7 @@ val documentSet = documentSet {
 
     }
     document("/documents/Заявка на оплату.docx") {
-        payment()
+        paymentSum()
         iniciatorfio()
 
         financiallyResponsiblePerson()
@@ -51,25 +51,22 @@ val documentSet = documentSet {
     }
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
-            ipInfo()
-            bankInfo()
-            ppAndPrice()
+            ipInformation()
+            paymentDetails()
+            purchaseCost()
+            field("PP", get<PurchasePoint>().number.point)
         }
 
         OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
             companyInformation()
-            bankInfo()
-            ppAndPrice()
+            paymentDetails()
+            purchaseCost()
+            field("PP", get<PurchasePoint>().number.point)
         }
     }
 }
 
-private fun DocumentBuilder.ppAndPrice() {
-    field("PP", get<PurchasePoint>().number.point)
-    purchaseCost()
-}
-
-private fun DocumentBuilder.ipInfo() = get<EntrepreneurInformation>().run {
+private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
     val morpher: CachedMorpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
     field("ENPREPRENEURFIO", mainInfo.fullNameOfHolder)
@@ -99,11 +96,11 @@ private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run
     field("CONTRAGENTPHONE", phone.number)
 }
 
-private fun DocumentBuilder.bankInfo() {
-    field("BIK", get<PaymentInformation>().bank.bik.value)
-    field("CORRESPONDENTACCOUNT", get<PaymentInformation>().bank.correspondentAccount.value)
-    field("BANK", get<PaymentInformation>().bank.name)
-    field("SETTLEMENTACCOUNT", get<PaymentInformation>().settlementAccount.value)
+private fun DocumentBuilder.paymentDetails() {
+    field("BIK", get<PaymentDetails>().bank.bik.value)
+    field("CORRESPONDENTACCOUNT", get<PaymentDetails>().bank.correspondentAccount.value)
+    field("BANK", get<PaymentDetails>().bank.name)
+    field("SETTLEMENTACCOUNT", get<PaymentDetails>().settlementAccount.value)
 }
 
 private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
@@ -115,7 +112,7 @@ private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
     field("COPS", copecksUnit())
 }
 
-private fun DocumentBuilder.payment() {
+private fun DocumentBuilder.paymentSum() {
     val payment = when (get<TermOfPayment>()) {
         TermOfPayment.Prepaid -> get<PurchaseCost>() * BigDecimal("0.3")
         TermOfPayment.Fact -> get()

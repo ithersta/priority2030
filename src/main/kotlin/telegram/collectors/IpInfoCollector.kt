@@ -15,7 +15,7 @@ import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 import validation.IsFullNameValid
 
-
+@Suppress("LongMethod")
 fun CollectorMapBuilder.ipInfoCollector() {
     collector<EntrepreneurInformation>(initialState = IpCollectorState.WaitingForInn) {
         val parser = SbisParser()

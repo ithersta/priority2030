@@ -1,7 +1,6 @@
 package domain.datatypes
 
 import domain.entities.Email
-import domain.entities.MorphedFullName
 import domain.entities.OrgInfo
 import domain.entities.PhoneNumber
 import kotlinx.serialization.Serializable

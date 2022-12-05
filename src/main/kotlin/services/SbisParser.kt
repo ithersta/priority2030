@@ -1,7 +1,5 @@
 package services
 
-import domain.entities.IpInfo
-import domain.entities.OrgInfo
 import domain.entities.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -22,12 +20,12 @@ class SbisParser {
             .timeout(Timeout)
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
-        val ipOgrn = IpOgrn.of(mainInfoAboutOrg[orderOgrnIp].replace("ОГРН ", ""))!!
+        val ipOgrn = IpOgrn.of(mainInfoAboutOrg[orderOgrnIp].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
         IpInfo(
             inn,
             ipOgrn,
             fullNameOfHolder(document),
-            ParserRusprofile().parseWebPage(ipOgrn)!!,
+            ParserRusprofile().parseWebPage(ipOgrn) ?: error("Ogrn is invalid"),
             location(document)
         )
     }.getOrNull()
@@ -41,7 +39,7 @@ class SbisParser {
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
         val fullNameOfOrg = mainInfoAboutOrg[orderFullName].trim()
-        val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[orderOgrnOoo].replace("ОГРН ", ""))!!
+        val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[orderOgrnOoo].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
         OrgInfo(
             inn,
             kpp,

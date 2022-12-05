@@ -43,7 +43,7 @@ internal class DocumentSetTest {
                 Email.of("responsible@gmail.com")!!
             ),
             PurchaseDeadlineAndDeliveryAddress(LocalDate.fromEpochDays(400), "Адрес"),
-            PaymentInformation(
+            PaymentDetails(
                 BikParser().parseWebPage(Bik.of("044525225")!!)!!,
                 SettlementAccount.of("30301810000006000001")!!
             )
