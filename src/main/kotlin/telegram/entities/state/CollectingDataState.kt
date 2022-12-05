@@ -7,3 +7,8 @@ import kotlinx.serialization.Serializable
 data class CollectingDataState(
     val fieldsData: List<FieldData>
 ) : DialogState
+
+@Serializable
+data class CancelCollectingDataState(
+    val returnTo: DialogState
+) : DialogState

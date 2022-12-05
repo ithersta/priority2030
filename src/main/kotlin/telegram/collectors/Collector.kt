@@ -4,10 +4,21 @@ import com.ithersta.tgbotapi.fsm.builders.NestedStateMachineBuilder
 import com.ithersta.tgbotapi.fsm.builders.StateFilterBuilder
 import com.ithersta.tgbotapi.fsm.entities.StateMachine
 import com.ithersta.tgbotapi.fsm.entities.triggers.onCommand
+import com.ithersta.tgbotapi.fsm.entities.triggers.onEnter
+import com.ithersta.tgbotapi.fsm.entities.triggers.onText
+import dev.inmo.tgbotapi.extensions.api.send.sendTextMessage
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.replyKeyboard
+import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.types.UserId
+import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.FieldData
+import telegram.entities.state.CancelCollectingDataState
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
+import telegram.entities.state.EmptyState
+import telegram.resources.strings.ButtonStrings
+import telegram.resources.strings.InvalidInputStrings
+import telegram.resources.strings.Strings
 import kotlin.reflect.KClass
 
 private typealias CollectorNestedStateMachineBuilder<T> =
@@ -16,6 +27,7 @@ private typealias CollectorNestedStateMachineBuilder<T> =
 sealed interface CollectorResult<T : FieldData> {
     class OK<T : FieldData>(val data: T) : CollectorResult<T>
     object Back : CollectorResult<FieldData>
+    object Cancel : CollectorResult<FieldData>
 }
 
 @DslMarker
@@ -46,12 +58,32 @@ class CollectorMapBuilder {
                 when (result) {
                     is CollectorResult.Back -> copy(fieldsData = fieldsData.dropLast(1))
                     is CollectorResult.OK -> copy(fieldsData = fieldsData + result.data)
+                    is CollectorResult.Cancel -> EmptyState
                 }
             }
         ) {
+            state<CancelCollectingDataState> {
+                onEnter {
+                    sendTextMessage(
+                        it,
+                        Strings.CancelDataCollection,
+                        replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                            row {
+                                simpleButton(ButtonStrings.No)
+                                simpleButton(ButtonStrings.Yes)
+                            }
+                        })
+                }
+                onText(ButtonStrings.No) { state.override { returnTo } }
+                onText(ButtonStrings.Yes) { this@nestedStateMachine.exit(state, CollectorResult.Cancel) }
+                onText { sendTextMessage(it.chat, InvalidInputStrings.InvalidAnswer) }
+            }
             anyState {
                 onCommand("back", description = null) {
                     this@nestedStateMachine.exit(state, CollectorResult.Back)
+                }
+                onCommand("cancel", description = null) {
+                    state.override { CancelCollectingDataState(this) }
                 }
             }
             blocks.forEach { it() }
