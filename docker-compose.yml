@@ -12,3 +12,8 @@ services:
       - config
     environment:
       CONFIG_FILE: /run/secrets/config
+    volumes:
+      - app:/app
+
+volumes:
+  app:
