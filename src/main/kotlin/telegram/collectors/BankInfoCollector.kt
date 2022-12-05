@@ -17,7 +17,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
     collector<PaymentDetails>(initialState = BankCollectorState.WaitingForBik) {
         state<BankCollectorState.WaitingForBik> {
             val parser = BikParser()
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.bik) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.Bik) }
             onText {
                 val bik = Bik.of(it.content.text)
                 if (bik != null) {
@@ -30,25 +30,25 @@ fun CollectorMapBuilder.bankInfoCollector() {
                         state.override { BankCollectorState.HandsWaitingForCorrAccount(bik) }
                     }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.bik)
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.Bik)
                     return@onText
                 }
             }
         }
         state<BankCollectorState.HandsWaitingForCorrAccount> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.corrAccount) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.CorrespondentAccount) }
             onText {
                 val correspondentAccount = CorrespondentAccount.of(it.content.text)
                 if (correspondentAccount != null) {
                     state.override { BankCollectorState.HandsWaitingForBankName(bik, correspondentAccount) }
                 } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.corrAccount)
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.CorrespondentAccount)
                     return@onText
                 }
             }
         }
         state<BankCollectorState.HandsWaitingForBankName> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.bankName) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.BankName) }
             onText {
                 state.override {
                     BankCollectorState.WaitingForSettlementAccount(
@@ -58,7 +58,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
             }
         }
         state<BankCollectorState.WaitingForSettlementAccount> {
-            onEnter { sendTextMessage(it, CollectorStrings.Bank.account) }
+            onEnter { sendTextMessage(it, CollectorStrings.Bank.SettlementAccount) }
             onText { message ->
                 val settlementAccount = SettlementAccount.of(message.content.text)
                 if (settlementAccount != null) {
@@ -68,7 +68,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
                     )
                     this@collector.exit(state, listOf(info))
                 } else {
-                    sendTextMessage(message.chat, CollectorStrings.Recommendations.paymentAccount)
+                    sendTextMessage(message.chat, CollectorStrings.Recommendations.SettlementAccount)
                     return@onText
                 }
             }

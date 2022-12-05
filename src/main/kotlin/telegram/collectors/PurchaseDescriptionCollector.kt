@@ -10,19 +10,13 @@ import domain.datatypes.PurchaseDescription
 import domain.entities.SelectionIdentifier
 import domain.entities.SelectionLetter
 import telegram.entities.state.PurchaseDescriptionState
+import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.CollectorStrings.PurchaseDescription.MaterialValuesAreNeeded
-import telegram.resources.strings.CollectorStrings.PurchaseDescription.No
-import telegram.resources.strings.CollectorStrings.PurchaseDescription.Yes
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.infoWithLink
 
 const val SELECTION_IDENTIFIERS_PER_ROW = 4
-
-private val answerToBoolean = mapOf(
-    No to false,
-    Yes to true
-)
 
 @Suppress("LongMethod")
 fun CollectorMapBuilder.purchaseDescriptionCollector() {
@@ -115,14 +109,18 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
                         oneTimeKeyboard = true
                     ) {
                         row {
-                            simpleButton(No)
-                            simpleButton(Yes)
+                            simpleButton(ButtonStrings.No)
+                            simpleButton(ButtonStrings.Yes)
                         }
                     }
                 )
             }
             onText {
-                val areNeeded = answerToBoolean[it.content.text]
+                val areNeeded = when (it.content.text) {
+                    ButtonStrings.Yes -> true
+                    ButtonStrings.No -> false
+                    else -> null
+                }
                 if (areNeeded != null) {
                     val purchaseDescription = PurchaseDescription(
                         shortJustification = state.snapshot.shortJustification,

@@ -24,6 +24,7 @@ object Strings {
     const val SuccessfulSendDocsEmail = "Документы успешно отправлены на электронную почту"
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
+    const val InitiatorFullName = "Введите ФИО инициатора закупки (ответственного исполнителя)"
     const val SendDocuments = "Отправить документы на почту?"
     val CheckListOfDocs = """|Проверьте список документов:
             |

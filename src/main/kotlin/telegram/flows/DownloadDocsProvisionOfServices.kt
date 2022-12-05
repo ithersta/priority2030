@@ -148,17 +148,19 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
     state<WaitingForDocs> {
         onEnter { chatId ->
             val type = state.snapshot.type ?: run {
-                state.override { FillingProvisionOfServicesState.SendDocs(docs) }
+                state.override { FillingProvisionOfServicesState.WaitingForFullNameOfInitiator(docs) }
                 return@onEnter
             }
             sendTextMessage(
-                chatId, when (type) {
+                chatId,
+                when (type) {
                     Type.ApplicationForPlacement -> Strings.UploadDocs.ApplicationForPlacement
                     Type.OfficialMemo -> Strings.UploadDocs.OfficialMemo
                     Type.DraftAgreement -> Strings.UploadDocs.DraftAgreement
                     Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
                     Type.Extra -> Strings.UploadDocs.ExtraDocs
-                }, replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true) {
+                },
+                replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
                     row { simpleButton(ButtonStrings.UploadedAllDocs) }
                 } else ReplyKeyboardRemove()
             )
@@ -180,11 +182,16 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
 }
 
 private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
+    state<FillingProvisionOfServicesState.WaitingForFullNameOfInitiator> {
+        onEnter { sendTextMessage(it, Strings.InitiatorFullName) }
+        onText { state.override { FillingProvisionOfServicesState.SendDocs(it.content.text, docs) } }
+    }
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
             sendTextMessage(
                 chatId, Strings.SendDocuments,
                 replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.No) }
                     row { simpleButton(ButtonStrings.Send) }
                 }
             )
@@ -193,10 +200,16 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
         val emailTo = get<MainProperties>().emailTo
         onText(ButtonStrings.Send) { message ->
             val attachments = state.snapshot.docs.map { Attachment(downloadFile(it.fileId), it.filename, it.filename) }
-            emailSender.sendFiles(emailTo, attachments, EmailStrings.ToAdmin.Subject, EmailStrings.ToAdmin.Message)
+            emailSender.sendFiles(
+                to = emailTo,
+                attachments = attachments,
+                subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName),
+                message = EmailStrings.ToAdmin.Message
+            )
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
         }
+        onText(ButtonStrings.No) { state.override { EmptyState } }
     }
 }
 
@@ -207,7 +220,6 @@ private suspend fun StatefulContext<DialogState, *, WaitingForDocs, *>.handleUpl
     val type = state.snapshot.type ?: return
     val oldCount = state.snapshot.docs.count { it.type == type }
     val newDocs = state.snapshot.docs + group
-        .take(type.max - oldCount)
         .filter { document ->
             val fileSize = document.fileSize
             (fileSize != null && fileSize < MAX_SIZE_OF_DOC).also {
@@ -216,6 +228,7 @@ private suspend fun StatefulContext<DialogState, *, WaitingForDocs, *>.handleUpl
                 }
             }
         }
+        .take(type.max - oldCount)
         .map { UploadedDocument(it.fileId, it.fileName.orEmpty(), type) }
     val count = newDocs.count { it.type == type }
     when {

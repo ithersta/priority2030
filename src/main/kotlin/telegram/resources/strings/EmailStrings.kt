@@ -7,7 +7,7 @@ object EmailStrings {
     }
 
     object ToAdmin {
-        const val Subject = "Документы на проверку"
+        fun subject(fullName: String) = "Заявка на услугу. $fullName"
         const val Message = ""
     }
 }
