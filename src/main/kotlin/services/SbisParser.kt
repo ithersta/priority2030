@@ -4,9 +4,9 @@ import domain.entities.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import services.ConstantsForParsing.Timeout
-import services.ConstantsForParsing.orderFullName
-import services.ConstantsForParsing.orderOgrnIp
-import services.ConstantsForParsing.orderOgrnOoo
+import services.ConstantsForParsing.FullNameIndex
+import services.ConstantsForParsing.IpOgrnIndex
+import services.ConstantsForParsing.OooOgrnIndex
 
 private const val URL = "https://sbis.ru/contragents/"
 private const val SELECT = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"
@@ -20,7 +20,7 @@ class SbisParser {
             .timeout(Timeout)
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
-        val ipOgrn = IpOgrn.of(mainInfoAboutOrg[orderOgrnIp].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
+        val ipOgrn = IpOgrn.of(mainInfoAboutOrg[IpOgrnIndex].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
         IpInfo(
             inn,
             ipOgrn,
@@ -38,8 +38,8 @@ class SbisParser {
             .timeout(Timeout)
         val document = connection.execute().parse()
         val mainInfoAboutOrg = mainInfoAboutOrg(document)
-        val fullNameOfOrg = mainInfoAboutOrg[orderFullName].trim()
-        val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[orderOgrnOoo].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
+        val fullNameOfOrg = mainInfoAboutOrg[FullNameIndex].trim()
+        val ogrnOfOrg = OooOgrn.of(mainInfoAboutOrg[OooOgrnIndex].replace("ОГРН ", "")) ?: error("Ogrn is invalid")
         OrgInfo(
             inn,
             kpp,
