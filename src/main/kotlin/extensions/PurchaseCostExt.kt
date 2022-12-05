@@ -15,7 +15,6 @@ private val spelloutNumberFormat = RuleBasedNumberFormat(
 )
 
 fun PurchaseCost.spelloutRubles(): String = spelloutNumberFormat.format(rubles)
-fun PurchaseCost.spelloutCopecks(): String = spelloutNumberFormat.format(copecks)
 
 fun PurchaseCost.rublesUnit(): String = MessageFormat(
     "{0, plural, " +

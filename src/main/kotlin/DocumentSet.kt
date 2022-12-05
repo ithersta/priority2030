@@ -107,7 +107,6 @@ private fun DocumentBuilder.purchaseCost() = get<PurchaseCost>().run {
     field("RUBLENUMB", rubles.toString())
     field("COPEEKNUMB", "%02d".format(copecks))
     field("RUBLES", spelloutRubles())
-    field("COPEEKS", spelloutCopecks())
     field("RUBS", rublesUnit())
     field("COPS", copecksUnit())
 }
@@ -121,7 +120,6 @@ private fun DocumentBuilder.paymentSum() {
     field("RUBLENUMB", payment?.rubles?.toString().orEmpty())
     field("COPEEKNUMB", payment?.copecks?.let { "%02d".format(it) }.orEmpty())
     field("RUBLES", payment?.spelloutRubles().orEmpty())
-    field("COPEEKS", payment?.spelloutCopecks().orEmpty())
 }
 
 

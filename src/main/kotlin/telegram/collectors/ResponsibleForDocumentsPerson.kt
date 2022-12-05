@@ -51,7 +51,7 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                         state.snapshot.contactPhoneNumber,
                         email
                     )
-                    this@collector.exit(state, listOf(responsibleForDocumentsPerson))
+                    this@collector.exit(state, responsibleForDocumentsPerson)
 
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidEmail)

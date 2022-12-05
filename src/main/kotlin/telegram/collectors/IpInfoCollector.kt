@@ -117,7 +117,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 val email = Email.of(it.content.text)
                 if (email != null) {
                     val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
-                    this@collector.exit(state, listOf(info))
+                    this@collector.exit(state, info)
                 } else {
                     sendTextMessage(it.chat, InvalidEmail)
                     return@onText

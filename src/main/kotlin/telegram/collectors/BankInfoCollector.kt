@@ -66,7 +66,7 @@ fun CollectorMapBuilder.bankInfoCollector() {
                         bank = state.snapshot.mainInfo,
                         settlementAccount = settlementAccount
                     )
-                    this@collector.exit(state, listOf(info))
+                    this@collector.exit(state, info)
                 } else {
                     sendTextMessage(message.chat, CollectorStrings.Recommendations.SettlementAccount)
                     return@onText

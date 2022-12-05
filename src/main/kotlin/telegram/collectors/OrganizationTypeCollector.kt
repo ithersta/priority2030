@@ -35,7 +35,7 @@ fun CollectorMapBuilder.organizationTypeCollector() {
                         return@onText
                     }
                 }
-                this@collector.exit(state, listOf(type))
+                this@collector.exit(state, type)
             }
         }
     }

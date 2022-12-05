@@ -139,7 +139,7 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 val email = Email.of(it.content.text)
                 if (email != null) {
                     val info = CompanyInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
-                    this@collector.exit(state, listOf(info))
+                    this@collector.exit(state, info)
                 } else {
                     sendTextMessage(it.chat, InvalidEmail)
                     return@onText
