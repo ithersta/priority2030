@@ -190,8 +190,10 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
             sendTextMessage(
                 chatId, Strings.SendDocuments,
                 replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                    row { simpleButton(ButtonStrings.No) }
-                    row { simpleButton(ButtonStrings.Send) }
+                    row {
+                        simpleButton(ButtonStrings.No)
+                        simpleButton(ButtonStrings.Send)
+                    }
                 }
             )
         }

@@ -1,0 +1,19 @@
+version: '3.9'
+
+secrets:
+  config:
+    file: /home/telegram/priority2030/config.properties
+
+services:
+  app:
+    build: .
+    restart: always
+    secrets:
+      - config
+    environment:
+      CONFIG_FILE: /run/secrets/config
+    volumes:
+      - app:/app
+
+volumes:
+  app:
