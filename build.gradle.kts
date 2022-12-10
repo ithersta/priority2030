@@ -23,6 +23,7 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly(files("src/main/ruby"))
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
     implementation("com.ithersta.tgbotapi:fsm:0.21.0")
     implementation("com.ithersta.tgbotapi:sqlite-persistence:0.2.0")
@@ -40,6 +41,7 @@ dependencies {
     implementation("com.ibm.icu:icu4j:72.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("io.github.classgraph:classgraph:4.8.151")
+    implementation("org.jruby:jruby-complete:9.4.0.0")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))

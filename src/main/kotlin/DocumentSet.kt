@@ -2,9 +2,12 @@ import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
 import domain.documents.get
-import extensions.*
+import extensions.copecksUnit
+import extensions.format
+import extensions.rublesUnit
+import extensions.spelloutRubles
 import org.koin.core.component.inject
-import services.CachedMorpher
+import services.morpher.Morpher
 import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
 
@@ -67,11 +70,11 @@ val documentSet = documentSet {
 }
 
 private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
-    val morpher: CachedMorpher by inject()
-    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
+    val morpher: Morpher by inject()
+    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
     field("ENPREPRENEURFIO", mainInfo.fullNameOfHolder)
-    field("INICENPREPRENEUR", morphedFullName?.initialsSurname.orEmpty())
-    field("ENPREPRENEURINIC", morphedFullName?.surnameInitials.orEmpty())
+    field("INICENPREPRENEUR", morphedFullName.initialsSurname)
+    field("ENPREPRENEURINIC", morphedFullName.surnameInitials)
     field("OGRNIPNUMB", mainInfo.ogrn.value)
     field("OGRNIPDATE", mainInfo.orgrnData)
     field("ENTERPRENEURADDRESS", mainInfo.location)
@@ -81,17 +84,17 @@ private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run
 }
 
 private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run {
-    val morpher: CachedMorpher by inject()
-    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder) // TODO: morpher fallback
-    field("GENERALMANAGERR", morphedFullName?.genitive.orEmpty())
+    val morpher: Morpher by inject()
+    val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
+    field("GENERALMANAGERR", morphedFullName.genitive)
     field("CONTRAGENTFULLNAME", mainInfo.fullName)
     field("CONTRAGENTSHORTNAME", mainInfo.shortName)
-    field("GENERALMANAGERINIC", morphedFullName?.initialsSurname.orEmpty())
+    field("GENERALMANAGERINIC", morphedFullName.initialsSurname)
     field("CONTRAGENTADDRESS", mainInfo.location)
     field("INN", mainInfo.inn.value)
     field("KPP", mainInfo.kpp.value)
     field("OGRN", mainInfo.ogrn.value)
-    field("CONTRAGENTFIO", morphedFullName?.original.orEmpty())
+    field("CONTRAGENTFIO", morphedFullName.original)
     field("CONTRAGENTEMAIL", email.email)
     field("CONTRAGENTPHONE", phone.number)
 }
