@@ -21,7 +21,7 @@ val documentSet = documentSet {
     document("/documents/Служебная записка.docx") {
         purchaseObject()
         field("DESCRIPTION", get<PurchaseDescription>().shortJustification)
-        field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
+        field("LETTER", get<PurchaseDescription>().selectionLetter.value)
         field("NUMBER", get<PurchaseDescription>().selectionIdentifier.indicator)
         field("REASON", get<PurchaseDescription>().fullJustification)
         field("PP", get<PurchasePoint>().number.point)
