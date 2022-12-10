@@ -24,6 +24,7 @@ val stateMachine = rolelessStateMachine(
 ) {
     cancelCommand(EmptyState)
     startCommand()
+    backCommandStub()
     mainMenu.run { invoke() }
     documentBuildingLoop()
     fillDocsProvisionOfServices()

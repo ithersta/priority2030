@@ -8,11 +8,10 @@ import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
 import telegram.resources.strings.Strings
 
-fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.startCommand() {
+fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.backCommandStub() {
     state<EmptyState> {
-        onCommand("start", null) { message ->
-            sendTextMessage(message.chat, Strings.Welcome)
-            refreshCommands()
+        onCommand("back", description = Strings.Help.Back) { message ->
+            sendTextMessage(message.chat, Strings.BackOnlyInCollector)
             state.override { this }
         }
     }
