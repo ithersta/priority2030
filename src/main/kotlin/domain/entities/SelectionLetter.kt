@@ -8,10 +8,7 @@ value class SelectionLetter private constructor(
     val value: String
 ) {
     companion object {
-        fun of(letter: String): SelectionLetter? {
-            val lowercaseLetter = letter.lowercase()
-            return SelectionLetter(lowercaseLetter)
-                .takeIf { Regex("[а-уё]").matches(lowercaseLetter) }
-        }
+        fun of(letter: String) = SelectionLetter(letter.lowercase())
+            .takeIf { Regex("[а-уё]").matches(it.value) }
     }
 }
