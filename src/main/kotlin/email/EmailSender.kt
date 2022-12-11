@@ -11,6 +11,10 @@ private const val DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocumen
 
 @Single
 class EmailSender(private val emailSecrets: EmailSecrets) {
+    init {
+        System.setProperty("mail.mime.encodefilename", "true")
+    }
+
     fun sendFiles(
         to: Email,
         attachments: List<Attachment>,
