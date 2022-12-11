@@ -38,7 +38,7 @@ val documentSet = documentSet {
         materialObjectNumber()
 
         responsibleForDocumentsPerson()
-        field("EMAIL", get<ResponsibleForDocumentsPerson>().email.email)
+        field("DOCEMAIL", get<ResponsibleForDocumentsPerson>().email.email)
         field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
         field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
         iniciatorfio()
