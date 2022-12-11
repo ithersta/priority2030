@@ -63,7 +63,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.afterDownloadStat
             )
         }
         onText(ButtonStrings.UploadPackageDoc) {
-            state.override { FillingProvisionOfServicesState.CheckAndUploadDocs }
+            state.override { FillingProvisionOfServicesState.CheckAndUploadDocs(replyTo) }
         }
         onText(ButtonStrings.BackToCreateDocs) {
             state.override { EmptyState }
@@ -95,7 +95,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsFlow(
             state.snapshot.documents.forEach {
                 sendDocument(message.chat, Docx.load(it).asMultipartFile(it.filename))
             }
-            state.override { FillingProvisionOfServicesState.AfterDownload }
+            state.override { FillingProvisionOfServicesState.AfterDownload(replyTo = null) }
         }
         onText(ButtonStrings.GetByEmail) {
             state.override { FillingProvisionOfServicesState.DownloadDocsByEmail(documents) }
@@ -115,7 +115,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsFlow(
                     EmailStrings.ToBotUser.Subject
                 )
                 sendTextMessage(message.chat, Strings.SuccessfulSendDocsEmail)
-                state.override { FillingProvisionOfServicesState.AfterDownload }
+                state.override { FillingProvisionOfServicesState.AfterDownload(email) }
             } else {
                 sendTextMessage(message.chat, InvalidInputStrings.InvalidEmail)
             }
@@ -139,7 +139,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.checkAndUploadDoc
                 }
             )
         }
-        onText(ButtonStrings.UploadDocuments) { state.override { WaitingForDocs() } }
+        onText(ButtonStrings.UploadDocuments) { state.override { WaitingForDocs(replyTo) } }
     }
 }
 
@@ -147,7 +147,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
     state<WaitingForDocs> {
         onEnter { chatId ->
             val type = state.snapshot.type ?: run {
-                state.override { FillingProvisionOfServicesState.WaitingForFullNameOfInitiator(docs) }
+                state.override { FillingProvisionOfServicesState.WaitingForFullNameOfInitiator(replyTo, docs) }
                 return@onEnter
             }
             sendTextMessage(
@@ -183,7 +183,46 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
 private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
     state<FillingProvisionOfServicesState.WaitingForFullNameOfInitiator> {
         onEnter { sendTextMessage(it, Strings.InitiatorFullName) }
-        onText { state.override { FillingProvisionOfServicesState.SendDocs(it.content.text, docs) } }
+        onText {
+            state.override {
+                if (replyTo != null) {
+                    FillingProvisionOfServicesState.ConfirmReplyToEmail(it.content.text, replyTo, docs)
+                } else {
+                    FillingProvisionOfServicesState.WaitingForReplyToEmail(it.content.text, docs)
+                }
+            }
+        }
+    }
+    state<FillingProvisionOfServicesState.WaitingForReplyToEmail> {
+        onEnter { sendTextMessage(it, Strings.ReplyToEmail) }
+        onText { message ->
+            val replyTo = Email.of(message.content.text)
+            if (replyTo != null) {
+                state.override { FillingProvisionOfServicesState.SendDocs(initiatorFullName, replyTo, docs) }
+            } else {
+                sendTextMessage(message.chat, InvalidInputStrings.InvalidEmail)
+            }
+        }
+    }
+    state<FillingProvisionOfServicesState.ConfirmReplyToEmail> {
+        onEnter {
+            sendTextMessage(it, Strings.confirmReplyToEmail(state.snapshot.replyTo), replyMarkup = replyKeyboard {
+                row {
+                    simpleButton(ButtonStrings.No)
+                    simpleButton(ButtonStrings.Yes)
+                }
+            })
+        }
+        onText(ButtonStrings.No) {
+            state.override {
+                FillingProvisionOfServicesState.WaitingForReplyToEmail(initiatorFullName, docs)
+            }
+        }
+        onText(ButtonStrings.Yes) {
+            state.override {
+                FillingProvisionOfServicesState.SendDocs(initiatorFullName, replyTo, docs)
+            }
+        }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
@@ -204,7 +243,8 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
             emailSender.sendFiles(
                 to = emailTo,
                 attachments = attachments,
-                subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName)
+                subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName),
+                replyTo = listOf(state.snapshot.replyTo)
             )
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)
             state.override { EmptyState }
