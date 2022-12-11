@@ -126,6 +126,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.downloadDocsFlow(
 private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.uploadDocsFlow() {
     checkAndUploadDocsState()
     waitingForDocsState()
+    collectInfoForEmailFlow()
     sendDocsState()
 }
 
@@ -180,7 +181,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
     }
 }
 
-private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.collectInfoForEmailFlow() {
     state<FillingProvisionOfServicesState.WaitingForFullNameOfInitiator> {
         onEnter { sendTextMessage(it, Strings.InitiatorFullName) }
         onText {
@@ -224,6 +225,9 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
             }
         }
     }
+}
+
+private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
             sendTextMessage(
