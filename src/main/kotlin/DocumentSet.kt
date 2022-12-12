@@ -196,7 +196,7 @@ private fun DocumentBuilder.genetivePurchasePoint(){
 private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost(){
     val avance =  get<PurchaseCost>() * BigDecimal("0.3")
 
-    val seventyPercent= get<PurchaseCost>() * BigDecimal("0.7")
+    val seventyPercent = get<PurchaseCost>()-avance
 
     field("RUBLEAVANCENUMB", avance.rubles.toString())
     field("COPEEKAVANCENUMB", avance.copecks.let { "%02d".format(it) })
