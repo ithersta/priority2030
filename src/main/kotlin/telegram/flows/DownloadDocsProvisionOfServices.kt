@@ -207,12 +207,15 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.collectInfoForEma
     }
     state<FillingProvisionOfServicesState.ConfirmReplyToEmail> {
         onEnter {
-            sendTextMessage(it, Strings.confirmReplyToEmail(state.snapshot.replyTo), replyMarkup = replyKeyboard {
-                row {
-                    simpleButton(ButtonStrings.No)
-                    simpleButton(ButtonStrings.Yes)
-                }
-            })
+            sendTextMessage(
+                chatId = it,
+                text = Strings.confirmReplyToEmail(state.snapshot.replyTo),
+                replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row {
+                        simpleButton(ButtonStrings.No)
+                        simpleButton(ButtonStrings.Yes)
+                    }
+                })
         }
         onText(ButtonStrings.No) {
             state.override {
