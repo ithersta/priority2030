@@ -183,7 +183,17 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
 private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
     state<FillingProvisionOfServicesState.WaitingForFullNameOfInitiator> {
         onEnter { sendTextMessage(it, Strings.InitiatorFullName) }
-        onText { state.override { FillingProvisionOfServicesState.SendDocs(it.content.text, docs) } }
+        onText { state.override { FillingProvisionOfServicesState.WaitingForEmail(it.content.text, docs) } }
+    }
+    state<FillingProvisionOfServicesState.WaitingForEmail> {
+        onEnter { sendTextMessage(it, Strings.ReplyEmail) }
+        onText {
+            val email = Email.of(it.content.text)
+            if (email != null) {
+            state.override { FillingProvisionOfServicesState.SendDocs(this.initiatorFullName, it.content.text, docs)}
+            }
+            else{ sendTextMessage(it.chat, InvalidInputStrings.InvalidEmail) }
+        }
     }
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
@@ -204,6 +214,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
             emailSender.sendFiles(
                 to = emailTo,
                 attachments = attachments,
+                message = EmailStrings.ToAdmin.reply(state.snapshot.replyEmail),
                 subject = EmailStrings.ToAdmin.subject(state.snapshot.initiatorFullName)
             )
             sendTextMessage(message.chat, Strings.SuccessfulSendDocs)

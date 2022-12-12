@@ -31,6 +31,7 @@ object Strings {
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
     const val InitiatorFullName = "Введите ФИО инициатора закупки (ответственного исполнителя)"
+    const val ReplyEmail = "Введите адрес электронной почты, на которую необходимо получить ответ о статусе документов"
     const val SendDocuments = "Отправить документы на почту?"
     val CheckListOfDocs = """|Проверьте список документов:
             |

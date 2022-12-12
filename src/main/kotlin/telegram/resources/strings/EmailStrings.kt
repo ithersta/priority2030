@@ -7,5 +7,6 @@ object EmailStrings {
 
     object ToAdmin {
         fun subject(fullName: String) = "Заявка на услугу. $fullName"
+        fun reply(email: String) = "Почта для ответа о статусе документов: $email"
     }
 }
