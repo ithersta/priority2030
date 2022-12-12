@@ -66,7 +66,9 @@ object CollectorStrings {
     }
 
     object PurchaseDescription {
-        const val ShortName = "Введите краткое наименование предмета закупки\n"
+        const val ShortName = "Введите краткое наименование предмета закупки в формате:\n" +
+                "\n" +
+                "Услуги по ... (наименование услуги)"
         const val ShortJustification = "Товары или работы/услуги предназначен (-ы) для:\n" +
                 "\n" +
                 "Введите краткое описание"
