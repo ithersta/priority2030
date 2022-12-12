@@ -189,7 +189,7 @@ private fun DocumentBuilder.documentResponsibleEmailAndPhone(){
 }
 
 private fun DocumentBuilder.genetivePurchasePoint(){
-    val genetiveName=get<PurchaseObject>().shortName.replace("услуги","услуг")
+    val genetiveName=get<PurchaseObject>().shortName.replaceFirst("услуги","услуг")
     field("NAMGENETIVE", genetiveName)
 }
 
