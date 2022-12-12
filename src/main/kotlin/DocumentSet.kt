@@ -12,6 +12,7 @@ import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
     TermOfPayment.Prepaid to CollectorStrings.TermOfPayment.Prepaid,
@@ -74,7 +75,7 @@ val documentSet = documentSet {
 private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
     val morpher: Morpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
-    val dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+    val dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.forLanguageTag("ru"))
     field("ENPREPRENEURFIO", mainInfo.fullNameOfHolder)
     field("INICENPREPRENEUR", morphedFullName.initialsSurname)
     field("ENPREPRENEURINIC", morphedFullName.surnameInitials)
