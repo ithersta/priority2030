@@ -8,15 +8,17 @@ import dev.inmo.tgbotapi.extensions.utils.types.buttons.simpleButton
 import dev.inmo.tgbotapi.utils.row
 import domain.datatypes.EntrepreneurInformation
 import domain.entities.*
+import kotlinx.datetime.toKotlinLocalDate
 import services.SbisParser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.CollectorStrings
-import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidAnswer
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
 import validation.IsFullNameValid
+import java.time.format.DateTimeFormatter
+import java.time.LocalDate as JavaLocalDate
 
 @Suppress("LongMethod")
 fun CollectorMapBuilder.ipInfoCollector() {
@@ -71,7 +73,15 @@ fun CollectorMapBuilder.ipInfoCollector() {
         state<IpCollectorState.HandsWaitingDataOfOgrn> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.Date) }
             onText {
-                state.override { IpCollectorState.HandsWaitingfullNameOfHolder(this.inn, this.ogrn, it.content.text) }
+                val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.uuuu")
+                val ogrnDate = runCatching {
+                    JavaLocalDate.parse(it.content.text, dateTimeFormatter).toKotlinLocalDate()
+                }.getOrNull()
+                if (ogrnDate != null) {
+                    state.override { IpCollectorState.HandsWaitingfullNameOfHolder(inn, ogrn, ogrnDate) }
+                } else {
+                    sendTextMessage(it.chat, CollectorStrings.Recommendations.OgrnDate)
+                }
             }
         }
         state<IpCollectorState.HandsWaitingfullNameOfHolder> {
@@ -79,7 +89,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 if (IsFullNameValid(it.content.text)) {
                     state.override {
-                        IpCollectorState.HandsWaitingLocation(this.inn, this.ogrn, this.dataOgrn, it.content.text)
+                        IpCollectorState.HandsWaitingLocation(inn, ogrn, ogrnDate, it.content.text)
                     }
                 } else {
                     sendTextMessage(it.chat, CollectorStrings.Recommendations.FullName)
@@ -92,7 +102,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 state.override {
                     IpCollectorState.WaitingPhone(
-                        IpInfo(inn, ogrn, fullNameOfHolder, dataOgrn, it.content.text)
+                        IpInfo(inn, ogrn, fullNameOfHolder, ogrnDate, it.content.text)
                     )
                 }
             }

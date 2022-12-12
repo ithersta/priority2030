@@ -10,6 +10,8 @@ import org.koin.core.component.inject
 import services.morpher.Morpher
 import telegram.resources.strings.CollectorStrings
 import java.math.BigDecimal
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 private val termOfPaymentToStrings: Map<TermOfPayment, String> = mapOf(
     TermOfPayment.Prepaid to CollectorStrings.TermOfPayment.Prepaid,
@@ -72,11 +74,12 @@ val documentSet = documentSet {
 private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
     val morpher: Morpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
+    val dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     field("ENPREPRENEURFIO", mainInfo.fullNameOfHolder)
     field("INICENPREPRENEUR", morphedFullName.initialsSurname)
     field("ENPREPRENEURINIC", morphedFullName.surnameInitials)
     field("OGRNIPNUMB", mainInfo.ogrn.value)
-    field("OGRNIPDATE", mainInfo.orgrnData)
+    field("OGRNIPDATE", mainInfo.ogrnDate.format(dateTimeFormatter))
     field("ENTERPRENEURADDRESS", mainInfo.location)
     field("ENTERPRENEURINN", mainInfo.inn.value)
     field("ENTERPRENEUREMAIL", email.email)
