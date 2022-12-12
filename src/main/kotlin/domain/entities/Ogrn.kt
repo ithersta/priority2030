@@ -2,8 +2,9 @@ package domain.entities
 
 import kotlinx.serialization.Serializable
 
+@JvmInline
 @Serializable
-class IpOgrn private constructor(
+value class IpOgrn private constructor(
     val value: String
 ) {
     companion object {
@@ -11,8 +12,9 @@ class IpOgrn private constructor(
     }
 }
 
+@JvmInline
 @Serializable
-class OooOgrn private constructor(
+value class OooOgrn private constructor(
     val value: String
 ) {
     companion object {
