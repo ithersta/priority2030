@@ -198,15 +198,15 @@ private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost(){
 
     val seventyPercent= get<PurchaseCost>() * BigDecimal("0.7")
 
-    field("RUBLEAVANCENUMB", avance?.rubles?.toString().orEmpty())
-    field("COPEEKAVANCENUMB", avance?.copecks?.let { "%02d".format(it) }.orEmpty())
-    field("RUBAVANCE", avance?.spelloutRubles().orEmpty())
+    field("RUBLEAVANCENUMB", avance.rubles.toString())
+    field("COPEEKAVANCENUMB", avance.copecks.let { "%02d".format(it) })
+    field("RUBAVANCE", avance.spelloutRubles())
     field("AVANCERUB", avance.rublesUnit())
     field("AVANCECOP", avance.copecksUnit())
 
-    field("SEVENTYPERCRUBNUMB", seventyPercent?.rubles?.toString().orEmpty())
-    field("SEVENTYPERCCOPNUMB", seventyPercent?.copecks?.let { "%02d".format(it) }.orEmpty())
-    field("RUBLSEVENTYPERC", seventyPercent?.spelloutRubles().orEmpty())
+    field("SEVENTYPERCRUBNUMB", seventyPercent.rubles.toString())
+    field("SEVENTYPERCCOPNUMB", seventyPercent.copecks.let { "%02d".format(it) })
+    field("RUBLSEVENTYPERC", seventyPercent.spelloutRubles())
     field("SEVENTYRUB", avance.rublesUnit())
     field("SEVENTYCOP", avance.copecksUnit())
 }
