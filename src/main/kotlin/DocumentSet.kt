@@ -24,7 +24,7 @@ val documentSet = documentSet {
         field("LETTER", get<PurchaseDescription>().selectionLetter.letter)
         field("NUMBER", get<PurchaseDescription>().selectionIdentifier.indicator)
         field("REASON", get<PurchaseDescription>().fullJustification)
-        field("PP", get<PurchasePoint>().number.point)
+        purchasePoint()
         iniciatorfio()
         purchaseCost()
     }
@@ -38,9 +38,9 @@ val documentSet = documentSet {
         materialObjectNumber()
 
         responsibleForDocumentsPerson()
-        field("DOCEMAIL", get<ResponsibleForDocumentsPerson>().email.email)
-        field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
-        field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
+        documentResponsibleEmailAndPhone()
+        deadline()
+        place()
         iniciatorfio()
 
     }
@@ -51,20 +51,33 @@ val documentSet = documentSet {
         financiallyResponsiblePerson()
         materialObjectNumber()
         responsibleForDocumentsPerson()
+        documentResponsibleEmailAndPhone()
     }
     when (get<OrganizationType>()) {
         OrganizationType.IP -> document("/documents/Договор для ИП.docx") {
+            purchaseObject()
             ipInformation()
             paymentDetails()
             purchaseCost()
-            field("PP", get<PurchasePoint>().number.point)
+            purchasePoint()
+            deadline()
+            place()
+            documentResponsibleEmailAndPhone()
+            genetivePurchasePoint()
+            thirtyAndSeventyPercentsOfCost()
         }
 
         OrganizationType.Ooo -> document("/documents/Договор для ООО.docx") {
+            purchaseObject()
             companyInformation()
             paymentDetails()
             purchaseCost()
-            field("PP", get<PurchasePoint>().number.point)
+            purchasePoint()
+            deadline()
+            place()
+            documentResponsibleEmailAndPhone()
+            genetivePurchasePoint()
+            thirtyAndSeventyPercentsOfCost()
         }
     }
 }
@@ -87,8 +100,8 @@ private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run
     val morpher: Morpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
     field("GENERALMANAGERR", morphedFullName.genitive)
-    field("CONTRAGENTFULLNAME", mainInfo.fullName)
-    field("CONTRAGENTSHORTNAME", mainInfo.shortName)
+    field("CONTRAGENTFULLNAM", mainInfo.fullName)
+    field("CONTRAGENTSHORTNAM", mainInfo.shortName)
     field("GENERALMANAGERINIC", morphedFullName.initialsSurname)
     field("CONTRAGENTADDRESS", mainInfo.location)
     field("INN", mainInfo.inn.value)
@@ -156,4 +169,44 @@ private fun DocumentBuilder.purchaseObject() {
 
 private fun DocumentBuilder.iniciatorfio() {
     field("INICIATORFIO", get<PurchaseIniciator>().fio.fio)
+}
+
+private fun DocumentBuilder.purchasePoint(){
+    field("PP", get<PurchasePoint>().number.point)
+}
+
+private fun DocumentBuilder.deadline(){
+    field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
+}
+
+private fun DocumentBuilder.place(){
+    field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
+}
+
+private fun DocumentBuilder.documentResponsibleEmailAndPhone(){
+    field("DOCEMAIL", get<ResponsibleForDocumentsPerson>().email.email)
+    field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
+}
+
+private fun DocumentBuilder.genetivePurchasePoint(){
+    val genetiveName=get<PurchaseObject>().shortName.replace("услуги","услуг")
+    field("NAMGENETIVE", genetiveName)
+}
+
+private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost(){
+    val avance =  get<PurchaseCost>() * BigDecimal("0.3")
+
+    val seventyPercent= get<PurchaseCost>() * BigDecimal("0.7")
+
+    field("RUBLEAVANCENUMB", avance?.rubles?.toString().orEmpty())
+    field("COPEEKAVANCENUMB", avance?.copecks?.let { "%02d".format(it) }.orEmpty())
+    field("RUBAVANCE", avance?.spelloutRubles().orEmpty())
+    field("AVANCERUB", avance.rublesUnit())
+    field("AVANCECOP", avance.copecksUnit())
+
+    field("SEVENTYPERCRUBNUMB", seventyPercent?.rubles?.toString().orEmpty())
+    field("SEVENTYPERCCOPNUMB", seventyPercent?.copecks?.let { "%02d".format(it) }.orEmpty())
+    field("RUBLSEVENTYPERC", seventyPercent?.spelloutRubles().orEmpty())
+    field("SEVENTYRUB", avance.rublesUnit())
+    field("SEVENTYCOP", avance.copecksUnit())
 }
