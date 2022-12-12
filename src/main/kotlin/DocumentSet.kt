@@ -207,6 +207,6 @@ private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost(){
     field("SEVENTYPERCRUBNUMB", seventyPercent.rubles.toString())
     field("SEVENTYPERCCOPNUMB", seventyPercent.copecks.let { "%02d".format(it) })
     field("RUBLSEVENTYPERC", seventyPercent.spelloutRubles())
-    field("SEVENTYRUB", avance.rublesUnit())
-    field("SEVENTYCOP", avance.copecksUnit())
+    field("SEVENTYRUB", seventyPercent.rublesUnit())
+    field("SEVENTYCOP", seventyPercent.copecksUnit())
 }
