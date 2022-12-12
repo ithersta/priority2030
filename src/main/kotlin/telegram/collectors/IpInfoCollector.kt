@@ -12,7 +12,6 @@ import services.SbisParser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.CollectorStrings
-import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidAnswer
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
@@ -52,7 +51,11 @@ fun CollectorMapBuilder.ipInfoCollector() {
                         }
                     })
             }
-            onText(ButtonStrings.Yes) { state.override { IpCollectorState.WaitingPhone(mainInfo) } }
+            onText(ButtonStrings.Yes) {
+                state.override {
+                    IpCollectorState.WaitingSpecifyLegalAddressOfEntrepreneur(mainInfo)
+                }
+            }
             onText(ButtonStrings.No) { state.override { IpCollectorState.WaitingForInn } }
             onText { sendTextMessage(it.chat, InvalidAnswer) }
         }
@@ -97,6 +100,22 @@ fun CollectorMapBuilder.ipInfoCollector() {
                 }
             }
         }
+
+        state<IpCollectorState.WaitingSpecifyLegalAddressOfEntrepreneur> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.cityAddress) }
+             // не уверен что самый умный способ но другого я не придумал =)
+            onText {
+                state.override {
+                    IpCollectorState.WaitingPhone(
+                        IpInfo(
+                            mainInfo.inn, mainInfo.ogrn, mainInfo.fullNameOfHolder, mainInfo.orgrnData,
+                            mainInfo.location + it.content.text
+                        )
+                    )
+                }
+            }
+        }
+
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.Phone) }
             onText {

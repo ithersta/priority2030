@@ -135,6 +135,11 @@ object IpCollectorState {
     ) : DialogState
 
     @Serializable
+    data class  WaitingSpecifyLegalAddressOfEntrepreneur(
+        val mainInfo: IpInfo
+    ):DialogState
+
+    @Serializable
     data class WaitingPhone(
         val mainInfo: IpInfo
     ) : DialogState
