@@ -16,7 +16,6 @@ import telegram.resources.strings.CollectorStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidAnswer
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber
-import validation.IsFullNameValid
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate as JavaLocalDate
 
@@ -86,16 +85,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
         }
         state<IpCollectorState.HandsWaitingfullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.FullName) }
-            onText {
-                if (IsFullNameValid(it.content.text)) {
-                    state.override {
-                        IpCollectorState.HandsWaitingLocation(inn, ogrn, ogrnDate, it.content.text)
-                    }
-                } else {
-                    sendTextMessage(it.chat, CollectorStrings.Recommendations.FullName)
-                    return@onText
-                }
-            }
+            onText { state.override { IpCollectorState.HandsWaitingLocation(inn, ogrn, ogrnDate, it.content.text) } }
         }
         state<IpCollectorState.HandsWaitingLocation> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.Location) }
