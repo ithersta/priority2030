@@ -3,8 +3,9 @@ package domain.entities
 import kotlinx.serialization.Serializable
 import org.apache.commons.validator.routines.EmailValidator
 
+@JvmInline
 @Serializable
-data class Email private constructor(
+value class Email private constructor(
     val email: String
 ) {
     companion object {
