@@ -1,8 +1,8 @@
 package validation
 
 object IsShortNameValid {
-    operator fun invoke(cost: String): Boolean {
+    operator fun invoke(shortName: String): Boolean {
         val regex = Regex(pattern = "услуги по .+")
-        return regex.matches(input = cost)
+        return regex.matches(input = shortName)
     }
 }
