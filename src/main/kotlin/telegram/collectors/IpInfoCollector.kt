@@ -103,14 +103,10 @@ fun CollectorMapBuilder.ipInfoCollector() {
 
         state<IpCollectorState.WaitingSpecifyLegalAddressOfEntrepreneur> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.cityAddress) }
-             // не уверен что самый умный способ но другого я не придумал =)
             onText {
                 state.override {
                     IpCollectorState.WaitingPhone(
-                        IpInfo(
-                            mainInfo.inn, mainInfo.ogrn, mainInfo.fullNameOfHolder, mainInfo.orgrnData,
-                            mainInfo.location + it.content.text
-                        )
+                        mainInfo.copy(location = mainInfo.location + it.content.text)
                     )
                 }
             }
