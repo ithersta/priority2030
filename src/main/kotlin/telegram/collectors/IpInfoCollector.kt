@@ -70,7 +70,7 @@ fun CollectorMapBuilder.ipInfoCollector() {
             }
         }
         state<IpCollectorState.HandsWaitingDataOfOgrn> {
-            onEnter { sendTextMessage(it, CollectorStrings.IP.Date) }
+            onEnter { sendTextMessage(it, CollectorStrings.IP.OgrnDate) }
             onText {
                 val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.uuuu")
                 val ogrnDate = runCatching {
