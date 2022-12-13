@@ -31,10 +31,7 @@ fun CollectorMapBuilder.purchaseDescriptionCollector() {
         }
         state<PurchaseDescriptionState.WaitingForSelectionLetter> {
             onEnter {
-                sendTextMessage(
-                    it,
-                    CollectorStrings.PurchaseDescription.SelectionLetter
-                )
+                sendTextMessage(it, CollectorStrings.PurchaseDescription.SelectionLetter)
             }
             onText {
                 val letter = SelectionLetter.of(it.content.text)
