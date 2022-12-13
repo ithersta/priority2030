@@ -12,7 +12,6 @@ import services.SbisParser
 import telegram.entities.state.IpCollectorState
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.CollectorStrings
-import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.InvalidInputStrings.InvalidAnswer
 import telegram.resources.strings.InvalidInputStrings.InvalidEmail
 import telegram.resources.strings.InvalidInputStrings.InvalidPhoneNumber

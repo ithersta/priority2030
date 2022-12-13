@@ -15,4 +15,7 @@ data class PurchaseCost(
 
     operator fun times(other: BigDecimal) =
         PurchaseCost(other.multiply(value.toBigDecimal()).setScale(0, RoundingMode.HALF_UP).toLong())
+
+    operator fun minus(other: PurchaseCost) =
+        PurchaseCost(this.value - other.value)
 }
