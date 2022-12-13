@@ -68,7 +68,7 @@ val documentSet = documentSet {
             deadline()
             place()
             documentResponsibleEmailAndPhone()
-            genitivePurchasePoint()
+            genitivePurchaseObject()
             thirtyAndSeventyPercentsOfCost()
         }
 
@@ -81,7 +81,7 @@ val documentSet = documentSet {
             deadline()
             place()
             documentResponsibleEmailAndPhone()
-            genitivePurchasePoint()
+            genitivePurchaseObject()
             thirtyAndSeventyPercentsOfCost()
         }
     }
@@ -194,9 +194,9 @@ private fun DocumentBuilder.documentResponsibleEmailAndPhone() {
     field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
 
-private fun DocumentBuilder.genitivePurchasePoint() {
+private fun DocumentBuilder.genitivePurchaseObject() {
     val genitiveName = get<PurchaseObject>().shortName.replaceFirst("услуги", "услуг")
-    field("NAMGENETIVE", genitiveName)
+    field("NAMGENITIVE", genitiveName)
 }
 
 private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost() {
