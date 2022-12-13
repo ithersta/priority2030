@@ -12,7 +12,7 @@ internal class IsShortNameValidTest {
         Assertions.assertTrue(IsShortNameValid
             ("услуги по выплатам материальной помощи Ангольским жирафам, предназначенным для их кормления"))
         Assertions.assertTrue(IsShortNameValid
-            ("услуги по выплатам материальной помощи Сетчатым жирафам: фонд DSWT"))
+            ("Услуги по выплатам материальной помощи Сетчатым жирафам: фонд DSWT"))
         Assertions.assertFalse(IsShortNameValid("услуги выплата южноафриканским жирафам"))
         Assertions.assertFalse(IsShortNameValid(""))
         Assertions.assertFalse(IsShortNameValid("1234 услуга по"))
