@@ -3,10 +3,10 @@ package services
 import domain.entities.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import services.ConstantsForParsing.Timeout
 import services.ConstantsForParsing.FullNameIndex
 import services.ConstantsForParsing.IpOgrnIndex
 import services.ConstantsForParsing.OooOgrnIndex
+import services.ConstantsForParsing.Timeout
 
 private const val URL = "https://sbis.ru/contragents/"
 private const val SELECT = "#container > div.sbis_ru-content_wrapper.ws-flexbox.ws-flex-column > div > div >"

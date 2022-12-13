@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 import domain.datatypes.*
 import domain.documents.DocumentBuilder
 import domain.documents.documentSet
@@ -171,32 +173,32 @@ private fun DocumentBuilder.iniciatorfio() {
     field("INICIATORFIO", get<PurchaseIniciator>().fio.fio)
 }
 
-private fun DocumentBuilder.purchasePoint(){
+private fun DocumentBuilder.purchasePoint() {
     field("PP", get<PurchasePoint>().number.point)
 }
 
-private fun DocumentBuilder.deadline(){
+private fun DocumentBuilder.deadline() {
     field("DEADLINE", get<PurchaseDeadlineAndDeliveryAddress>().deadline.format("dd.MM.uuuu"))
 }
 
-private fun DocumentBuilder.place(){
+private fun DocumentBuilder.place() {
     field("PLACE", get<PurchaseDeadlineAndDeliveryAddress>().deliveryAddress)
 }
 
-private fun DocumentBuilder.documentResponsibleEmailAndPhone(){
+private fun DocumentBuilder.documentResponsibleEmailAndPhone() {
     field("DOCEMAIL", get<ResponsibleForDocumentsPerson>().email.email)
     field("DOCPRIVATEPHONE", get<ResponsibleForDocumentsPerson>().contactPhoneNumber.number)
 }
 
-private fun DocumentBuilder.genetivePurchasePoint(){
-    val genetiveName=get<PurchaseObject>().shortName.replaceFirst("услуги","услуг")
+private fun DocumentBuilder.genetivePurchasePoint() {
+    val genetiveName = get<PurchaseObject>().shortName.replaceFirst("услуги", "услуг")
     field("NAMGENETIVE", genetiveName)
 }
 
-private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost(){
-    val avance =  get<PurchaseCost>() * BigDecimal("0.3")
+private fun DocumentBuilder.thirtyAndSeventyPercentsOfCost() {
+    val avance = get<PurchaseCost>() * BigDecimal("0.3")
 
-    val seventyPercent = get<PurchaseCost>()-avance
+    val seventyPercent = get<PurchaseCost>() - avance
 
     field("RUBLEAVANCENUMB", avance.rubles.toString())
     field("COPEEKAVANCENUMB", avance.copecks.let { "%02d".format(it) })

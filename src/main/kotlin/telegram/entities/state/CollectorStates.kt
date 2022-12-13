@@ -1,8 +1,6 @@
 package telegram.entities.state
 
 import domain.datatypes.Bank
-import domain.entities.IpInfo
-import domain.entities.OrgInfo
 import domain.entities.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
