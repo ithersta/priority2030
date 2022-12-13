@@ -1,13 +1,14 @@
 package domain.entities
 
 import kotlinx.serialization.Serializable
-import validation.IsLetterEventValid
 
+@JvmInline
 @Serializable
-data class SelectionLetter private constructor(
-    val letter: String
+value class SelectionLetter private constructor(
+    val value: String
 ) {
     companion object {
-        fun of(letter: String) = if (IsLetterEventValid(letter)) SelectionLetter(letter) else null
+        fun of(letter: String) = SelectionLetter(letter.lowercase())
+            .takeIf { Regex("[а-уё]").matches(it.value) }
     }
 }
