@@ -1,13 +1,14 @@
 package services
 
 import domain.entities.IpOgrn
-import extensions.format
+import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class ParserRusprofileTest {
     @Test
     fun parseWebPage() {
-        val date = ParserRusprofile().parseWebPage(IpOgrn.of("304182813200102")!!)
-        println(date?.format("dd.MM.uuuu"))
+        val date = ParserRusprofile().parseWebPage(IpOgrn.of("321554300064704")!!)
+        assertEquals(date, LocalDate.parse("2021-10-07"))
     }
 }
