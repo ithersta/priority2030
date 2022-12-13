@@ -6,6 +6,7 @@ import dev.inmo.tgbotapi.utils.bold
 import dev.inmo.tgbotapi.utils.buildEntities
 import dev.inmo.tgbotapi.utils.regular
 import dev.inmo.tgbotapi.utils.regularln
+import domain.entities.Email
 
 object Strings {
     object Menu {
@@ -31,7 +32,8 @@ object Strings {
     const val SuccessfulSendDocs = "Документы успешно отправлены на проверку"
     const val InProcess = "Функция находится на этапе разработки"
     const val InitiatorFullName = "Введите ФИО инициатора закупки (ответственного исполнителя)"
-    const val SendDocuments = "Отправить документы на почту?"
+    const val ReplyToEmail = "Введите адрес электронной почты для ответа"
+    const val SendDocuments = "Отправить документы на проверку?"
     val CheckListOfDocs = """|Проверьте список документов:
             |
             |1. Заявка на размещение
@@ -75,4 +77,5 @@ object Strings {
         "Загружено недостаточное количество документов. $current/$needed"
 
     fun tooBigFileSize(filename: String) = "Файл $filename слишком большой. Загрузите файл размером не более 20Мб"
+    fun confirmReplyToEmail(replyTo: Email) = "Вы хотите получить ответ на почту ${replyTo.email}?"
 }

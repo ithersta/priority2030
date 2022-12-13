@@ -2,6 +2,7 @@ package telegram.entities.state
 
 import dev.inmo.tgbotapi.requests.abstracts.FileId
 import domain.documents.Document
+import domain.entities.Email
 import kotlinx.serialization.Serializable
 
 const val MIN_NUM_OF_COMMERCIAL_OFFERS = 3
@@ -16,7 +17,9 @@ object FillingProvisionOfServicesState {
     ) : DialogState
 
     @Serializable
-    object AfterDownload : DialogState
+    data class AfterDownload(
+        val replyTo: Email?
+    ) : DialogState
 
     @Serializable
     class DownloadDocsByEmail(
@@ -24,10 +27,13 @@ object FillingProvisionOfServicesState {
     ) : DialogState
 
     @Serializable
-    object CheckAndUploadDocs : DialogState
+    class CheckAndUploadDocs(
+        val replyTo: Email?
+    ) : DialogState
 
     @Serializable
     data class WaitingForDocs(
+        val replyTo: Email?,
         val docs: List<UploadedDocument> = emptyList(),
         val typeIndex: Int = 0
     ) : DialogState {
@@ -51,12 +57,27 @@ object FillingProvisionOfServicesState {
 
     @Serializable
     data class WaitingForFullNameOfInitiator(
+        val replyTo: Email?,
+        val docs: List<WaitingForDocs.UploadedDocument>
+    ) : DialogState
+
+    @Serializable
+    data class WaitingForReplyToEmail(
+        val initiatorFullName: String,
+        val docs: List<WaitingForDocs.UploadedDocument>
+    ) : DialogState
+
+    @Serializable
+    data class ConfirmReplyToEmail(
+        val initiatorFullName: String,
+        val replyTo: Email,
         val docs: List<WaitingForDocs.UploadedDocument>
     ) : DialogState
 
     @Serializable
     data class SendDocs(
         val initiatorFullName: String,
+        val replyTo: Email,
         val docs: List<WaitingForDocs.UploadedDocument>
     ) : DialogState
 }
