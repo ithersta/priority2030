@@ -1,8 +1,6 @@
 package telegram.entities.state
 
 import domain.datatypes.Bank
-import domain.entities.IpInfo
-import domain.entities.OrgInfo
 import domain.entities.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -123,14 +121,14 @@ object IpCollectorState {
     data class HandsWaitingfullNameOfHolder(
         val inn: IpInn,
         val ogrn: IpOgrn,
-        val dataOgrn: String
+        val ogrnDate: LocalDate
     ) : DialogState
 
     @Serializable
     data class HandsWaitingLocation(
         val inn: IpInn,
         val ogrn: IpOgrn,
-        val dataOgrn: String,
+        val ogrnDate: LocalDate,
         val fullNameOfHolder: String
     ) : DialogState
 
