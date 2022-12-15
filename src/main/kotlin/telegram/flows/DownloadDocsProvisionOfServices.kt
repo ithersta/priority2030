@@ -173,9 +173,7 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
                 } else ReplyKeyboardRemove()
             )
         }
-        onDocument {
-            handleUploadedDocuments(it.chat, listOf(it.content.media))
-        }
+        onDocument { handleUploadedDocuments(it.chat, listOf(it.content.media)) }
         onDocumentMediaGroup { message ->
             handleUploadedDocuments(message.chat, message.content.group.map { it.content.media })
         }
@@ -189,8 +187,9 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
             }
         }
         onText(ButtonStrings.NotUploadExtraDocs){
-            state.override { copy(typeIndex = typeIndex + 1) }
+            ///после редактирования кода я без понятия, как оно работает.
         }
+
     }
 }
 
