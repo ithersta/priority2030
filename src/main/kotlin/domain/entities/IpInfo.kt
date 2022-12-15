@@ -8,6 +8,5 @@ data class IpInfo(
     val inn: IpInn,
     val ogrn: IpOgrn,
     val fullNameOfHolder: String,
-    val ogrnDate: LocalDate,
-    val location: String
+    val ogrnDate: LocalDate
 )

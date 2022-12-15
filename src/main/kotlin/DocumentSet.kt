@@ -36,7 +36,7 @@ val documentSet = documentSet {
     document("/documents/Заявка на размещение.docx") {
         purchaseObject()
         field("CUSTOMER", get<PurchaseInitiatorDepartment>().department)
-        termOfPaymentToStrings.get(get())?.let { field("PAYMENTWAY", it) }
+        termOfPaymentToStrings[get()]?.let { field("PAYMENTWAY", it) }
         purchaseCost()
 
         financiallyResponsiblePerson()
@@ -96,7 +96,7 @@ private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run
     field("ENPREPRENEURINIC", morphedFullName.surnameInitials)
     field("OGRNIPNUMB", mainInfo.ogrn.value)
     field("OGRNIPDATE", mainInfo.ogrnDate.format(dateTimeFormatter))
-    field("ENTERPRENEURADDRESS", mainInfo.location)
+    field("ENTERPRENEURADDRESS", location)
     field("ENTERPRENEURINN", mainInfo.inn.value)
     field("ENTERPRENEUREMAIL", email.email)
     field("ENTERPRENEURPHONE", phone.number)

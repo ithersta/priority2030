@@ -125,26 +125,20 @@ object IpCollectorState {
     ) : DialogState
 
     @Serializable
-    data class HandsWaitingLocation(
-        val inn: IpInn,
-        val ogrn: IpOgrn,
-        val ogrnDate: LocalDate,
-        val fullNameOfHolder: String
+    data class WaitingLocation(
+        val mainInfo: IpInfo
     ) : DialogState
 
     @Serializable
-    data class  WaitingSpecifyLegalAddressOfEntrepreneur(
-        val mainInfo: IpInfo
-    ):DialogState
-
-    @Serializable
     data class WaitingPhone(
-        val mainInfo: IpInfo
+        val mainInfo: IpInfo,
+        val location: String
     ) : DialogState
 
     @Serializable
     data class WaitingEmail(
         val mainInfo: IpInfo,
+        val location: String,
         val phone: PhoneNumber
     ) : DialogState
 }

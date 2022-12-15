@@ -67,6 +67,7 @@ internal class DocumentSetTest {
             OrganizationType.IP,
             EntrepreneurInformation(
                 SbisParser().getIpInfo(IpInn.of("551002798304")!!)!!,
+                "Омская обл., г. Омск\n",
                 PhoneNumber.of("+79000000000")!!,
                 Email.of("s@g.com")!!
             )
