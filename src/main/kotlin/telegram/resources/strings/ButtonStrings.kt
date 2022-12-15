@@ -16,8 +16,7 @@ object ButtonStrings {
     const val BackToCreateDocs = "Вернуться к заполнению документов"
     const val UploadDocuments = "Загрузить документы"
 
-    // тут бы немного другое название у кнопки, чтобы
-    // пользователь не подумал, что при нажатии он перейдет сразу к отправке
+    const val NotUploadExtraDocs = "Не загружать дополнительные документы"
     const val UploadedAllDocs = "Документы загружены"
     const val Send = "Отправить"
     const val Yes = "Да"

@@ -160,14 +160,38 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
                     Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
                     Type.Extra -> Strings.UploadDocs.ExtraDocs
                 },
-                replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
+                replyMarkup = if (type.max != type.min){
+                    if(type == Type.Extra){
+                        replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                            row { simpleButton(ButtonStrings.NotUploadExtraDocs) }
+                        }
+                    } else {
+                        replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                        row { simpleButton(ButtonStrings.UploadedAllDocs) }
+                    }
+                }
                 } else ReplyKeyboardRemove()
             )
         }
-        onDocument { handleUploadedDocuments(it.chat, listOf(it.content.media)) }
+        onDocument {
+            handleUploadedDocuments(it.chat, listOf(it.content.media))
+            val type = state.snapshot.type ?: return@onDocument
+            if(type == Type.Extra) {
+                ReplyKeyboardRemove()
+                replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
+                }
+            }
+        }
         onDocumentMediaGroup { message ->
             handleUploadedDocuments(message.chat, message.content.group.map { it.content.media })
+            val type = state.snapshot.type ?: return@onDocumentMediaGroup
+            if(type == Type.Extra) {
+                ReplyKeyboardRemove()
+                replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
+                }
+            }
         }
         onText(ButtonStrings.UploadedAllDocs) { message ->
             val type = state.snapshot.type ?: return@onText
