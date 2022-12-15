@@ -14,10 +14,10 @@ fun CollectorMapBuilder.purchaseObjectCollector() {
         state<PurchaseObjectState> {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortName) }
             onText {
-                val purchaseObj = ShortName.of(it.content.text)
-                if(purchaseObj != null) {
+                val shortName = ShortName.of(it.content.text)
+                if(shortName != null) {
                     val purchaseObject = PurchaseObject(
-                        purchaseObj
+                        shortName
                     )
                     this@collector.exit(state, purchaseObject)
                 } else{
