@@ -175,23 +175,9 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
         }
         onDocument {
             handleUploadedDocuments(it.chat, listOf(it.content.media))
-            val type = state.snapshot.type ?: return@onDocument
-            if(type == Type.Extra) {
-                ReplyKeyboardRemove()
-                replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
-                }
-            }
         }
         onDocumentMediaGroup { message ->
             handleUploadedDocuments(message.chat, message.content.group.map { it.content.media })
-            val type = state.snapshot.type ?: return@onDocumentMediaGroup
-            if(type == Type.Extra) {
-                ReplyKeyboardRemove()
-                replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
-                }
-            }
         }
         onText(ButtonStrings.UploadedAllDocs) { message ->
             val type = state.snapshot.type ?: return@onText
@@ -201,6 +187,9 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
             } else {
                 sendTextMessage(message.chat, Strings.incorrectNumOfDocs(count, type.min))
             }
+        }
+        onText(ButtonStrings.NotUploadExtraDocs){
+            state.override { copy(typeIndex = typeIndex + 1) }
         }
     }
 }
