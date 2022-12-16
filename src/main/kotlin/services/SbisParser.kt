@@ -26,7 +26,6 @@ class SbisParser {
             ipOgrn,
             fullNameOfHolder(document),
             ParserRusprofile().parseWebPage(ipOgrn) ?: error("Ogrn is invalid"),
-            location(document)
         )
     }.getOrNull()
 

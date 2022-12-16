@@ -53,7 +53,11 @@ fun CollectorMapBuilder.ipInfoCollector() {
                         }
                     })
             }
-            onText(ButtonStrings.Yes) { state.override { IpCollectorState.WaitingPhone(mainInfo) } }
+            onText(ButtonStrings.Yes) {
+                state.override {
+                    IpCollectorState.WaitingLocation(mainInfo)
+                }
+            }
             onText(ButtonStrings.No) { state.override { IpCollectorState.WaitingForInn } }
             onText { sendTextMessage(it.chat, InvalidAnswer) }
         }
@@ -85,25 +89,28 @@ fun CollectorMapBuilder.ipInfoCollector() {
         }
         state<IpCollectorState.HandsWaitingfullNameOfHolder> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.FullName) }
-            onText { state.override { IpCollectorState.HandsWaitingLocation(inn, ogrn, ogrnDate, it.content.text) } }
-        }
-        state<IpCollectorState.HandsWaitingLocation> {
-            onEnter { sendTextMessage(it, CollectorStrings.IP.Location) }
             onText {
                 state.override {
-                    IpCollectorState.WaitingPhone(
-                        IpInfo(inn, ogrn, fullNameOfHolder, ogrnDate, it.content.text)
-                    )
+                    IpCollectorState.WaitingLocation(IpInfo(inn, ogrn, it.content.text, ogrnDate))
                 }
             }
         }
+        state<IpCollectorState.WaitingLocation> {
+            onEnter { sendTextMessage(it, CollectorStrings.IP.Location) }
+            onText {
+                state.override {
+                    IpCollectorState.WaitingPhone(mainInfo, it.content.text)
+                }
+            }
+        }
+
         state<IpCollectorState.WaitingPhone> {
             onEnter { sendTextMessage(it, CollectorStrings.IP.Phone) }
             onText {
                 val phoneNumber = PhoneNumber.of(it.content.text)
                 if (phoneNumber != null) {
                     state.override {
-                        IpCollectorState.WaitingEmail(mainInfo, phoneNumber)
+                        IpCollectorState.WaitingEmail(mainInfo, location, phoneNumber)
                     }
                 } else {
                     sendTextMessage(it.chat, InvalidPhoneNumber)
@@ -116,7 +123,12 @@ fun CollectorMapBuilder.ipInfoCollector() {
             onText {
                 val email = Email.of(it.content.text)
                 if (email != null) {
-                    val info = EntrepreneurInformation(state.snapshot.mainInfo, state.snapshot.phone, email)
+                    val info = EntrepreneurInformation(
+                        state.snapshot.mainInfo,
+                        state.snapshot.location,
+                        state.snapshot.phone,
+                        email
+                    )
                     this@collector.exit(state, info)
                 } else {
                     sendTextMessage(it.chat, InvalidEmail)
