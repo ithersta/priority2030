@@ -19,4 +19,3 @@ class DocumentBuilder(
 
     fun build() = Document(templatePath, replacements.toList())
 }
-

@@ -22,7 +22,7 @@ import telegram.resources.strings.Strings
 import kotlin.reflect.KClass
 
 private typealias CollectorNestedStateMachineBuilder<T> =
-        NestedStateMachineBuilder<DialogState, *, CollectingDataState, *, UserId, CollectorResult<T>>
+NestedStateMachineBuilder<DialogState, *, CollectingDataState, *, UserId, CollectorResult<T>>
 
 sealed interface CollectorResult<T : FieldData> {
     class OK<T : FieldData>(val data: T) : CollectorResult<T>
@@ -72,7 +72,8 @@ class CollectorMapBuilder {
                                 simpleButton(ButtonStrings.No)
                                 simpleButton(ButtonStrings.Yes)
                             }
-                        })
+                        }
+                    )
                 }
                 onText(ButtonStrings.No) { state.override { returnTo } }
                 onText(ButtonStrings.Yes) { this@nestedStateMachine.exit(state, CollectorResult.Cancel) }

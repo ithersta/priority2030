@@ -15,7 +15,8 @@ fun CollectorMapBuilder.termOfPaymentCollector() {
     collector<TermOfPayment>(initialState = TermOfPaymentState) {
         state<TermOfPaymentState> {
             onEnter {
-                sendTextMessage(it,
+                sendTextMessage(
+                    it,
                     CollectorStrings.TermOfPayment.Question,
                     replyMarkup = replyKeyboard(
                         resizeKeyboard = true,
@@ -30,7 +31,8 @@ fun CollectorMapBuilder.termOfPaymentCollector() {
                         row {
                             simpleButton(CollectorStrings.TermOfPayment.Partially)
                         }
-                    })
+                    }
+                )
             }
             onText { message ->
                 val type = when (message.content.text) {

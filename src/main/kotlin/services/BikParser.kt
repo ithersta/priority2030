@@ -17,7 +17,7 @@ class BikParser {
             .timeout(Timeout)
 
         val document = connection.execute().parse()
-        val firstStrongElement = document.select("strong").first();
+        val firstStrongElement = document.select("strong").first()
         check(firstStrongElement?.text() != "Ошибка!")
         val name = document.select("body > div.container > ul:nth-child(7) > li:nth-child(3) > b").html()
         val correspondentAccount = CorrespondentAccount.of(

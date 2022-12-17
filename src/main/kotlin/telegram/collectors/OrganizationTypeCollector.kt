@@ -14,7 +14,9 @@ fun CollectorMapBuilder.organizationTypeCollector() {
     collector<OrganizationType>(initialState = OrganizationTypeState) {
         state<OrganizationTypeState> {
             onEnter {
-                sendTextMessage(it, CollectorStrings.OrganizationType.Message,
+                sendTextMessage(
+                    it,
+                    CollectorStrings.OrganizationType.Message,
                     replyMarkup = replyKeyboard(
                         resizeKeyboard = true,
                         oneTimeKeyboard = true

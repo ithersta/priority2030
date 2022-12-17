@@ -178,10 +178,8 @@ object PurchasePointState : DialogState
 @Serializable
 object PurchaseIniciatorState : DialogState
 
-
 @Serializable
 object PurchaseCostState : DialogState
-
 
 object FinanciallyResponsiblePersonState {
     @Serializable
@@ -200,7 +198,8 @@ object ResponsibleForDocumentsPersonState {
 
     @Serializable
     data class WaitingForEmail(
-        val fio: Fio, val contactPhoneNumber: PhoneNumber
+        val fio: Fio,
+        val contactPhoneNumber: PhoneNumber
     ) : DialogState
 }
 
