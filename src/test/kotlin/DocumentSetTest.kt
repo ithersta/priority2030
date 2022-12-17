@@ -14,13 +14,13 @@ internal class DocumentSetTest {
 
     private fun Collection<FieldData>.toFieldDataMap() = associateBy { it::class }
     private val dataset = listOf(
-        PurchaseObject("услуги по чему-то"),
+        PurchaseObject(ShortName.of("услуги по чему-то")!!),
         PurchaseDescription(
             "Краткое обоснование",
             SelectionLetter.of("а")!!,
             SelectionIdentifier.of("ПРГ1")!!,
             "Полное обоснование",
-            false
+            true
         ),
         PurchasePoint(PurchasePoints.of("2")!!),
         PurchaseIniciator(Fio.of("Г.Г. Дударь")!!),
@@ -36,7 +36,12 @@ internal class DocumentSetTest {
         PaymentDetails(
             BikParser().parseWebPage(Bik.of("044525225")!!)!!,
             SettlementAccount.of("30301810000006000001")!!
-        )
+        ),
+        FinanciallyResponsiblePerson(
+            Fio.of("А.А. Финансовый")!!,
+            PhoneNumber.of("+79000000001")!!
+        ),
+        MaterialObjectNumber(2)
     )
 
     @Test
