@@ -86,7 +86,12 @@ fun CollectorMapBuilder.organizationInfoCollector() {
             onText {
                 state.override {
                     CompanyCollectorState.HandsWaitingLocation(
-                        inn, kpp, ogrn, fullNameOfOrg, fullNameOfHolder, it.content.text
+                        inn,
+                        kpp,
+                        ogrn,
+                        fullNameOfOrg,
+                        fullNameOfHolder,
+                        it.content.text
                     )
                 }
             }
@@ -97,7 +102,13 @@ fun CollectorMapBuilder.organizationInfoCollector() {
                 state.override {
                     CompanyCollectorState.WaitingPhone(
                         OrgInfo(
-                            inn, kpp, ogrn, fullNameOfOrg, post, fullNameOfHolder, it.content.text
+                            inn,
+                            kpp,
+                            ogrn,
+                            fullNameOfOrg,
+                            post,
+                            fullNameOfHolder,
+                            it.content.text
                         )
                     )
                 }
@@ -105,7 +116,9 @@ fun CollectorMapBuilder.organizationInfoCollector() {
         }
         state<CompanyCollectorState.WaitingInspection> {
             onEnter {
-                sendTextMessage(it, CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg.replace("ИП", "")),
+                sendTextMessage(
+                    it,
+                    CollectorStrings.Ooo.isRight(state.snapshot.fullNameOfOrg.replace("ИП", "")),
                     replyMarkup = replyKeyboard(
                         resizeKeyboard = true,
                         oneTimeKeyboard = true

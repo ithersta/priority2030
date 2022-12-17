@@ -52,7 +52,6 @@ fun CollectorMapBuilder.responsibleForDocumentsPersonCollector() {
                         email
                     )
                     this@collector.exit(state, responsibleForDocumentsPerson)
-
                 } else {
                     sendTextMessage(it.chat.id, InvalidInputStrings.InvalidEmail)
                 }

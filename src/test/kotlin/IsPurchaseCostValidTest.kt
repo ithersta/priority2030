@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions
-
 import validation.IsPurchaseCostValid
 
 internal class IsPurchaseCostValidTest {

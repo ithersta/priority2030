@@ -11,4 +11,3 @@ data class PurchasePoints private constructor(
         fun of(point: String) = if (IsPointNumberValid(point)) PurchasePoints(point) else null
     }
 }
-

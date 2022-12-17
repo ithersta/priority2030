@@ -134,7 +134,8 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.checkAndUploadDoc
     state<FillingProvisionOfServicesState.CheckAndUploadDocs> {
         onEnter { chatId ->
             sendTextMessage(
-                chatId, Strings.CheckListOfDocs,
+                chatId,
+                Strings.CheckListOfDocs,
                 replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
                     row { simpleButton(ButtonStrings.UploadDocuments) }
                 }
@@ -160,9 +161,13 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
                     Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
                     Type.Extra -> Strings.UploadDocs.ExtraDocs
                 },
-                replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
-                } else ReplyKeyboardRemove()
+                replyMarkup = if (type.max != type.min) {
+                    replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                        row { simpleButton(ButtonStrings.UploadedAllDocs) }
+                    }
+                } else {
+                    ReplyKeyboardRemove()
+                }
             )
         }
         onDocument { handleUploadedDocuments(it.chat, listOf(it.content.media)) }
@@ -215,7 +220,8 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.collectInfoForEma
                         simpleButton(ButtonStrings.No)
                         simpleButton(ButtonStrings.Yes)
                     }
-                })
+                }
+            )
         }
         onText(ButtonStrings.No) {
             state.override {
@@ -234,7 +240,8 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.sendDocsState() {
     state<FillingProvisionOfServicesState.SendDocs> {
         onEnter { chatId ->
             sendTextMessage(
-                chatId, Strings.SendDocuments,
+                chatId,
+                Strings.SendDocuments,
                 replyMarkup = replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
                     row {
                         simpleButton(ButtonStrings.No)
