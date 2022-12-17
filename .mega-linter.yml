@@ -10,4 +10,4 @@ ENABLE_LINTERS: KOTLIN_KTLINT
 SHOW_ELAPSED_TIME: true
 FILEIO_REPORTER: false
 # DISABLE_ERRORS: true # Uncomment if you want MegaLinter to detect errors but not block CI to pass
-KOTLIN_KTLINT_ARGUMENTS: --disabled_rules no-wildcard-imports trailing-comma-on-call-site trailing-comma-on-declaration-site
+KOTLIN_KTLINT_ARGUMENTS: --disabled_rules no-wildcard-imports,trailing-comma-on-call-site,trailing-comma-on-declaration-site
