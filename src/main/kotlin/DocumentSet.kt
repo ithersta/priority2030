@@ -170,7 +170,7 @@ private fun DocumentBuilder.materialObjectNumber() {
 }
 
 private fun DocumentBuilder.purchaseObject() {
-    field("NAME", get<PurchaseObject>().shortName.name.replaceFirst("У", "у")) 
+    field("NAME", get<PurchaseObject>().shortName.name)
 }
 
 private fun DocumentBuilder.iniciatorfio() {
