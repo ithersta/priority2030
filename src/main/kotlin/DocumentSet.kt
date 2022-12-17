@@ -168,7 +168,7 @@ private fun DocumentBuilder.materialObjectNumber() {
 }
 
 private fun DocumentBuilder.purchaseObject() {
-    field("NAME", get<PurchaseObject>().shortName)
+    field("NAME", get<PurchaseObject>().shortName.name)
 }
 
 private fun DocumentBuilder.iniciatorfio() {
@@ -193,7 +193,7 @@ private fun DocumentBuilder.documentResponsibleEmailAndPhone() {
 }
 
 private fun DocumentBuilder.genitivePurchaseObject() {
-    val genitiveName = get<PurchaseObject>().shortName.replaceFirst("услуги", "услуг")
+    val genitiveName = get<PurchaseObject>().shortName.name.replaceFirst("услуги", "услуг")
     field("NAMGENITIVE", genitiveName)
 }
 
