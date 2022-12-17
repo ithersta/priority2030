@@ -9,7 +9,7 @@ class ShortName private constructor(
     val name: String
 ) {
     companion object {
-        fun of(name: String) = ShortName(name.replaceFirstChar { it.lowercase(Locale.getDefault()) }).
-        takeIf{IsShortNameValid(it.name)}
+        fun of(name: String) = ShortName(name.replaceFirstChar { it.lowercase(Locale.getDefault()) })
+            .takeIf { IsShortNameValid(it.name) }
     }
 }

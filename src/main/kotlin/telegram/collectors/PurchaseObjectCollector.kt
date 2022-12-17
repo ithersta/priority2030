@@ -15,13 +15,13 @@ fun CollectorMapBuilder.purchaseObjectCollector() {
             onEnter { sendTextMessage(it, CollectorStrings.PurchaseDescription.ShortName) }
             onText {
                 val shortName = ShortName.of(it.content.text)
-                if(shortName != null) {
+                if (shortName != null) {
                     val purchaseObject = PurchaseObject(
                         shortName
                     )
                     this@collector.exit(state, purchaseObject)
-                } else{
-                    sendTextMessage(it.chat,InvalidInputStrings.InvalidShortName)
+                } else {
+                    sendTextMessage(it.chat, InvalidInputStrings.InvalidShortName)
                 }
             }
         }
