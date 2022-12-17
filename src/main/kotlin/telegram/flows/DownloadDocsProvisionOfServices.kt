@@ -160,16 +160,8 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
                     Type.CommercialOffer -> Strings.UploadDocs.CommercialOffers
                     Type.Extra -> Strings.UploadDocs.ExtraDocs
                 },
-                replyMarkup = if (type.max != type.min){
-                    if(type == Type.Extra){
-                        replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                            row { simpleButton(ButtonStrings.NotUploadExtraDocs) }
-                        }
-                    } else {
-                        replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
-                        row { simpleButton(ButtonStrings.UploadedAllDocs) }
-                    }
-                }
+                replyMarkup = if (type.max != type.min) replyKeyboard(resizeKeyboard = true, oneTimeKeyboard = true) {
+                    row { simpleButton(ButtonStrings.UploadedAllDocs) }
                 } else ReplyKeyboardRemove()
             )
         }
@@ -186,10 +178,6 @@ private fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.waitingForDocsSta
                 sendTextMessage(message.chat, Strings.incorrectNumOfDocs(count, type.min))
             }
         }
-        onText(ButtonStrings.NotUploadExtraDocs){
-            ///после редактирования кода я без понятия, как оно работает.
-        }
-
     }
 }
 
