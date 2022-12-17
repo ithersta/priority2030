@@ -20,4 +20,3 @@ class Petrovich {
         return MorphedFullName(fullName, name.orEmpty(), surname.orEmpty(), patronymic.orEmpty(), genitive)
     }
 }
-

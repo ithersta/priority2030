@@ -42,16 +42,19 @@ fun CollectorMapBuilder.ipInfoCollector() {
         }
         state<IpCollectorState.WaitingInspection> {
             onEnter {
-                sendTextMessage(it,
+                sendTextMessage(
+                    it,
                     CollectorStrings.IP.isRight(state.snapshot.fullNameOfHolder),
                     replyMarkup = replyKeyboard(
-                        resizeKeyboard = true, oneTimeKeyboard = true
+                        resizeKeyboard = true,
+                        oneTimeKeyboard = true
                     ) {
                         row {
                             simpleButton(ButtonStrings.No)
                             simpleButton(ButtonStrings.Yes)
                         }
-                    })
+                    }
+                )
             }
             onText(ButtonStrings.Yes) {
                 state.override {

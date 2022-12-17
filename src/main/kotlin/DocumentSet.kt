@@ -47,7 +47,6 @@ val documentSet = documentSet {
         deadline()
         place()
         iniciatorfio()
-
     }
     document("/documents/Заявка на оплату.docx") {
         paymentSum()
@@ -143,7 +142,6 @@ private fun DocumentBuilder.paymentSum() {
     field("COPEEKNUMB", payment?.copecks?.let { "%02d".format(it) }.orEmpty())
     field("RUBLES", payment?.spelloutRubles().orEmpty())
 }
-
 
 private fun DocumentBuilder.financiallyResponsiblePerson() {
     val person = if (get<PurchaseDescription>().materialValuesAreNeeded) {

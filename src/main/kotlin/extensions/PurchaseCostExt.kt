@@ -18,14 +18,16 @@ fun PurchaseCost.spelloutRubles(): String = spelloutNumberFormat.format(rubles)
 
 fun PurchaseCost.rublesUnit(): String = MessageFormat(
     "{0, plural, " +
-            "one {рубль}" +
-            "few {рубля}" +
-            "other {рублей}}", locale
+        "one {рубль}" +
+        "few {рубля}" +
+        "other {рублей}}",
+    locale
 ).format(arrayOf(rubles))
 
 fun PurchaseCost.copecksUnit(): String = MessageFormat(
     "{0, plural, " +
-            "one {копейка}" +
-            "few {копейки}" +
-            "other {копеек}}", locale
+        "one {копейка}" +
+        "few {копейки}" +
+        "other {копеек}}",
+    locale
 ).format(arrayOf(copecks))
