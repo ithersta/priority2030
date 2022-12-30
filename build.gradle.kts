@@ -25,8 +25,8 @@ repositories {
 dependencies {
     runtimeOnly(files("src/main/ruby"))
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
-    implementation("com.ithersta.tgbotapi:fsm:0.21.0")
-    implementation("com.ithersta.tgbotapi:sqlite-persistence:0.2.0")
+    implementation("com.ithersta.tgbotapi:fsm:0.22.0")
+    implementation("com.ithersta.tgbotapi:sqlite-persistence:0.3.0")
     implementation("com.ithersta.tgbotapi:commands:0.1.0")
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation("com.deepoove:poi-tl:1.12.0")

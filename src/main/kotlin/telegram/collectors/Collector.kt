@@ -26,7 +26,6 @@ NestedStateMachineBuilder<DialogState, *, CollectingDataState, *, UserId, Collec
 
 sealed interface CollectorResult<T : FieldData> {
     class OK<T : FieldData>(val data: T) : CollectorResult<T>
-    object Back : CollectorResult<FieldData>
     object Cancel : CollectorResult<FieldData>
 }
 
@@ -56,7 +55,6 @@ class CollectorMapBuilder {
         stateFilterBuilder.nestedStateMachine(
             onExit = { result ->
                 when (result) {
-                    is CollectorResult.Back -> copy(fieldsData = fieldsData.dropLast(1))
                     is CollectorResult.OK -> copy(fieldsData = fieldsData + result.data)
                     is CollectorResult.Cancel -> EmptyState
                 }
@@ -80,8 +78,11 @@ class CollectorMapBuilder {
                 onText { sendTextMessage(it.chat, InvalidInputStrings.InvalidAnswer) }
             }
             anyState {
-                onCommand("back", description = null) {
-                    this@nestedStateMachine.exit(state, CollectorResult.Back)
+                onCommand("back", description = null) { message ->
+                    if (state.rollback().not()) {
+                        sendTextMessage(message.chat, Strings.CantRollback)
+                        state.override { this }
+                    }
                 }
                 onCommand("cancel", description = null) {
                     state.override { CancelCollectingDataState(this) }
