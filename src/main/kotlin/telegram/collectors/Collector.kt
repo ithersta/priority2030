@@ -61,6 +61,9 @@ class CollectorMapBuilder {
                 }
             }
         ) {
+            anyState {
+                backCommand()
+            }
             state<CancelCollectingDataState> {
                 onEnter {
                     sendTextMessage(
@@ -79,7 +82,6 @@ class CollectorMapBuilder {
                 onText { sendTextMessage(it.chat, InvalidInputStrings.InvalidAnswer) }
             }
             anyState {
-                backCommand()
                 onCommand("cancel", description = null) {
                     state.override { CancelCollectingDataState(this) }
                 }
