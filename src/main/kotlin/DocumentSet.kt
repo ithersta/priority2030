@@ -86,7 +86,7 @@ val documentSet = documentSet {
     }
 }
 
-private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
+private suspend fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run {
     val morpher: Morpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
     val dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.forLanguageTag("ru"))
@@ -101,7 +101,7 @@ private fun DocumentBuilder.ipInformation() = get<EntrepreneurInformation>().run
     field("ENTERPRENEURPHONE", phone.number)
 }
 
-private fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run {
+private suspend fun DocumentBuilder.companyInformation() = get<CompanyInformation>().run {
     val morpher: Morpher by inject()
     val morphedFullName = morpher.morphFullName(mainInfo.fullNameOfHolder)
     field("GENERALMANAGERR", morphedFullName.genitive)
