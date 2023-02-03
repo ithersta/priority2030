@@ -18,12 +18,12 @@ object Strings {
         const val Back = "вернуться на шаг назад"
     }
 
-    const val BackOnlyInCollector = "Команда работает только во время заполнения документов"
     const val InternalError = "Произошла внутренняя ошибка бота"
     const val Welcome =
         "Этот бот поможет Вам с оформлением документов, необходимых для оформления закупки на оказание услуг с ООО или ИП (Закупка у единственного поставщика)"
     const val CreateDocumentsMessage = "Давайте начнём заполнение"
     const val CancelDataCollection = "Прервать заполнение документов?"
+    const val CantRollback = "Дальше вернуться нельзя"
     const val PackageDocsReady = "Пакет документов сформирован"
     const val UploadPackageDocs =
         "Проверьте корректность данных в документах. При необходимости внесите изменения перед отправкой на проверку."

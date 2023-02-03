@@ -14,7 +14,7 @@ import telegram.resources.strings.Strings
 private val logger = KotlinLogging.logger { }
 
 val stateMachine = rolelessStateMachine(
-    stateRepository = SqliteStateRepository.create<DialogState>(),
+    stateRepository = SqliteStateRepository.create<DialogState>(historyDepth = 30),
     initialState = EmptyState,
     onException = { userId, throwable ->
         logger.info(throwable) { userId }
@@ -24,7 +24,7 @@ val stateMachine = rolelessStateMachine(
 ) {
     cancelCommand(EmptyState)
     startCommand()
-    backCommandStub()
+    anyState { backCommand() }
     mainMenu.run { invoke() }
     documentBuildingLoop()
     fillDocsProvisionOfServices()
