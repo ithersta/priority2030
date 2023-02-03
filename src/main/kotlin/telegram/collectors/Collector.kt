@@ -16,6 +16,7 @@ import telegram.entities.state.CancelCollectingDataState
 import telegram.entities.state.CollectingDataState
 import telegram.entities.state.DialogState
 import telegram.entities.state.EmptyState
+import telegram.flows.backCommand
 import telegram.resources.strings.ButtonStrings
 import telegram.resources.strings.InvalidInputStrings
 import telegram.resources.strings.Strings
@@ -78,12 +79,7 @@ class CollectorMapBuilder {
                 onText { sendTextMessage(it.chat, InvalidInputStrings.InvalidAnswer) }
             }
             anyState {
-                onCommand("back", description = null) { message ->
-                    if (state.rollback().not()) {
-                        sendTextMessage(message.chat, Strings.CantRollback)
-                        state.override { this }
-                    }
-                }
+                backCommand()
                 onCommand("cancel", description = null) {
                     state.override { CancelCollectingDataState(this) }
                 }
