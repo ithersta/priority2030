@@ -12,6 +12,7 @@ fun RoleFilterBuilder<DialogState, Unit, Unit, UserId>.startCommand() {
     state<EmptyState> {
         onCommand("start", null) { message ->
             sendTextMessage(message.chat, Strings.Welcome)
+            refreshCommands()
             state.override { this }
         }
     }

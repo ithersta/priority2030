@@ -16,7 +16,7 @@ out/
 ### Eclipse ###
 .apt_generated
 .classpath
-.factorypath
+.Factorypath
 .project
 .settings
 .springBeans
@@ -38,4 +38,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-state.db
+*.db
+
+megalinter-reports/

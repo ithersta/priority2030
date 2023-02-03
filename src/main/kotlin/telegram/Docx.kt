@@ -1,8 +1,9 @@
 package telegram
 
-import com.xandryex.WordReplacer
+import com.deepoove.poi.XWPFTemplate
+import com.deepoove.poi.config.Configure
+import com.deepoove.poi.config.Configure.AbortHandler
 import domain.documents.Document
-import org.apache.poi.xwpf.usermodel.XWPFDocument
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
@@ -13,16 +14,15 @@ object Docx {
     }
 
     private fun replace(inputStream: InputStream, replacements: Collection<Pair<String, String>>): ByteArray {
-        return XWPFDocument(inputStream).use { document ->
-            val wordReplacer = WordReplacer(document)
-            replacements.forEach {
-                wordReplacer.replaceWordsInText(it.first, it.second)
-            }
-            wordReplacer.moddedXWPFDoc.use { moddedDocument ->
-                ByteArrayOutputStream().also {
-                    moddedDocument.write(it)
-                }.toByteArray()
-            }
+        return XWPFTemplate.compile(
+            inputStream,
+            Configure.builder()
+                .setValidErrorHandler(AbortHandler())
+                .build()
+        ).render(replacements.toMap()).use { document ->
+            ByteArrayOutputStream().also {
+                document.write(it)
+            }.toByteArray()
         }
     }
 }

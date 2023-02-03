@@ -1,10 +1,12 @@
 package domain.documents
 
+import org.koin.core.component.KoinComponent
+
 @DocumentDsl
 class DocumentBuilder(
     private val templatePath: String,
     override val fieldDataMap: FieldDataMap
-) : FieldDataContext {
+) : FieldDataContext, KoinComponent {
     private val replacements = mutableListOf<Pair<String, String>>()
 
     infix fun String.replaceWith(value: String) {
@@ -17,4 +19,3 @@ class DocumentBuilder(
 
     fun build() = Document(templatePath, replacements.toList())
 }
-
