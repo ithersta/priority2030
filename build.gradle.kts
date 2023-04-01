@@ -26,7 +26,7 @@ dependencies {
     implementation("com.ithersta.tgbotapi:sqlite-persistence:0.6.1")
     implementation("com.ithersta.tgbotapi:commands:0.3.0")
     implementation("org.apache.poi:poi-ooxml:5.2.2")
-    implementation("com.deepoove:poi-tl:1.12.0")
+    implementation("com.deepoove:poi-tl:1.12.1")
     implementation("org.apache.xmlgraphics:batik-bridge:1.16")
     implementation("org.apache.commons:commons-email:1.5")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
