@@ -33,7 +33,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.15.3")
     implementation("org.slf4j:slf4j-simple:2.0.4")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
-    implementation("org.junit.jupiter:junit-jupiter:5.9.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.9.2")
     implementation("commons-validator:commons-validator:1.7")
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.1")
