@@ -10,7 +10,7 @@ import org.koin.core.annotation.Single
 @Single
 class Petrovich {
     private val container = ScriptingContainer()
-    private val receiver = container.runScriptlet(PathType.CLASSPATH, "entrypoint.rb")
+    private val receiver = container.runScriptlet(PathType.CLASSPATH, "entrypoint.rb")!!
     private val mutex = Mutex()
 
     suspend fun morphFullName(fullName: String): MorphedFullName {

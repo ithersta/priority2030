@@ -2,7 +2,7 @@ version: '3.9'
 
 secrets:
   config:
-    file: /home/telegram/priority2030/config.properties
+    file: /root/.priority2030
 
 services:
   app:

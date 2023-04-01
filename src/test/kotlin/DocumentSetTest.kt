@@ -1,6 +1,7 @@
 import domain.datatypes.*
 import domain.documents.DocumentSet
 import domain.entities.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.Test
 import org.koin.core.context.startKoin
@@ -45,7 +46,7 @@ internal class DocumentSetTest {
     )
 
     @Test
-    fun `Для ООО`() {
+    fun `Для ООО`() = runBlocking {
         startKoin { modules(priority2030Module) }
         val oooDataset = listOf(
             OrganizationType.Ooo,
@@ -66,7 +67,7 @@ internal class DocumentSetTest {
     }
 
     @Test
-    fun `Для ИП`() {
+    fun `Для ИП`() = runBlocking {
         startKoin { modules(priority2030Module) }
         val ipDataset = listOf(
             OrganizationType.IP,

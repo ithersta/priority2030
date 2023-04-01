@@ -1,4 +1,4 @@
-FROM eclipse-temurin:18-jre
+FROM ghcr.io/graalvm/graalvm-ce:22.3.1
 
 USER 1000
 
