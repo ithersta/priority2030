@@ -39,7 +39,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.1")
     implementation("com.ibm.icu:icu4j:72.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-    implementation("io.github.classgraph:classgraph:4.8.151")
+    implementation("io.github.classgraph:classgraph:4.8.157")
     implementation("org.jruby:jruby-complete:9.4.2.0")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
