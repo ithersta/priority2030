@@ -25,7 +25,7 @@ dependencies {
     implementation("com.ithersta.tgbotapi:fsm:0.29.0")
     implementation("com.ithersta.tgbotapi:sqlite-persistence:0.6.1")
     implementation("com.ithersta.tgbotapi:commands:0.3.0")
-    implementation("org.apache.poi:poi-ooxml:5.2.2")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
     implementation("com.deepoove:poi-tl:1.12.0")
     implementation("org.apache.xmlgraphics:batik-bridge:1.16")
     implementation("org.apache.commons:commons-email:1.5")
