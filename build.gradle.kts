@@ -41,7 +41,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("io.github.classgraph:classgraph:4.8.151")
     implementation("org.jruby:jruby-complete:9.4.2.0")
-    compileOnly("io.insert-koin:koin-annotations:1.0.3")
+    compileOnly("io.insert-koin:koin-annotations:1.2.0")
     ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
     testImplementation(kotlin("test"))
 }
