@@ -36,7 +36,7 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter:5.9.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("ru.morpher:ws3.client:1.0-SNAPSHOT")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     implementation("com.ibm.icu:icu4j:72.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("io.github.classgraph:classgraph:4.8.151")
