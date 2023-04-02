@@ -42,7 +42,7 @@ dependencies {
     implementation("io.github.classgraph:classgraph:4.8.151")
     implementation("org.jruby:jruby-complete:9.4.2.0")
     compileOnly("io.insert-koin:koin-annotations:1.0.3")
-    ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
+    ksp("io.insert-koin:koin-ksp-compiler:1.2.0")
     testImplementation(kotlin("test"))
 }
 
