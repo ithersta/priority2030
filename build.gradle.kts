@@ -31,7 +31,7 @@ dependencies {
     implementation("org.apache.commons:commons-email:1.5")
     implementation("io.ktor:ktor-client-okhttp:2.1.1")
     implementation("org.jsoup:jsoup:1.15.3")
-    implementation("org.slf4j:slf4j-simple:2.0.4")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
     implementation("org.junit.jupiter:junit-jupiter:5.9.0")
     implementation("commons-validator:commons-validator:1.7")
